@@ -1,0 +1,16 @@
+base_url = "/"
+compile_sass = true
+build_search_index = true
+
+theme = "anemone"
+
+[markdown]
+highlight_code = true
+
+[extra]
+twitter_card = true
+header_nav = [
+    { url = "/", name_en = "/home/" },
+    { url = "/about", name_en = "/about/" },
+    { url = "/blog", name_en = "/blog/" },
+]
