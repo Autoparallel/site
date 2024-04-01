@@ -2,7 +2,7 @@ services:
     zola: 
         build:
             context: .
-            target: zola-base
+            target: zola
         command: zola serve --interface 0.0.0.0
         volumes:
             - .:/project
