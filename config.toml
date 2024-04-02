@@ -11,6 +11,6 @@ highlight_code = true
 twitter_card = true
 header_nav = [
     { url = "/", name_en = "/home/" },
-    { url = "/about", name_en = "/about/" },
+    { url = "/braindump", name_en = "/braindump/" },
     { url = "/blog", name_en = "/blog/" },
 ]
