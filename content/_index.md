@@ -36,6 +36,10 @@ title = "/autoparallel/"
     MMMMMMMMMMWXOo;..     ..;okXWMMWXko;..     .';lOXMMMMMMMMMMM
 
 
+$$
+\hbar \frac{\partial^2}{\partial x^2} \psi(x) + V(x) \psi(x) = E \psi(x)
+$$
+
 ## `$whoami`
 
 My name is Colin Roberts.
