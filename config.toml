@@ -4,14 +4,16 @@ build_search_index = true
 
 theme = "anemone"
 
+taxonomies = [{ name = "tags", feed = true }]
+
 [markdown]
 highlight_code = true
 
 [extra]
 twitter_card = true
-twitter_title = "Autoparallel"
-twitter_url = "https://twitter.com/Autoparallel"
-twitter_description = "Autoparallel is a blog about parallel programming, compilers, and computer architecture."
+twitter_title = "/autoparallel/"
+twitter_url = "https://autoparallel.xyz"
+twitter_description = ""
 header_nav = [
     { url = "/", name_en = "/home/" },
     { url = "/braindump", name_en = "/braindump/" },
