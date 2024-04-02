@@ -1,8 +1,29 @@
 <meta charset="UTF-8">
-<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 <meta name="robots" content="index, follow">
+
+<!-- Katex math rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+<!-- ~~~ -->
+
+<!-- Tikzjax -->
+<link rel="stylesheet" type="text/css" href="http://tikzjax.com/v1/fonts.css">
+<script src="http://tikzjax.com/v1/tikzjax.js"></script>
+<!-- ~~~ -->
+
+<!-- Custom monospaced font -->
+<link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Ubuntu Mono', monospace;
+    }
+</style>
+<!-- ~~~ -->
+
 {% if page.title %}
 {% set title = page.title %}
 {% elif section.title %}
@@ -86,13 +107,13 @@
 {% endblock metatags %}
 {% if config.generate_feed %}
 {% block feed %}
-<link rel="alternate" type="application/atom+xml" title="RSS" href="{{ get_url(path="atom.xml", trailing_slash=false) }}"> 
+<link rel="alternate" type="application/atom+xml" title="RSS" href="{{ get_url(path=" atom.xml", trailing_slash=false)
+    }}">
 {% endblock feed %}
 {% endif %}
 {% block css %}
-<link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/reset-min.css"/>
-<link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/suCSS-min.css"/>
-<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/style.css', trailing_slash=false) | safe }}"/>
+<link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/reset-min.css" />
+<link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/suCSS-min.css" />
+<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/style.css', trailing_slash=false) | safe }}" />
 {% endblock css %}
 <script src="{{ get_url(path='js/script.js', trailing_slash=false) | safe }}" defer></script>
-

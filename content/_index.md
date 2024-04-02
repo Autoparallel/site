@@ -35,11 +35,6 @@ title = "/autoparallel/"
     MMMMMWMWKdc'.            .cO0dl:'.             .':dKWMMMMMMM
     MMMMMMMMMMWXOo;..     ..;okXWMMWXko;..     .';lOXMMMMMMMMMMM
 
-
-$$
-\hbar \frac{\partial^2}{\partial x^2} \psi(x) + V(x) \psi(x) = E \psi(x)
-$$
-
 ## `$whoami`
 
 My name is Colin Roberts.
@@ -56,12 +51,12 @@ Here we want beautiful math and beautiful software.
 We want it to be provable, modular, extensible, and composable.
 
 I am building or aim to build:
-- [Arbiter](https://github.com/primitivefinance/arbiter): Agent-based simulation framework for Ethereum execution environments.
+- [arbiter](https://github.com/primitivefinance/arbiter): Agent-based simulation framework for Ethereum execution environments.
 - [type_sheaf](https://github.com/Autoparallel/type_sheaf): Sheaves of types in Rust. WIP.
-- Sheaves of Modules in Lean4. TODO.
+- Sheaves of modules in Lean4. TODO.
 
 ## Contact
 
+- GitHub: [autoparallel](https://github.com/Autoparallel)
+- Twitter: [@autoparallel](https://twitter.com/autoparallel)
 - Email: colin@autoparallel.xyz
-- Twitter: [@autoparallel]
-- GitHub: [autoparallel]

@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html lang="{% if page %}{{ page.lang }}{% else %}{{ config.default_language }}{% endif %}">
+
 <head>
     {% include "head.html" %}
 </head>
+
 <body>
-      <header>
-          {% include "header.html" %}
-      </header>
-      <main>
-          {% block content %}
-          {% endblock content %}
-      </main>
-      <footer>
-          {% include "footer.html" %}
-      </footer>
+    <header>
+        {% include "header.html" %}
+    </header>
+    <main>
+        {% block content %}
+        {% endblock content %}
+    </main>
+    <footer>
+        {% include "footer.html" %}
+    </footer>
+    <!-- Katex math rendering -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                macros: {
+                    "\\R": "\\mathbb{R}",
+                },
+                throwOnError: false,
+                strict: "ignore",
+                extensions: ["AMScd"]
+            });
+        });
+    </script>
+    <!-- ~~~ -->
 </body>
+
 </html>

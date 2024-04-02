@@ -9,6 +9,9 @@ highlight_code = true
 
 [extra]
 twitter_card = true
+twitter_title = "Autoparallel"
+twitter_url = "https://twitter.com/Autoparallel"
+twitter_description = "Autoparallel is a blog about parallel programming, compilers, and computer architecture."
 header_nav = [
     { url = "/", name_en = "/home/" },
     { url = "/braindump", name_en = "/braindump/" },
