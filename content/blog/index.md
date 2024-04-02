@@ -4,4 +4,4 @@ title = "blog"
 
 # TODO
 
-More to come soon.
+More to come soon™
