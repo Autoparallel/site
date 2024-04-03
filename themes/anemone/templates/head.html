@@ -10,6 +10,12 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
 <!-- ~~~ -->
 
+<!-- tikzjax -->
+<link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+<!-- ~~~ -->
+
+
 <!-- Custom monospaced font -->
 <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap" rel="stylesheet">
 <style>
@@ -104,5 +110,6 @@
 <link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/reset-min.css" />
 <link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/suCSS-min.css" />
 <link rel="stylesheet" type="text/css" href="{{ get_url(path='css/style.css', trailing_slash=false) | safe }}" />
+<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/blurb.css', trailing_slash=false) | safe }}" />
 {% endblock css %}
 <script src="{{ get_url(path='js/blurb.js', trailing_slash=false) | safe }}" defer></script>

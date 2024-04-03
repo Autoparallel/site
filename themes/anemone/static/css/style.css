@@ -7,7 +7,7 @@
   --accent: #bd93f9;
   --accent-light: #d0b0ff;
   --accent-text: #50fa7b;
-  --border: #DBD5BC;
+  --border: #ff79c6;
   --link: #ff79c6;
 }
 
@@ -114,18 +114,13 @@
   float: left
 }
 
-/* shortcodes css */
-.webring {
-  margin: .375rem;
-}
-
 /* Blurbs in the braindump */
 .blurb-container {
   margin-bottom: 20px;
 }
 
 .blurb {
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   border-radius: 5px;
   margin-bottom: 10px;
 }
@@ -136,7 +131,18 @@
   align-items: center;
   padding: 10px;
   cursor: pointer;
-  background-color: #f5f5f5;
+  background-color: transparent;
+}
+
+.blurb-meta {
+  display: flex;
+  align-items: center;
+}
+
+.date {
+  margin-right: 10px;
+  font-size: 0.9em;
+  color: var(--text-light);
 }
 
 .blurb-content {
@@ -149,7 +155,7 @@
 }
 
 .tag {
-  background-color: #e0e0e0;
+  background-color: var(--bg-light);
   padding: 5px 10px;
   margin-right: 5px;
   border-radius: 3px;

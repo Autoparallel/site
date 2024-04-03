@@ -1,0 +1,16 @@
+<div class="blurb">
+    <div class="blurb-header">
+        <h4>{{ title }}</h4>
+        <div class="blurb-meta">
+            <span class="date">{{ date }}</span>
+            <div class="tags">
+                {% for tag in tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="blurb-content">
+        {{ body | markdown | safe }}
+    </div>
+</div>
