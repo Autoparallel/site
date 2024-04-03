@@ -1,29 +1,3 @@
-/* [data-theme="light"] {
-  color-scheme: light;
-  --bg: #EEEEEE;
-  --bg-light: #CBCDCD;
-  --text: #41474E;
-  --text-light: #646868;
-  --accent: #D26878;
-  --accent-light: #e08f67;
-  --accent-text: var(--bg);
-  --border: #646868;
-  --link: #5690AF;
-} */
-
-:root {
-  /* color-scheme: dark; */
-  --bg: #222529;
-  --bg-light: #464949;
-  --text: #D6D6D6;
-  --text-light: #DBD5BC;
-  --accent: #78B6AD;
-  --accent-light: #87C9E5;
-  --accent-text: var(--bg);
-  --border: #DBD5BC;
-  --link: #E2AEA2;
-}
-
 /* modified dracula */
 :root {
   --bg: #282a36;
