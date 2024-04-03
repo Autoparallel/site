@@ -2,7 +2,7 @@ base_url = "/"
 compile_sass = true
 build_search_index = true
 
-theme = "anemone"
+theme = "autome"
 
 taxonomies = [{ name = "tags" }]
 

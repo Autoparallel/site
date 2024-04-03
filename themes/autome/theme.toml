@@ -1,0 +1,10 @@
+name = "autome"
+description = "A super minimalist Zola theme forked from Anemone"
+license = "MIT"
+
+[extra]
+
+
+[author]
+name = "autoparallel"
+homepage = "https://autoparallel.xyz"
