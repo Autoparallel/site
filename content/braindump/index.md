@@ -13,6 +13,7 @@ og_image = "../../images/borromean_rings.jpg"
 - learn: more cryptography. 
   - [ ] read: "[Moonmath Manual](https://github.com/LeastAuthority/moonmath-manual)"
   - [ ] read: "[Proofs, Arguments, and Zero Knowledge](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html)"
+  - [ ] read: "[An Introduction to Mathematical Cryptography](https://link.springer.com/book/10.1007/978-0-387-77993-5)"
 - [ ] read: Shannon's papers.
     - [x] read: "A Mathematical Theory of Communication"
     - [ ] read: "Communication Theory of Secrecy Systems"
