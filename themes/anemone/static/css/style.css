@@ -9,10 +9,10 @@
   --accent-text: var(--bg);
   --border: #646868;
   --link: #5690AF;
-}
+} */
 
-[data-theme="dark"] {
-  color-scheme: dark;
+:root {
+  /* color-scheme: dark; */
   --bg: #222529;
   --bg-light: #464949;
   --text: #D6D6D6;
@@ -22,7 +22,22 @@
   --accent-text: var(--bg);
   --border: #DBD5BC;
   --link: #E2AEA2;
-} */
+}
+
+/* modified dracula */
+:root {
+  --bg: #282a36;
+  --bg-light: #44475a;
+  --text: #6bc9df;
+  --text-light: #bbf2fa;
+  --accent: #bd93f9;
+  --accent-light: #d0b0ff;
+  --accent-text: #50fa7b;
+  --border: #DBD5BC;
+  --link: #ff79c6;
+}
+
+
 
 #nav-bar {
   padding: .625rem 0 0 0;

@@ -10,11 +10,6 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
 <!-- ~~~ -->
 
-<!-- Tikzjax -->
-<link rel="stylesheet" type="text/css" href="http://tikzjax.com/v1/fonts.css">
-<script src="http://tikzjax.com/v1/tikzjax.js"></script>
-<!-- ~~~ -->
-
 <!-- Custom monospaced font -->
 <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap" rel="stylesheet">
 <style>
@@ -105,16 +100,8 @@
 <link rel="shortcut icon" type="image/x-icon" href="{{ get_url(path=config.extra.favicon, trailing_slash=false) }}">
 {% endif %}
 {% endblock metatags %}
-{% if config.generate_feed %}
-{% block feed %}
-<link rel="alternate" type="application/atom+xml" title="RSS" href="{{ get_url(path=" atom.xml", trailing_slash=false)
-    }}">
-{% endblock feed %}
-{% endif %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/reset-min.css" />
 <link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/suCSS-min.css" />
-<!-- <link rel="stylesheet" type="text/css" href="../static/css/style.css" /> -->
 <link rel="stylesheet" type="text/css" href="{{ get_url(path='css/style.css', trailing_slash=false) | safe }}" />
 {% endblock css %}
-<script src="{{ get_url(path='js/script.js', trailing_slash=false) | safe }}" defer></script>

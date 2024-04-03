@@ -4,7 +4,7 @@ build_search_index = true
 
 theme = "anemone"
 
-taxonomies = [{ name = "tags", feed = true }]
+taxonomies = [{ name = "tags" }]
 
 [markdown]
 highlight_code = true
