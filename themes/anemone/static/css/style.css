@@ -118,3 +118,40 @@
 .webring {
   margin: .375rem;
 }
+
+/* Blurbs in the braindump */
+.blurb-container {
+  margin-bottom: 20px;
+}
+
+.blurb {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.blurb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f5f5f5;
+}
+
+.blurb-content {
+  padding: 10px;
+  display: none;
+}
+
+.tags {
+  display: flex;
+}
+
+.tag {
+  background-color: #e0e0e0;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+}
