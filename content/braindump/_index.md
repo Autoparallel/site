@@ -12,9 +12,11 @@ title = "/braindump/"
   - [ ] read: "[Moonmath Manual](https://github.com/LeastAuthority/moonmath-manual)"
 - [ ] read: Shannon's papers.
     - [x] read: "A Mathematical Theory of Communication"
+    - [ ] read: "Communication Theory of Secrecy Systems"
+    - [ ] read: "Communication in the Presence of Noise"
 
-## Brain
-{% blurb(title="Excerpt: Curry Howard Correspondence", date="2024-04-03", tags=["math", "metamath"]) %}
+## blurbs
+{% blurb(title="Curry-Howard correspondence", date="2024-04-03", tags=["math", "metamath"]) %}
 The Curry-Howard correspondence was something I found out about too late.
 In essence, it shows that mathematical proofs are equivalent to computer programs. 
 Since then, I've been curious about type theory and what it means to use a theorem prover or type checker.

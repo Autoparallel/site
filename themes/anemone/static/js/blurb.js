@@ -1,7 +1,7 @@
-// Toggle blurb content visibility when header is clicked
-document.querySelectorAll('.blurb .blurb-header').forEach(header => {
-    header.addEventListener('click', () => {
-        const content = header.nextElementSibling;
+// Toggle blurb content visibility when the toggle button is clicked
+document.querySelectorAll('.blurb .toggle-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const content = button.closest('.blurb').querySelector('.blurb-content');
         content.style.display = content.style.display === 'none' ? 'block' : 'none';
     });
 });
