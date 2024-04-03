@@ -38,7 +38,7 @@ MMMMWMMMN0o;..&nbsp;&nbsp;&nbsp;&nbsp;..,lkNWNXOl;..&nbsp;&nbsp;&nbsp;&nbsp;..:o
 ## `$whoami`
 
 My name is Colin Roberts.
-I have a passion for mathematics, physics, and computer science..
+I have a passion for mathematics, physics, and computer science.
 Some specific interests were previously mathematical physics via Riemannian geometry, PDEs, Clifford analysis, Hodge theory, and inverse problems.
 I also dabbled in sensor fusion, data assimilation, and plasma physics.
 
