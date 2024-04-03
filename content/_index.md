@@ -1,6 +1,7 @@
 +++
 title = "/autoparallel/"
 description = ">>> going with the flow >>>"
+og_image = "../images/borromean_rings.png"
 +++
 
 > The universe follows the flows of autoparallels
