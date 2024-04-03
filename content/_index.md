@@ -55,8 +55,21 @@ I am building or aim to build:
 - [type_sheaf](https://github.com/Autoparallel/type_sheaf): Sheaves of types in Rust. WIP.
 - Sheaves of modules in Lean4. TODO.
 
-## Contact
+## contact
 
 - GitHub: [autoparallel](https://github.com/Autoparallel)
 - Twitter: [@autoparallel](https://twitter.com/autoparallel)
 - Email: colin@autoparallel.xyz
+
+---
+
+<span class="light-text">
+<b>
+>> what is this ASCII image i see?
+</b>
+</span>
+
+- The [Borromean rings](https://en.wikipedia.org/wiki/Borromean_rings) are a set of three interlocking rings with the special property that if any one ring is removed, the remaining two are not linked. 
+Mathematically, we say the Borromean links have [linking number](https://en.wikipedia.org/wiki/Linking_number) zero. 
+However, higher order linking can be detected using [Massey products](https://en.wikipedia.org/wiki/Massey_product) which shows that the Borromean rings are "triply linked" in a sense.
+Linking, braiding, and knotting are all important concepts in topology and are used in the study of [magnetic fields, fluid dynamics](https://pubs.aip.org/aip/jmp/article-abstract/54/1/013515/983781/Generalized-Gauss-maps-and-integrals-for-three?redirectedFrom=fulltext), and [DNA](https://math.mit.edu/research/highschool/primes/circle/documents/2020/Ayinon_2020.pdf).
