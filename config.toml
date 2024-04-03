@@ -13,7 +13,8 @@ highlight_code = true
 twitter_card = true
 twitter_title = "/autoparallel/"
 twitter_url = "https://autoparallel.xyz"
-twitter_description = ""
+twitter_description = ">>> going with the flow >>>"
+twitter_image = "/images/borromean_rings.png"
 header_nav = [
     { url = "/", name_en = "/home/" },
     { url = "/braindump", name_en = "/braindump/" },
