@@ -1,13 +1,9 @@
 version: '3.7'
 
 services:
-  zola:
+  site:
     container_name: site
     build:
       context: .
-      target: zola
-    command: serve --interface 0.0.0.0
-    volumes:
-      - .:/project
     ports:
-      - "0.0.0.0:1111:1111"
+      - "1111:80"
