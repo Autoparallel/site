@@ -10,6 +10,7 @@ title = "/braindump/"
   - [ ] read: "[Theorem Proving in Lean](https://leanprover.github.io/theorem_proving_in_lean/)"
 - learn: more cryptography. 
   - [ ] read: "[Moonmath Manual](https://github.com/LeastAuthority/moonmath-manual)"
+  - [ ] read: "[Proofs, Arguments, and Zero Knowledge](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.html)"
 - [ ] read: Shannon's papers.
     - [x] read: "A Mathematical Theory of Communication"
     - [ ] read: "Communication Theory of Secrecy Systems"
