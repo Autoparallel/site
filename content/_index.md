@@ -36,7 +36,22 @@ description = ">>> going with the flow >>>"
     MMMMMWMWKdc'.            .cO0dl:'.             .':dKWMMMMMMM
     MMMMMMMMMMWXOo;..     ..;okXWMMWXko;..     .';lOXMMMMMMMMMMM -->
 
-<p style="line-height: 1; color: rgba(245, 140, 255, 0.2);">
+<style>
+  .colored-paragraph {
+    line-height: 1;
+    color: rgba(245, 140, 255, 1.0);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  @media screen and (max-width: 600px) {
+    .colored-paragraph {
+      white-space: normal;
+    }
+  }
+</style>
+
+<pre class="colored-paragraph">
 MMMMMMMMMMMMMMWN0dc;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..,cd0NWMMMMMMMMMMMMMM
 MMMMMMMMMMMMWKo,.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;......&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.,o0WMMMMMMMMMMMM
 MMMMMMMMMMMKl.&nbsp;&nbsp;&nbsp;.,lxO0KKXK0Oxl,.&nbsp;&nbsp;&nbsp;.lKWMMMMMMMMMM
@@ -61,7 +76,7 @@ MW0;&nbsp;&nbsp;&nbsp;&nbsp;,oOXWMMMWWNx'&nbsp;&nbsp;&nbsp;.':lllkNMMMMMWXOo,.&n
 MMMNx;.&nbsp;&nbsp;&nbsp;.';clooolcol'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.,:looolc;.&nbsp;&nbsp;&nbsp;&nbsp;.;xNMMM
 MMMMWN0o;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;ddc;'.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.;o0NMMMMM
 MMMMWMMMN0o;..&nbsp;&nbsp;&nbsp;&nbsp;..,lkNWNXOl;..&nbsp;&nbsp;&nbsp;&nbsp;..:o0NWMMMMMMM
-</p>
+</pre>
 
 ## `$whoami`
 
