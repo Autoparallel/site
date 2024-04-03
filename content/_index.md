@@ -38,26 +38,6 @@ image = "../images/borromean_rings.png"
     MMMMMMMMMMWXOo;..     ..;okXWMMWXko;..     .';lOXMMMMMMMMMMM -->
 
 
-<style>
-  .colored-paragraph {
-    line-height: 1;
-    color: rgba(255, 140, 255, 1);
-    white-space: pre;
-    font-size: 1.5vw;
-  }
-
-  @media screen and (max-width: 600px) {
-    .colored-paragraph {
-      font-size: 2vw;
-    }
-  }
-
-  @media screen and (max-width: 400px) {
-    .colored-paragraph {
-      font-size: 2vw;
-    }
-  }
-</style>
 
 <pre class="colored-paragraph">
 MMMMMMMMMMMMMMWN0dc;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..,cd0NWMMMMMMMMMMMMMM

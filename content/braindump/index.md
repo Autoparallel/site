@@ -79,30 +79,35 @@ $$
 This $H$ can be taken such that $H(0)=f$ and $H(1)=g$.
 Diagramatically:
 <script type="text/tikz">
+
+
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 
 \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,281); %set diagram left start at 0, and has height of 281
 
 %Curve Lines [id:da9388209042996238] 
-\draw [color={rgb, 255:red, 107; green, 201; blue, 223 }  ,draw opacity=1 ]   (36.37,106.56) .. controls (109.92,11.69) and (290.38,13.94) .. (374.54,108.86) ;
-\draw [shift={(375.8,110.3)}, rotate = 229.04] [fill={rgb, 255:red, 107; green, 201; blue, 223 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (10.72,-5.15) -- (0,0) -- (10.72,5.15) -- (7.12,0) -- cycle    ;
+\draw [color={rgb, 255:red, 107; green, 201; blue, 223 }  ,draw opacity=1 ]   (29.05,106.56) .. controls (81.95,11.69) and (211.72,13.94) .. (272.24,108.86) ;
+\draw [shift={(273.15,110.3)}, rotate = 238.03] [fill={rgb, 255:red, 107; green, 201; blue, 223 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (10.72,-5.15) -- (0,0) -- (10.72,5.15) -- (7.12,0) -- cycle    ;
 %Curve Lines [id:da22390256742717696] 
-\draw [color={rgb, 255:red, 107; green, 201; blue, 223 }  ,draw opacity=1 ]   (36.37,162.98) .. controls (109.92,248.85) and (295.97,253.37) .. (374.62,166.66) ;
-\draw [shift={(375.8,165.34)}, rotate = 131.51] [fill={rgb, 255:red, 107; green, 201; blue, 223 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (10.72,-5.15) -- (0,0) -- (10.72,5.15) -- (7.12,0) -- cycle    ;
+\draw [color={rgb, 255:red, 107; green, 201; blue, 223 }  ,draw opacity=1 ]   (29.05,162.98) .. controls (81.95,248.85) and (215.74,253.37) .. (272.3,166.66) ;
+\draw [shift={(273.15,165.34)}, rotate = 122.48] [fill={rgb, 255:red, 107; green, 201; blue, 223 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (10.72,-5.15) -- (0,0) -- (10.72,5.15) -- (7.12,0) -- cycle    ;
 %Straight Lines [id:da3453292356684231] 
-\draw [color={rgb, 255:red, 107; green, 201; blue, 223 }  ,draw opacity=1 ]   (199.92,58) -- (199.92,204.51)(196.92,58) -- (196.92,204.51) ;
-\draw [shift={(198.42,213.51)}, rotate = 270] [fill={rgb, 255:red, 107; green, 201; blue, 223 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (10.72,-5.15) -- (0,0) -- (10.72,5.15) -- (7.12,0) -- cycle    ;
+\draw [color={rgb, 255:red, 107; green, 201; blue, 223 }  ,draw opacity=1 ]   (147.09,58) -- (147.09,204.51)(144.09,58) -- (144.09,204.51) ;
+\draw [shift={(145.59,213.51)}, rotate = 270] [fill={rgb, 255:red, 107; green, 201; blue, 223 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (10.72,-5.15) -- (0,0) -- (10.72,5.15) -- (7.12,0) -- cycle    ;
 
 % Text Node
-\draw (11.32,122.56) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$[ 0,1]$};
+\draw (4.72,122.56) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$[ 0,1]$};
 % Text Node
-\draw (368.72,126.03) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$X$};
+\draw (265.67,126.03) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$X$};
 % Text Node
-\draw (193.7,4.93) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$f$};
+\draw (140.37,4.93) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$f$};
 % Text Node
-\draw (194.13,241.63) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$g$};
+\draw (140.68,241.63) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$g$};
 % Text Node
-\draw (214.03,126.03) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$H$};
+\draw (154.85,126.03) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1]  {$F$};
+
+
 \end{tikzpicture}
 </script>
 It is not true that such an $H$ exists for all $f,g$, and $X$.
