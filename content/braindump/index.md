@@ -1,7 +1,9 @@
 +++
 title = "/braindump/"
 description = "<<< what's on my mind >>>"
+[extra]
 og_image = "../../images/borromean_rings.png"
+twitter_image = "../../images/borromean_rings.png"
 +++
 ---
 

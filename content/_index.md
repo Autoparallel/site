@@ -1,43 +1,12 @@
 +++
 title = "/autoparallel/"
 description = ">>> going with the flow >>>"
-image = "../images/borromean_rings.png"
+[extra]
+og_image = "../images/borromean_rings.png"
+twitter_image = "../images/borromean_rings.png"
 +++
 
 > The universe follows the flows of autoparallels
-
-<!-- 
-    MMMMMMMMMMMMMMMMMMMMMN0dc,...  ...,cd0NWMMMWMMMMMMMMMMMMMMMM
-    MMMMMMMMMMMMMMMMWWXxc,.              .,cxXWMMMMMMMMMMMMMMMMM
-    MMMMMMMMMMMMMMMNk:.       ........       .:ONWWMMMMMMMMMMMMM
-    MMMMMMMMMMMMMNk;     .,lxOKKXNNNX0kdl,.     ;kNMMMMMMMMMMMMM
-    MMMMMMMMMMMMKc.    'o0WMMMMMMMMMMMMMMN0o'    .cKMMMMMMMMMMMM
-    MMMMMMMMMMW0;    .dNMWMMMMMMMMMMMMMMMMMMXd.    ;0WMMMMMMMMMM
-    MMMMMMMMMWK;    ,0MMMMMMMMMMMMMMMMMMMMMMMW0,    ,KMMMMMMMMMM
-    MMMMMMMMMNl    ,KMMMMMMMMMMMMMMMMMMMMMMMMWWK,    lNMMMMMMMMM
-    MMMMMMMMMO'.';lOXKKKKXNNWMMMMMMMMMMMWXXKKKKNx.   '0MWWMMMMMM
-    MMMMMMMMMKdolc:,.......';co0WWWXOdc;,......o0;   .xMMMMMMMMM
-    MMMMMMWKd:.              'lxd:'.           :0;   .dNXWMMMMMM
-    MMMWNOc.      .,:clllc::oxc.       .,:clllckO'   .ko.cOWMMMM
-    MMWKc.    .;oookNMMMMMW0c.     .;oodKWMMMMWNl    :0:  .cKWMM
-    MWk'    .oOd;. .dWMMWWx.    .oxko,. .kWMWMWd.   .k0,    'kWM
-    Wx.    :KWNd.   .lXWNd.   .cKWWKc.   .dNWKl.   .dWW0:    .xW
-    O.   .oNMWWNx.    'd0d'  .oNMMWWNd.   .k0;    .xNMWWNo.   .O
-    :    cNMMMMMW0:.    .coookNMMMMMMNl    :0:  .:OWMMMMMNc    :
-    .   .OMMMMMMMMNk:.     .';cloooolkO'   .ko.:kWMMMMMMMMO.   .
-    .   ,KMMMMMMMMMMW0o;.            :0:   .xXKNMMMMMMMMMMK,    
-    .   ,KMMMMMMMMMMMMMKdll:,........l0;   .xMMWMMMMMMMMMMK,   .
-    '   .xMMMMMMMMMMMMMO,.;:lkKK00000Nk.   .OMMMMMMMMMMMMWx.   '
-    l    ,KMMMMMMMMMMMMNc    ;KMMMMMMK;    cNMMMMMMMMMMMMK;    l
-    K;    ;KMMMMMMMMMMMM0,    :KMMMMK:    ,0MMMMMMMMMMWMK;    ;K
-    M0,    'xNMMMMMMMMMMMO'    'xNMK;    'OMMMMMMMMMMMNx'    ,0W
-    MMKc.    ,dKWMMMMMMMMWK:     ,codl;.cKWMMMMMMMMWKd,     :KMM
-    MMMNk,     .;lx0KNNWNNK0d'      .;lokKNNNNNK0xl;.     ,kNMMM
-    MMMMMNk:.       ..'''...;do;.       ...''''.       .;kNMMMMM
-    MMMMMWMWKdc'.            .cO0dl:'.             .':dKWMMMMMMM
-    MMMMMMMMMMWXOo;..     ..;okXWMMWXko;..     .';lOXMMMMMMMMMMM -->
-
-
 
 <pre class="colored-paragraph">
 MMMMMMMMMMMMMMWN0dc;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..,cd0NWMMMMMMMMMMMMMM
