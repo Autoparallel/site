@@ -23,7 +23,6 @@ twitter_image = "../../images/borromean_rings.png"
 
 ## blurbs
 
-
 {% blurb(title="paths of paths", date="2024-04-03", tags=["math", "topology"], slug="paths_of_paths") %}
 There's a nice relationship between higher order functions and higher homotopy theory.
 Let's develop a mental picture for what we mean by "paths of paths".

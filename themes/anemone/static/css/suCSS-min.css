@@ -99,11 +99,6 @@ body>* {
     grid-column: 2
 }
 
-body>footer {
-    color: var(--text-light);
-    font-size: .875
-}
-
 h1 {
     font-size: 2rem
 }
