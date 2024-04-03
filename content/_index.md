@@ -36,17 +36,24 @@ description = ">>> going with the flow >>>"
     MMMMMWMWKdc'.            .cO0dl:'.             .':dKWMMMMMMM
     MMMMMMMMMMWXOo;..     ..;okXWMMWXko;..     .';lOXMMMMMMMMMMM -->
 
+
 <style>
   .colored-paragraph {
     line-height: 1;
-    color: rgba(245, 140, 255, 1.0);
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    color: rgba(255, 140, 255, 1);
+    white-space: pre;
+    font-size: 4vw;
   }
 
   @media screen and (max-width: 600px) {
     .colored-paragraph {
-      white-space: normal;
+      font-size: 5vw;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .colored-paragraph {
+      font-size: 6vw;
     }
   }
 </style>
