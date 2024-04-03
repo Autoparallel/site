@@ -16,15 +16,6 @@
 <!-- ~~~ -->
 
 
-<!-- Custom monospaced font -->
-<link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap" rel="stylesheet">
-<style>
-    body {
-        font-family: 'Ubuntu Mono', monospace;
-    }
-</style>
-<!-- ~~~ -->
-
 {% if page.title %}
 {% set title = page.title %}
 {% elif section.title %}
@@ -107,9 +98,8 @@
 {% endif %}
 {% endblock metatags %}
 {% block css %}
-<link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/reset-min.css" />
-<link rel="stylesheet" type="text/css" href="https://speyll.github.io/suCSS/suCSS-min.css" />
+<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/reset-min.css', trailing_slash=false) | safe }}" />
+<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/suCSS-min.css', trailing_slash=false) | safe }}" />
 <link rel="stylesheet" type="text/css" href="{{ get_url(path='css/style.css', trailing_slash=false) | safe }}" />
-<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/blurb.css', trailing_slash=false) | safe }}" />
 {% endblock css %}
 <script src="{{ get_url(path='js/blurb.js', trailing_slash=false) | safe }}" defer></script>
