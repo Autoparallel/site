@@ -42,18 +42,18 @@ description = ">>> going with the flow >>>"
     line-height: 1;
     color: rgba(255, 140, 255, 1);
     white-space: pre;
-    font-size: 4vw;
+    font-size: 1.5vw;
   }
 
   @media screen and (max-width: 600px) {
     .colored-paragraph {
-      font-size: 5vw;
+      font-size: 2vw;
     }
   }
 
   @media screen and (max-width: 400px) {
     .colored-paragraph {
-      font-size: 6vw;
+      font-size: 2vw;
     }
   }
 </style>
