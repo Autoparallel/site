@@ -42,6 +42,7 @@ table {
 ::backdrop,
 :root {
     --mono-font: "Ubuntu Mono", monospace;
+    --code-font: "Kode Mono", monospace;
     --standard-border-radius: 5px;
     --bg: #282a36;
     --bg-light: #44475a;
@@ -49,7 +50,7 @@ table {
     --text-light: #bbf2fa;
     --accent: #bd93f9;
     --accent-light: #d0b0ff;
-    --accent-text: #50fa7b;
+    --accent-text: #f9abe7;
     --border: #ff79c6;
     --link: #ff79c6;
 }
@@ -78,7 +79,6 @@ table {
 * {
     scrollbar-color: var(--accent) var(--bg-light);
     scrollbar-width: thin;
-    scrollbar-height: thin
 }
 
 html {
@@ -170,7 +170,7 @@ a:hover {
 }
 
 ul {
-    list-style: none
+    list-style: none !important;
 }
 
 ol {
@@ -182,8 +182,8 @@ li {
 }
 
 ul li::marker {
-    content: '» ';
-    color: var(--accent)
+    content: '» ' !important;
+    color: var(--accent) !important;
 }
 
 ul li:hover::marker {
@@ -471,7 +471,7 @@ kbd,
 pre,
 pre span,
 samp {
-    font-family: var(--mono-font)
+    font-family: var(--code-font)
 }
 
 pre {
@@ -488,8 +488,8 @@ li code,
 p code {
     padding: 0 .125rem;
     border-radius: 3px;
-    color: var(--bg);
-    background-color: var(--text)
+    color: var(--accent-text);
+    background-color: var(--bg-light)
 }
 
 pre code {

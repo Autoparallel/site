@@ -8,6 +8,7 @@ taxonomies = [{ name = "tags" }]
 
 [markdown]
 highlight_code = true
+highlight_theme = "dracula"
 
 [extra]
 twitter_card = true

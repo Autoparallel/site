@@ -6,7 +6,7 @@ og_image = "../images/borromean_rings.png"
 twitter_image = "../images/borromean_rings.png"
 +++
 
-> The universe follows the flows of autoparallels
+> the universe follows flows of autoparallels
 
 <pre class="colored-paragraph">
 MMMMMMMMMMMMMMWN0dc;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..,cd0NWMMMMMMMMMMMMMM
@@ -38,8 +38,8 @@ MMMMWMMMN0o;..&nbsp;&nbsp;&nbsp;&nbsp;..,lkNWNXOl;..&nbsp;&nbsp;&nbsp;&nbsp;..:o
 ## `$whoami`
 
 My name is Colin Roberts.
-Prior to where I am now, I earned a PhD in mathematics and double majored in mathematics and physics as an undergraduate.
-My interests early on were in mathematical physics via Riemannian geometry, PDEs, Clifford analysis, Hodge theory, and inverse problems.
+I have a passion for mathematics, physics, and computer science..
+Some specific interests were previously mathematical physics via Riemannian geometry, PDEs, Clifford analysis, Hodge theory, and inverse problems.
 I also dabbled in sensor fusion, data assimilation, and plasma physics.
 
 Now I find myself in an open arc of developing software on and related to blockchains. 
