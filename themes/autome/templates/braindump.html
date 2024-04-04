@@ -5,15 +5,18 @@
 
 {{ section.content | safe }}
 
-<h2>Blurbs</h2>
+<h2>blurbs</h2>
 
-{% set subsection = get_section(path="braindump/blurbs/_index.md")%}
+{% set subsection = get_section(path="braindump/blurbs/_index.md") %}
 
 {% for page in subsection.pages %}
-<div class="blurb">
+{% set slug = page.title | slugify %}
+<div class="blurb" id="{{ slug }}">
     <div class="blurb-header">
         <button class="toggle-btn">view</button>
-        <h4 class="blurb-title">{{ page.title }}</h4>
+        <h3 class="blurb-title">
+            <a href="#{{ slug }}">{{ page.title }}</a>
+        </h3>
         <div class="blurb-meta">
             <span class="date">{{ page.date }}</span>
             <div class="tags">
