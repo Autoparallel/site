@@ -19,5 +19,3 @@ template = "braindump.html"
     - [ ] read: "[Communication Theory of Secrecy Systems](https://www.cs.miami.edu/home/burt/learning/csc685.211/bstj28-4-656.pdf)"
     - [ ] read: "[Communication in the Presence of Noise](https://fab.cba.mit.edu/classes/S62.12/docs/Shannon_noise.pdf)"
 
-
-

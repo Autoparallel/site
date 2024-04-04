@@ -12,7 +12,7 @@ In particular, I want to use these tools to write formally verified software.
 
 Curry-Howard gives us the following diagram of equivalences:
 
-{<script type="text/tikz">}
+<script type="text/tikz">
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
 
