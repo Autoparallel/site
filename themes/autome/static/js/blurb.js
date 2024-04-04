@@ -26,17 +26,29 @@ document.querySelectorAll('.blurb .toggle-btn').forEach(button => {
     });
 });
 
-// Filter blurbs by tag when a tag is clicked
-document.querySelectorAll('.tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-        const selectedTag = tag.textContent;
-        document.querySelectorAll('.blurb').forEach(blurb => {
-            const tags = Array.from(blurb.querySelectorAll('.tag')).map(tag => tag.textContent);
-            if (tags.includes(selectedTag)) {
-                blurb.style.display = 'block';
-            } else {
-                blurb.style.display = 'none';
-            }
-        });
+// Collect unique tags from blurbs and populate the tag select dropdown
+const tagSelect = document.getElementById('tag-select');
+const uniqueTags = new Set();
+document.querySelectorAll('.blurb').forEach(blurb => {
+    const tags = blurb.dataset.tags.split(',');
+    tags.forEach(tag => uniqueTags.add(tag));
+});
+uniqueTags.forEach(tag => {
+    const option = document.createElement('option');
+    option.value = tag;
+    option.textContent = tag;
+    tagSelect.appendChild(option);
+});
+
+// Filter blurbs by selected tag
+tagSelect.addEventListener('change', () => {
+    const selectedTag = tagSelect.value;
+    document.querySelectorAll('.blurb').forEach(blurb => {
+        const tags = blurb.dataset.tags.split(',');
+        if (selectedTag === '' || tags.includes(selectedTag)) {
+            blurb.style.display = 'block';
+        } else {
+            blurb.style.display = 'none';
+        }
     });
 });

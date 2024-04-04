@@ -201,6 +201,15 @@
   cursor: default;
 }
 
+.tag-filter {
+  margin-top: 10px;
+}
+
+.tag-filter select {
+  padding: 5px;
+  font-size: 14px;
+}
+
 /* Colored paragraphs */
 .colored-paragraph {
   line-height: 1;

@@ -13,12 +13,15 @@
     <div class="search-box">
         <input type="text" id="search-input" placeholder="Search by title">
     </div>
+    <div class="tag-filter">
+        <select id="tag-select">
+            <option value="">All tags</option>
+        </select>
+    </div>
 </div>
 <p style="margin-bottom:1cm;"></p>
 
 <div id="blurb-list">
-
-
     {% for page in subsection.pages %}
     {% set slug = page.title | slugify %}
     <div class="blurb" id="{{ slug }}" data-tags="{{ page.extra.tags | join(sep=',') }}" data-date="{{ page.date }}">
