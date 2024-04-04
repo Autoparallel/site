@@ -14,9 +14,15 @@
         <input type="text" id="search-input" placeholder="Search by title">
     </div>
     <div class="tag-filter">
-        <select id="tag-select">
-            <option value="">All tags</option>
-        </select>
+        <div class="multiselect">
+            <div class="selectBox" onclick="toggleCheckboxes()">
+                <select>
+                    <option>Select tags</option>
+                </select>
+                <div class="overSelect"></div>
+            </div>
+            <div id="checkboxes" class="checkboxes-dropdown" style="display: none;"></div>
+        </div>
     </div>
 </div>
 <p style="margin-bottom:1cm;"></p>

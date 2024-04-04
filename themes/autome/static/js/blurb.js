@@ -26,29 +26,36 @@ document.querySelectorAll('.blurb .toggle-btn').forEach(button => {
     });
 });
 
-// Collect unique tags from blurbs and populate the tag select dropdown
-const tagSelect = document.getElementById('tag-select');
+// Collect unique tags from blurbs and populate the tag checkboxes
+const checkboxesContainer = document.getElementById('checkboxes');
 const uniqueTags = new Set();
 document.querySelectorAll('.blurb').forEach(blurb => {
     const tags = blurb.dataset.tags.split(',');
     tags.forEach(tag => uniqueTags.add(tag));
 });
 uniqueTags.forEach(tag => {
-    const option = document.createElement('option');
-    option.value = tag;
-    option.textContent = tag;
-    tagSelect.appendChild(option);
+    const checkbox = document.createElement('label');
+    checkbox.innerHTML = `<input type="checkbox" value="${tag}"> ${tag}`;
+    checkbox.style.paddingLeft = '5px';
+    checkboxesContainer.appendChild(checkbox);
 });
 
-// Filter blurbs by selected tag
-tagSelect.addEventListener('change', () => {
-    const selectedTag = tagSelect.value;
+// Filter blurbs by selected tags
+function filterBlurbsByTags() {
+    const selectedTags = Array.from(checkboxesContainer.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
     document.querySelectorAll('.blurb').forEach(blurb => {
         const tags = blurb.dataset.tags.split(',');
-        if (selectedTag === '' || tags.includes(selectedTag)) {
+        if (selectedTags.length === 0 || selectedTags.every(tag => tags.includes(tag))) {
             blurb.style.display = 'block';
         } else {
             blurb.style.display = 'none';
         }
     });
-});
+}
+checkboxesContainer.addEventListener('change', filterBlurbsByTags);
+
+// Show/hide checkboxes when the select box is clicked
+function toggleCheckboxes() {
+    const checkboxes = document.getElementById("checkboxes");
+    checkboxes.style.display = checkboxes.style.display === "block" ? "none" : "block";
+}
