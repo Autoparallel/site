@@ -1,5 +1,5 @@
 +++
-title = "Curry-Howard Correspondence"
+title = "Curry-Howard correspondence"
 date = "2024-04-03"
 [extra]
 tags = ["math", "metamath"]
