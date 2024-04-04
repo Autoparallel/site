@@ -11,12 +11,13 @@ highlight_code = true
 highlight_theme = "dracula"
 
 [extra]
-og_image = "borromean_rings.png"
+image = "og_image.png"
+favicon = "favicon.ico"
 twitter_card = true
 twitter_title = "/autoparallel/"
 twitter_url = "https://autoparallel.xyz"
 twitter_description = ">>> going with the flow >>>"
-twitter_image = "/images/borromean_rings.png"
+twitter_image = "borromean_rings.png"
 header_nav = [
     { url = "/", name_en = "/home/" },
     { url = "/braindump", name_en = "/braindump/" },
