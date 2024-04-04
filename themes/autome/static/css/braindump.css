@@ -1,22 +1,47 @@
 /* Blurbs in the braindump */
-.blurb-container {
-    margin-bottom: 20px;
-}
-
 .blurb {
     border: 1px solid var(--border);
     border-radius: 5px;
     margin-bottom: 10px;
 }
 
+
 .blurb-title {
-    margin: 0;
     flex-grow: 1;
     text-align: left;
     margin-right: 10px;
-    font-size: 1.75rem;
+    font-size: 1.3rem;
     font-weight: bold;
+    white-space: nowrap;
+    /* Prevent line wrapping */
+    overflow-x: auto;
+    /* Add horizontal scroll */
+    scrollbar-width: thin;
+    /* Set the width of the scrollbar */
+    scrollbar-color: var(--accent) var(--bg-light);
+    /* Set the color of the scrollbar */
+    -webkit-overflow-scrolling: touch;
+    /* Enable smooth scrolling on iOS */
 }
+
+.blurb-title::-webkit-scrollbar {
+    height: 6px;
+    color: var(--accent)
+        /* Set the height of the scrollbar */
+}
+
+.blurb-title::-webkit-scrollbar-track {
+    background-color: var(--bg-light);
+    /* Set the background color of the scrollbar track */
+}
+
+.blurb-title::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    /* Set the color of the scrollbar thumb */
+    border-radius: 3px;
+    /* Set the border radius of the scrollbar thumb */
+}
+
 
 .blurb-title-text {
     cursor: pointer;
@@ -41,7 +66,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
     background-color: transparent;
 }
@@ -62,7 +87,8 @@
 }
 
 .date {
-    margin-bottom: 5px;
+    margin-top: -1px;
+    margin-bottom: 1px;
     color: var(--text-light);
 }
 
@@ -89,7 +115,7 @@
 
 .tags-button {
     background-color: var(--bg-light);
-    padding: 3px 8px;
+    padding: 2px 10px;
     border-radius: 3px;
     cursor: pointer;
     font-size: 12px;
