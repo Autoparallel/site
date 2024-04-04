@@ -260,14 +260,13 @@
 .selectBox select {
   width: 100%;
   font-weight: bold;
-  padding: 5px;
+  padding: 4px;
   border: none;
   background-color: transparent;
   color: var(--text);
   cursor: pointer;
   text-align-last: center;
 }
-
 
 .overSelect {
   position: absolute;
@@ -294,7 +293,22 @@
 }
 
 #checkboxes label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
   margin-right: 5px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  cursor: pointer;
+}
+
+#checkboxes label input[type="checkbox"]:checked {
+  background-color: var(--accent);
 }
 
 #checkboxes label:hover {
