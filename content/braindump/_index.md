@@ -1,6 +1,7 @@
 +++
 title = "/braindump/"
 description = "<<< what's on my mind >>>"
+template = "braindump.html"
 +++
 ---
 
@@ -17,6 +18,8 @@ description = "<<< what's on my mind >>>"
     - [x] read: "A Mathematical Theory of Communication"
     - [ ] read: "Communication Theory of Secrecy Systems"
     - [ ] read: "Communication in the Presence of Noise"
+
+[View all blurbs](/braindump/blurbs/)
 
 ## blurbs
 

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{{ section.content | safe }}
+
+<h2>Blurbs</h2>
+
+{% for blurb in section.pages %}
+{% if blurb.extra.layout == "blurb" %}
+<div class="blurb">
+    <div class="blurb-header">
+        <button class="toggle-btn">view</button>
+        <h4 class="blurb-title">{{ blurb.title }}</h4>
+        <div class="blurb-meta">
+            <span class="date">{{ blurb.date }}</span>
+            <div class="tags">
+                {% for tag in blurb.extra.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="blurb-content">
+        {{ blurb.content | safe }}
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock content %}
