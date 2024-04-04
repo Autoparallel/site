@@ -43,6 +43,7 @@
 {% elif config.description %}
 {% set description = config.description | truncate(length=150) %}
 {% endif %}
+
 {% if page.extra.image %}
 {% set image = get_url(path=page.extra.image, trailing_slash=false) %}
 {% elif section.extra.image %}
@@ -50,6 +51,7 @@
 {% elif config.extra.favicon %}
 {% set image = get_url(path=config.extra.favicon, trailing_slash=false) %}
 {% endif %}
+
 {% if page.permalink %}
 {% set url = page.permalink %}
 {% elif section.permalink %}

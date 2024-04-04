@@ -1,8 +1,6 @@
 +++
 title = "/autoparallel/"
 description = ">>> going with the flow >>>"
-image = "../images/borromean_rings.png"
-twitter_image = "../images/borromean_rings.png"
 +++
 
 > the universe follows flows of autoparallels

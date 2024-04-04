@@ -11,6 +11,7 @@ highlight_code = true
 highlight_theme = "dracula"
 
 [extra]
+og_image = "borromean_rings.png"
 twitter_card = true
 twitter_title = "/autoparallel/"
 twitter_url = "https://autoparallel.xyz"
