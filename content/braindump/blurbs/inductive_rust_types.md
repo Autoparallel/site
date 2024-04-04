@@ -17,7 +17,7 @@ struct Cell {
 
 impl Cell {
     fn attach(&mut self, other: &Cell) {
-        if self.dim == other.dim {
+        if self.dim - 1 == other.dim {
             self.attachments.push(other);
         } else {
             panic!();
