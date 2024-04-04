@@ -26,14 +26,14 @@ document.querySelectorAll('.blurb .toggle-btn').forEach(button => {
     });
 });
 
-// Collect unique tags from blurbs and populate the tag checkboxes
 const checkboxesContainer = document.getElementById('checkboxes');
 const uniqueTags = new Set();
 document.querySelectorAll('.blurb').forEach(blurb => {
     const tags = blurb.dataset.tags.split(',');
     tags.forEach(tag => uniqueTags.add(tag));
 });
-uniqueTags.forEach(tag => {
+const sortedTags = Array.from(uniqueTags).sort();
+sortedTags.forEach(tag => {
     const checkbox = document.createElement('label');
     checkbox.innerHTML = `<input type="checkbox" value="${tag}"> ${tag}`;
     checkbox.style.paddingLeft = '5px';

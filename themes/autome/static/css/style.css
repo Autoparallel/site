@@ -169,6 +169,36 @@
   flex-shrink: 0;
 }
 
+.tags-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tags-button {
+  background-color: var(--bg-light);
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.tags-list {
+  display: none;
+  position: absolute;
+  background-color: var(--bg-light);
+  padding: 5px;
+  border-radius: 3px;
+  z-index: 1;
+  right: 0;
+  min-width: 100px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
+}
+
+.tags-container:hover .tags-list {
+  display: block;
+}
+
 @media screen and (max-width: 600px) {
   .tag {
     font-size: 10px;

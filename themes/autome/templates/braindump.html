@@ -38,10 +38,13 @@
             </h3>
             <div class="blurb-meta">
                 <span class="date">{{ page.date }}</span>
-                <div class="tags">
-                    {% for tag in page.extra.tags %}
-                    <span class="tag">{{ tag }}</span>
-                    {% endfor %}
+                <div class="tags-container">
+                    <div class="tags-button">tags</div>
+                    <div class="tags-list">
+                        {% for tag in page.extra.tags | sort %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
