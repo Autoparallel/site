@@ -8,14 +8,17 @@ tags = ["rust", "programming", "type theory"]
 Rust allows for `type` and `const` generics which can nearly be used to create something close to inductive types.
 A struct we might want to define may have fields that depend on a predecessor or successor value of the current `const` associated to it.
 For instance, we may want to have $k$-cells attach to $(k-1)$-cells to build a *cell complex*.
-We want to enforce at compile time that we indeed map a specific type `Cell<K>` to a `Cell<K-1>` as opposed to a runtime check that like:
+We want to enforce at compile time that we indeed map a specific type `Cell<K>` to a `Cell<K-1>` as opposed to a runtime check like:
 ```rust
-// ~ snipping
+struct Cell {
+    dim: usize,
+    attachments: Vec<Cell>
+}
 
 impl Cell {
     fn attach(&mut self, other: &Cell) {
-        if self.k == other.k - 1 {
-            // do the attachment logic
+        if self.dim == other.dim {
+            self.attachments.push(other);
         } else {
             panic!();
         }
@@ -24,11 +27,11 @@ impl Cell {
 
 fn main() {
     let k = 2;
-    let kcell: Cell = Cell::new(k);
+    let k_cell: Cell = Cell::new(k);
     let k_minus_one_cell: Cell = Cell::new(k - 1);
 
-    kcell.attach(k_minus_one_cell); // passes
-    kcell.attach(kcell); // panics
+    k_cell.attach(k_minus_one_cell); // passes
+    k_cell.attach(k_cell); // panics
 }
 
 ```
