@@ -74,6 +74,7 @@ let 0cell: Cell<0> = Cell::new();
 0cell.attach(_); // will not compile for any input
 ```
 will not compile because `.attach()` is not even defined for `Cell<0>`, as it should not be.
+Actually, `.attach()` is what you get when you apply the "cell functor" to the `predecessor()` function that defines the inductive step.
 
 We can actually do something similar if you check out this video: [Type Theory for the Working Rustacean](https://www.youtube.com/watch?v=BdXWlQsd7RI). 
 I'll summarize the idea here in code:
