@@ -1,3 +1,23 @@
+// Function to expand the blurb content
+function expandBlurb(blurbId) {
+    const blurb = document.getElementById(blurbId);
+    if (blurb) {
+        const content = blurb.querySelector('.blurb-content');
+        content.style.display = 'block';
+    }
+}
+
+// Check if the URL contains a blurb slug and expand the corresponding blurb
+function checkURLandExpandBlurb() {
+    const hash = window.location.hash.substr(1);
+    if (hash) {
+        expandBlurb(hash);
+    }
+}
+
+// Call the function on page load
+window.addEventListener('DOMContentLoaded', checkURLandExpandBlurb);
+
 // Toggle blurb content visibility when the toggle button is clicked
 document.querySelectorAll('.blurb .toggle-btn').forEach(button => {
     button.addEventListener('click', () => {
