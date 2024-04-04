@@ -66,6 +66,27 @@ document.querySelectorAll('.blurb-title').forEach(title => {
 
     titleText.addEventListener('click', (event) => {
         event.preventDefault();
-        blurbContent.style.display = blurbContent.style.display === 'none' ? 'block' : 'none';
+        blurbContent.style.display = blurbContent.style.display === 'block' ? 'none' : 'block';
     });
 });
+
+function toggleTagsList(button) {
+    const tagsContainer = button.closest('.tags-container');
+    tagsContainer.classList.toggle('active');
+}
+
+document.addEventListener('click', (event) => {
+    const tagsContainers = document.querySelectorAll('.tags-container');
+    tagsContainers.forEach(container => {
+        if (!container.contains(event.target)) {
+            container.classList.remove('active');
+        }
+    });
+});
+
+function copyLink(event, url) {
+    event.preventDefault();
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Blurb link copied to clipboard: ' + url);
+    });
+}

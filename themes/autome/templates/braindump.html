@@ -32,9 +32,11 @@
     {% set slug = page.title | slugify %}
     <div class="blurb" id="{{ slug }}" data-tags="{{ page.extra.tags | join(sep=',') }}" data-date="{{ page.date }}">
         <div class="blurb-header">
-            <h3 class="blurb-title" data-url="#{{ slug }}">
+            <div class="blurb-title">
+                <a href="#{{ slug }}" class="blurb-link"
+                    onclick="copyLink(event, '{{ section.permalink }}#{{ slug }}')">#</a>
                 <span class="blurb-title-text">{{ page.title }}</span>
-            </h3>
+            </div>
             <div class="blurb-meta">
                 <span class="date">{{ page.date }}</span>
                 <div class="tags-container">
