@@ -213,9 +213,10 @@
 }
 
 .selectBox select {
+    margin-bottom: 0.5px;
     width: 100%;
     font-weight: bold;
-    padding: 4px;
+    padding: 3px;
     border: none;
     background-color: transparent;
     color: var(--text);
