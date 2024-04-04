@@ -1,6 +1,6 @@
 +++
 title = "Curry-Howard Correspondence"
-date = "2023-06-09"
+date = "2024-04-03"
 [extra]
 tags = ["math", "metamath"]
 +++
@@ -12,7 +12,7 @@ In particular, I want to use these tools to write formally verified software.
 
 Curry-Howard gives us the following diagram of equivalences:
 
-{% tikz %}
+{<script type="text/tikz">}
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
 
@@ -37,7 +37,7 @@ Curry-Howard gives us the following diagram of equivalences:
 \draw (424,167) node [anchor=north west][inner sep=0.75pt]  [font=\large,color={rgb, 255:red, 107; green, 201; blue, 223 }  ,opacity=1 ,xscale=1.1,yscale=1.1] [align=left] {\texttt{Logic}};
 
 \end{tikzpicture}
-{% end %}
+</script>
 <!-- 
 Copilot wrote the following, I wonder if this is correct?
 - Propositions as Types

@@ -5,25 +5,16 @@
 
 {{ section.content | safe }}
 
+<p style="margin-bottom:1cm;"></p>
+
 <h2>blurbs</h2>
 {% set subsection = get_section(path="braindump/blurbs/_index.md") %}
 <div class="blurb-filters">
     <div class="search-box">
         <input type="text" id="search-input" placeholder="Search by title">
     </div>
-    <div class="tag-filter">
-        <select id="tag-select" multiple>
-            {% set all_tags = subsection.pages | map(attribute="extra.tags") %}
-            {% for tag in all_tags %}
-            <option value="{{ tag }}">{{ tag }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="date-filter">
-        <input type="date" id="start-date" placeholder="Start date">
-        <input type="date" id="end-date" placeholder="End date">
-    </div>
 </div>
+<p style="margin-bottom:1cm;"></p>
 
 <div id="blurb-list">
 
@@ -54,38 +45,19 @@
 
 <script>
     const searchInput = document.getElementById('search-input');
-    const tagSelect = document.getElementById('tag-select');
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
     const blurbList = document.getElementById('blurb-list');
-
     function filterBlurbs() {
         const searchTerm = searchInput.value.toLowerCase();
-        const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.value);
-        const startDate = startDateInput.value;
-        const endDate = endDateInput.value;
-
         Array.from(blurbList.children).forEach(blurb => {
             const title = blurb.querySelector('.blurb-title').textContent.toLowerCase();
-            const tags = blurb.dataset.tags.split(',');
-            const date = blurb.dataset.date;
-
             const matchesSearch = title.includes(searchTerm);
-            const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => tags.includes(tag));
-            const matchesStartDate = !startDate || date >= startDate;
-            const matchesEndDate = !endDate || date <= endDate;
-
-            if (matchesSearch && matchesTags && matchesStartDate && matchesEndDate) {
+            if (matchesSearch) {
                 blurb.style.display = 'block';
             } else {
                 blurb.style.display = 'none';
             }
         });
     }
-
     searchInput.addEventListener('input', filterBlurbs);
-    tagSelect.addEventListener('change', filterBlurbs);
-    startDateInput.addEventListener('change', filterBlurbs);
-    endDateInput.addEventListener('change', filterBlurbs);
 </script>
 {% endblock content %}
