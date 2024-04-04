@@ -5,7 +5,7 @@ date = "2024-04-04"
 tags = ["math", "category theory", "topology"]
 +++
 
-Taking a look at [paths of paths](/braindump/#path-of-paths) we could see that there is a geometry invoked by thinking of functions of functions.
+Taking a look at [paths of paths](/braindump/#paths-of-paths) we could see that there is a geometry invoked by thinking of functions of functions.
 Considering categories which consist purely of morphisms (functions), we can start to build up their geometric structure.
 
 Take a category with objects $A$ and $B$.
