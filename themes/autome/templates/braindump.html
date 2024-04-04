@@ -6,29 +6,86 @@
 {{ section.content | safe }}
 
 <h2>blurbs</h2>
-
 {% set subsection = get_section(path="braindump/blurbs/_index.md") %}
-
-{% for page in subsection.pages %}
-{% set slug = page.title | slugify %}
-<div class="blurb" id="{{ slug }}">
-    <div class="blurb-header">
-        <button class="toggle-btn">view</button>
-        <h3 class="blurb-title">
-            <a href="#{{ slug }}">{{ page.title }}</a>
-        </h3>
-        <div class="blurb-meta">
-            <span class="date">{{ page.date }}</span>
-            <div class="tags">
-                {% for tag in page.extra.tags %}
-                <span class="tag">{{ tag }}</span>
-                {% endfor %}
-            </div>
-        </div>
+<div class="blurb-filters">
+    <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search by title">
     </div>
-    <div class="blurb-content">
-        {{ page.content | safe }}
+    <div class="tag-filter">
+        <select id="tag-select" multiple>
+            {% set all_tags = subsection.pages | map(attribute="extra.tags") %}
+            {% for tag in all_tags %}
+            <option value="{{ tag }}">{{ tag }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="date-filter">
+        <input type="date" id="start-date" placeholder="Start date">
+        <input type="date" id="end-date" placeholder="End date">
     </div>
 </div>
-{% endfor %}
+
+<div id="blurb-list">
+
+
+    {% for page in subsection.pages %}
+    {% set slug = page.title | slugify %}
+    <div class="blurb" id="{{ slug }}" data-tags="{{ page.extra.tags | join(sep=',') }}" data-date="{{ page.date }}">
+        <div class="blurb-header">
+            <button class="toggle-btn">view</button>
+            <h3 class="blurb-title">
+                <a href="#{{ slug }}">{{ page.title }}</a>
+            </h3>
+            <div class="blurb-meta">
+                <span class="date">{{ page.date }}</span>
+                <div class="tags">
+                    {% for tag in page.extra.tags %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="blurb-content">
+            {{ page.content | safe }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    const searchInput = document.getElementById('search-input');
+    const tagSelect = document.getElementById('tag-select');
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const blurbList = document.getElementById('blurb-list');
+
+    function filterBlurbs() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedTags = Array.from(tagSelect.selectedOptions).map(option => option.value);
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+
+        Array.from(blurbList.children).forEach(blurb => {
+            const title = blurb.querySelector('.blurb-title').textContent.toLowerCase();
+            const tags = blurb.dataset.tags.split(',');
+            const date = blurb.dataset.date;
+
+            const matchesSearch = title.includes(searchTerm);
+            const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => tags.includes(tag));
+            const matchesStartDate = !startDate || date >= startDate;
+            const matchesEndDate = !endDate || date <= endDate;
+
+            if (matchesSearch && matchesTags && matchesStartDate && matchesEndDate) {
+                blurb.style.display = 'block';
+            } else {
+                blurb.style.display = 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterBlurbs);
+    tagSelect.addEventListener('change', filterBlurbs);
+    startDateInput.addEventListener('change', filterBlurbs);
+    endDateInput.addEventListener('change', filterBlurbs);
+</script>
 {% endblock content %}
