@@ -3,21 +3,6 @@
 
 <head>
     {% include "head.html" %}
-
-    <!-- Responsive Math Styles -->
-    <style>
-        .katex-display {
-            max-width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .katex {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-    </style>
 </head>
 
 <body>
@@ -28,26 +13,6 @@
         {% block content %}
         {% endblock content %}
     </main>
-    <!-- Katex math rendering -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    { left: "$$", right: "$$", display: true },
-                    { left: "$", right: "$", display: false },
-                    { left: "\\(", right: "\\)", display: false },
-                    { left: "\\[", right: "\\]", display: true }
-                ],
-                macros: {
-                    "\\R": "\\mathbb{R}",
-                    "\\Hom": "\\operatorname{Hom}"
-                },
-                throwOnError: false,
-                strict: "ignore",
-            });
-        });
-    </script>
-    <!-- ~~~ -->
 </body>
 
 </html>
