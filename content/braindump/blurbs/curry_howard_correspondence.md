@@ -43,4 +43,4 @@ Copilot wrote the following, I wonder if this is correct?
 - Propositions as Types
 - Proofs as Programs
 - Normalization as Computation -->
-{% end %}
+

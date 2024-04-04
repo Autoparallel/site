@@ -187,5 +187,3 @@ All of falls under the notion of *homotopy* in topology.
 This is the same idea of homotopy in *homotopy type theory*.
 In this theory, we can consider types (for which there are function types) and equality between these types as paths.
 I'm trying to get to a more formal understanding of this, but it's a bit of a journey.
-
-{% end %}
