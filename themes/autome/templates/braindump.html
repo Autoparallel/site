@@ -32,14 +32,13 @@
     {% set slug = page.title | slugify %}
     <div class="blurb" id="{{ slug }}" data-tags="{{ page.extra.tags | join(sep=',') }}" data-date="{{ page.date }}">
         <div class="blurb-header">
-            <button class="toggle-btn">view</button>
-            <h3 class="blurb-title">
-                <a href="#{{ slug }}">{{ page.title }}</a>
+            <h3 class="blurb-title" data-url="#{{ slug }}">
+                <span class="blurb-title-text">{{ page.title }}</span>
             </h3>
             <div class="blurb-meta">
                 <span class="date">{{ page.date }}</span>
                 <div class="tags-container">
-                    <div class="tags-button">tags</div>
+                    <div class="tags-button" onclick="toggleTagsList(this)">tags</div>
                     <div class="tags-list">
                         {% for tag in page.extra.tags | sort %}
                         <span class="tag">{{ tag }}</span>

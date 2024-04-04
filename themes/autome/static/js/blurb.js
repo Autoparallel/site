@@ -59,3 +59,13 @@ function toggleCheckboxes() {
     const checkboxes = document.getElementById("checkboxes");
     checkboxes.style.display = checkboxes.style.display === "block" ? "none" : "block";
 }
+
+document.querySelectorAll('.blurb-title').forEach(title => {
+    const blurbContent = title.closest('.blurb').querySelector('.blurb-content');
+    const titleText = title.querySelector('.blurb-title-text');
+
+    titleText.addEventListener('click', (event) => {
+        event.preventDefault();
+        blurbContent.style.display = blurbContent.style.display === 'none' ? 'block' : 'none';
+    });
+});
