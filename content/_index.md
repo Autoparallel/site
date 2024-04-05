@@ -57,8 +57,19 @@ I am building or aim to build:
 - GitHub: [autoparallel](https://github.com/Autoparallel)
 - Twitter: [@autoparallel](https://twitter.com/autoparallel)
 - Email: colin@autoparallel.xyz
+<p style="margin-bottom:0.5cm;"></p>
 
 ---
+<p style="margin-bottom:0.5cm;"></p>
+
+<span class="light-text">
+<b>
+>> why "autoparallel" and why does "the universe follow flows of autoparallels"?
+</b>
+</span>
+
+- Go see [this blurb](/braindump/#autoparallels).
+
 
 <span class="light-text">
 <b>
