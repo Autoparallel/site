@@ -2,8 +2,6 @@ base_url = "/"
 compile_sass = true
 build_search_index = true
 
-theme = "autome"
-
 taxonomies = [{ name = "tags" }]
 
 [markdown]

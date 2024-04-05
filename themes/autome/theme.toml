@@ -1,8 +1,0 @@
-name = "autome"
-description = "A super minimalist Zola theme forked from Anemone"
-license = "MIT"
-
-
-[author]
-name = "autoparallel"
-homepage = "https://autoparallel.xyz"
