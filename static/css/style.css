@@ -9,6 +9,15 @@
   align-content: flex-end
 }
 
+pre {
+  font-size: 14px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+pre code {
+  font-size: inherit;
+}
 
 .accent-data {
   color: var(--accent);
@@ -29,38 +38,6 @@
 
 .title-list li {
   margin-bottom: .375rem;
-}
-
-/* icons settings */
-.icons {
-  width: 1.3rem;
-  height: 1.3rem;
-  aspect-ratio: 1/1;
-  display: inline-block;
-  vertical-align: middle;
-  color: var(--text);
-  fill: var(--text);
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.icons:hover {
-  background-color: transparent;
-  color: var(--accent);
-}
-
-/* footnotes */
-.footnote-definition {
-  margin: 0 0 0 .125rem;
-}
-
-.footnote-definition-label {
-  color: var(--accent);
-}
-
-.footnote-definition p {
-  display: inline;
-  margin: .625rem 0 0 .625rem;
 }
 
 /* general classes */
