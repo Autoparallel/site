@@ -19,5 +19,5 @@ twitter_image = "og_image.png"
 header_nav = [
     { url = "/", name_en = "/home/" },
     { url = "/braindump", name_en = "/braindump/" },
-    { url = "/blog", name_en = "/blog/" },
+    { url = "/longform", name_en = "/longform/" },
 ]

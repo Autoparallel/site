@@ -154,6 +154,7 @@ p {
 
 a,
 a:visited {
+    transition: color 0.3s, background-color 0.3s;
     text-decoration: none;
     border-radius: .125rem;
     color: var(--link)

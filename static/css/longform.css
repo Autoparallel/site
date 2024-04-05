@@ -1,0 +1,117 @@
+.series-card {
+    background-color: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.series-title {
+    margin-top: 0;
+    font-size: 1.1rem;
+}
+
+.series-description {
+    color: var(--accent);
+    font-size: 0.9rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.post-cards-container {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.post-card {
+    width: 500px;
+    min-width: 500px;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 15px;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    position: relative;
+}
+
+.post-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    font-size: 1rem;
+    /* text-overflow: ellipsis; */
+}
+
+.post-title a {
+    color: var(--link);
+    text-decoration: none;
+    transition: color 0.3s, background-color 0.3s;
+    padding: 2px 4px;
+    display: inline-block;
+}
+
+.post-title a:hover {
+    color: var(--bg-light);
+    background-color: var(--link);
+}
+
+.post-description-wrapper {
+    margin-top: 0;
+    margin-bottom: 15px;
+    overflow-y: auto;
+    max-height: 120px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg-light);
+}
+
+.post-description-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.post-description-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 3px;
+}
+
+.post-description-wrapper::-webkit-scrollbar-track {
+    background-color: var(--bg-light);
+}
+
+.post-description {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    font-size: .9rem;
+}
+
+.post-date {
+    color: var(--text-light);
+    font-size: 12px;
+    position: absolute;
+    bottom: -10px;
+    right: 15px;
+}
+
+@media screen and (max-width: 600px) {
+    .post-cards-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 15px;
+    }
+
+    .post-card {
+        width: 75vw;
+        min-width: 75vw;
+        margin-right: 10px;
+        margin-bottom: 0;
+    }
+}

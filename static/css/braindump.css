@@ -13,15 +13,10 @@
     font-size: 1.3rem;
     font-weight: bold;
     white-space: nowrap;
-    /* Prevent line wrapping */
     overflow-x: auto;
-    /* Add horizontal scroll */
     scrollbar-width: thin;
-    /* Set the width of the scrollbar */
     scrollbar-color: var(--accent) var(--bg-light);
-    /* Set the color of the scrollbar */
     -webkit-overflow-scrolling: touch;
-    /* Enable smooth scrolling on iOS */
 }
 
 .blurb-title::-webkit-scrollbar {
@@ -44,6 +39,7 @@
 
 
 .blurb-title-text {
+    transition: color 0.3s, background-color 0.3s;
     cursor: pointer;
 }
 

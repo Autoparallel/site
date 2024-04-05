@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{{ section.content | safe }}
+
+<p style="margin-bottom:1cm;"></p>
+
+<h2>series</h2>
+<div id="series-list">
+    {% for subsection_path in section.subsections %}
+    {% set subsection = get_section(path=subsection_path) %}
+    <div class="series-card">
+        <h3 class="series-title">{{ subsection.title }}</h3>
+        <p class="series-description">{{ subsection.description }}</p>
+        <div class="post-cards-container">
+            {% for page in subsection.pages %}
+            <div class="post-card">
+                <h4 class="post-title"><a href="{{ page.permalink }}">{{ page.title }}</a></h4>
+                <div class="post-description-wrapper">
+                    <p class="post-description">{{ page.description }}</p>
+                </div>
+                <p class="post-date">{{ page.date }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
