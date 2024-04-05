@@ -2,8 +2,7 @@
     background-color: var(--bg);
     border-radius: 8px;
     border: 1px solid var(--border);
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 15px;
 }
 
 .series-title {
@@ -17,12 +16,12 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
+    padding-bottom: 10px;
 }
 
 .post-cards-container {
     display: flex;
     overflow-x: auto;
-    padding-bottom: 10px;
 }
 
 .post-card {
@@ -96,7 +95,7 @@
     color: var(--text-light);
     font-size: 12px;
     position: absolute;
-    bottom: -10px;
+    bottom: 5px;
     right: 15px;
 }
 
