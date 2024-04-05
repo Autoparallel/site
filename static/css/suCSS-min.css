@@ -466,7 +466,7 @@ kbd,
 pre,
 pre span,
 samp {
-    font-family: var(--code-font)
+    font-family: var(--code-font);
 }
 
 pre {
@@ -484,14 +484,18 @@ p code {
     padding: 0 .125rem;
     border-radius: 3px;
     color: var(--accent-text);
-    background-color: var(--bg-light)
+    background-color: var(--bg-light);
+    font-size: 14px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 pre code {
     padding: 0;
     border-radius: 0;
     color: inherit;
-    background-color: inherit
+    background-color: inherit;
+    font-size: 13px;
 }
 
 progress:indeterminate {
