@@ -138,6 +138,7 @@ h3 {
     line-height: 1.1
 }
 
+/* 
 h1::before,
 h2::before,
 h3::before,
@@ -146,11 +147,26 @@ h5::before,
 h6::before {
     color: var(--accent);
     content: '# '
+} */
+
+/* .anchor {
+    font-size: 1em;
+    margin-left: 0em;
+    text-decoration: none;
+}
+
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+    opacity: 1;
 }
 
 p {
     margin: 1rem 0
-}
+} */
 
 a,
 a:visited {
