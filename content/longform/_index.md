@@ -1,6 +1,6 @@
 +++
-path = "blog"
-title = "/blog/"
+path = "longform"
+title = "/longform/"
 template = "longform.html"
 +++
 
