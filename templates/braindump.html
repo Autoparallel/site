@@ -33,8 +33,7 @@
     <div class="blurb" id="{{ slug }}" data-tags="{{ page.extra.tags | join(sep=',') }}" data-date="{{ page.date }}">
         <div class="blurb-header">
             <div class="blurb-title">
-                <a href="#{{ slug }}" class="blurb-link"
-                    onclick="copyLink(event, '{{ section.permalink }}#{{ slug }}')">#</a>
+                <a href="#{{ slug }}" class="blurb-link" onclick="copyLink(event, '#{{ slug }}')">#</a>
                 <span class="blurb-title-text">{{ page.title }}</span>
             </div>
             <div class="blurb-meta">

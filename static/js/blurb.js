@@ -83,11 +83,3 @@ document.addEventListener('click', (event) => {
         }
     });
 });
-
-function copyLink(event, path) {
-    event.preventDefault();
-    const url = window.location.origin + path;
-    navigator.clipboard.writeText(url).then(() => {
-        alert('Link copied to clipboard: ' + url);
-    });
-}
