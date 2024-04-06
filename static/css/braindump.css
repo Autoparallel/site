@@ -19,6 +19,16 @@
     -webkit-overflow-scrolling: touch;
 }
 
+.blurb-title a {
+    color: var(--accent);
+    margin: 0;
+}
+
+.blurb-title a:hover {
+    color: var(--bg);
+    background-color: var(--accent);
+}
+
 .blurb-title::-webkit-scrollbar {
     height: 6px;
     color: var(--accent)
@@ -52,10 +62,6 @@
     text-decoration: none;
     color: var(--accent);
     margin-right: 5px;
-}
-
-.blurb-link:hover {
-    text-decoration: underline;
 }
 
 .blurb-header {
@@ -218,6 +224,8 @@
     color: var(--text);
     cursor: pointer;
     text-align-last: center;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .overSelect {
