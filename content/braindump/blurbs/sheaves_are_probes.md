@@ -18,10 +18,10 @@ Succinctly, sheaves are collections of probes that we can use to study a space a
 Take a space $U$, then we think of the set of all the ways to map $U$ into $X$ as the set of probes of $X$ by $U$, which we call $X(U)$.
 In order to really understand $X$, we need to understand how it interacts with all possible probes.
 For instance, I may also probe $X$ with $V$, and if we have $f \colon U \to V$, then the difference of the probes $X(U)$ and $X(V)$ should be related by the map $f$.
-- **Consistency** is guaranteed by $\operatorname{Id}_U \colon U \to U$ yields a $\operatorname{Id}_{X(U)} \colon X(U) \to X(U)$.
+- **Consistency** is guaranteed by $\operatorname{Id}\_U \colon U \to U$ yields a $\operatorname{Id}_{X(U)} \colon X(U) \to X(U)$.
 - **Composability** is guaranteed by $f \colon U \to V$ and $g \colon V \to W$, then $X(U) \to X(W)$ is the same as $X(U) \to X(V) \to X(W)$.
 
-These just show our $X(_)$ is a functor from the category of spaces to the category of sets -- a *presheaf*.
+These just show our $X(\\_)$ is a functor from the category of spaces to the category of sets -- a *presheaf*.
 
 For our probes to make sense, we have to have the ability to construct probes from other probes.
 For instance, if $V_1 \cup V_2 = U$ with $V_1 \cap V_2 \neq \emptyset$, then we should be able to construct a probe in $X(U)$ from probes in $X(V_1)$ along with $X(V_2)$ so long as the probe $p_1 \in X(V_1)$ and $p_2 \in X(V_2)$ agree on the overlap $p_1 = P_2 \in X(V_1 \cap V_2)$.
