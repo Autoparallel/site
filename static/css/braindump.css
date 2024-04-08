@@ -22,6 +22,8 @@
 .blurb-title a {
     color: var(--accent);
     margin: 0;
+    border-radius: .125rem;
+    margin-right: -5px;
 }
 
 .blurb-title a:hover {
@@ -51,6 +53,7 @@
 .blurb-title-text {
     transition: color 0.3s, background-color 0.3s;
     cursor: pointer;
+    border-radius: .125rem;
 }
 
 .blurb-title-text:hover {
@@ -61,7 +64,7 @@
 .blurb-link {
     text-decoration: none;
     color: var(--accent);
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .blurb-header {
@@ -97,6 +100,9 @@
 .blurb-content {
     padding: 10px;
     display: none;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
 }
 
 

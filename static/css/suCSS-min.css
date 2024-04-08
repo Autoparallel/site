@@ -1,8 +1,12 @@
 ol,
 ul {
     margin-top: .25rem;
-    margin-bottom: .25rem
+    margin-bottom: .25rem;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
 }
+
 
 details,
 td,
@@ -153,8 +157,9 @@ a:hover {
 }
 
 ul {
-    list-style: none !important;
+    list-style: none;
 }
+
 
 ol {
     list-style-type: decimal
@@ -164,13 +169,18 @@ li {
     margin-bottom: .125rem
 }
 
-ul li::marker {
-    content: '» ' !important;
-    color: var(--accent) !important;
+ul li::before {
+    content: '» ';
+    color: var(--accent)
 }
 
-ul li:hover::marker {
-    content: '# ';
+
+ol li:hover::marker {
+    font-weight: 700;
+    color: var(--link)
+}
+
+ul li:hover::before {
     font-weight: 700;
     color: var(--link)
 }
@@ -179,12 +189,8 @@ ol li::marker {
     color: var(--accent)
 }
 
-ol li:hover::marker {
-    font-weight: 700;
-    color: var(--link)
-}
 
-header>nav ol,
+*/ header>nav ol,
 header>nav ul {
     display: flex;
     flex-direction: row;
@@ -375,7 +381,8 @@ label[type=button]:hover {
 input[type=checkbox]:checked,
 input[type=radio]:checked,
 mark {
-    background-color: var(--accent)
+    background-color: var(--accent);
+    border: solid 1px var(--text);
 }
 
 .button:focus-visible,
@@ -390,7 +397,8 @@ input[type=radio] {
     vertical-align: middle;
     position: relative;
     width: 14px;
-    height: 14px
+    height: 14px;
+    border: solid 1px var(--text)
 }
 
 input[type=radio] {
@@ -588,4 +596,10 @@ a.anchor:hover {
     color: var(--bg);
     background-color: var(--accent);
     border-radius: .125rem;
+}
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
 }
