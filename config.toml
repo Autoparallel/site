@@ -9,7 +9,7 @@ highlight_code = true
 highlight_theme = "dracula"
 
 [extra]
-image = "https://autoparallel.xyz/og_image.png"
+image = "og_image.png"
 favicon = "favicon.ico"
 twitter_card = true
 twitter_title = "/autoparallel/"
