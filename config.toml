@@ -13,9 +13,9 @@ image = "og_image.png"
 favicon = "favicon.ico"
 twitter_card = true
 twitter_title = "/autoparallel/"
-twitter_url = "/"
+twitter_url = "https://autoparallel.xyz/"
 twitter_description = ">>> going with the flow >>>"
-twitter_image = "https://autoparallel.xyz/og_image.png"
+twitter_image = "og_image.png"
 header_nav = [
     { url = "/", name_en = "/home/" },
     { url = "/braindump", name_en = "/braindump/" },
