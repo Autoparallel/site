@@ -34,7 +34,7 @@ The point is that through a sufficiently rich algebraic structure of functions a
 This is in fact a very general idea in mathematics and is highlighted by the Yoneda lemma in category theory.
 More on this another time.
 
-At the very end of my Ph.D, I came across [sheaf theory](https://en.wikipedia.org/wiki/Sheaf_(mathematics)).
+At the very end of my Ph.D, I came across [sheaves](https://en.wikipedia.org/wiki/Sheaf_(mathematics)).
 As it turned out, another proof technique for the Calderón problem was to use [sheaf theory](http://www.numdam.org/item/10.1016/s0012-9593(01)01076-x.pdf) but it required the manifold be real-analytic (which is highly restrictive).
 
 Something was nagging at me though.
