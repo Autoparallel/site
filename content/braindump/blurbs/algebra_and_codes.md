@@ -7,7 +7,7 @@ tags = ["math", "algebra", "codes"]
 
 *Codes* are a means of providing redundancy and consistency checks in data transmission.
 What I am finding interesting is how codes are related to algebraic geometry and how they pop their head up in other protocols.
-For example, STARKs use Reed-Solomon codes in [FRI](https://hackernoon.com/zero-knowledge-proof-algorithm-zk-stark-fri-protocol) SNARKs can use [linear codes](https://zk-learning.org/assets/lecture7.pdf) and [sumcheck](https://blog.lambdaclass.com/have-you-checked-your-sums/) uses multilinear encoding.
+For example, STARKs use Reed-Solomon codes in [FRI](https://hackernoon.com/zero-knowledge-proof-algorithm-zk-stark-fri-protocol), SNARKs can use [linear codes](https://zk-learning.org/assets/lecture7.pdf), and [sumcheck](https://blog.lambdaclass.com/have-you-checked-your-sums/) uses multilinear encoding.
 Here's a bit on both [STARKs and SNARKs](https://aszepieniec.github.io/stark-anatomy/).
 
 We can quickly write down the Reed-Solomon code process.
