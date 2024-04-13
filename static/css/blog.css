@@ -1,0 +1,119 @@
+body {
+    position: relative;
+}
+
+.vertical-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--accent);
+}
+
+.vertical-line.left {
+    left: 1rem;
+}
+
+.vertical-line.right {
+    right: 1rem;
+}
+
+
+.vertical-line::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 15px;
+    background-image: linear-gradient(45deg,
+            transparent calc(50% - 0.5px),
+            var(--accent) calc(50% - 0.5px),
+            var(--accent) calc(50% + 0.5px), transparent calc(50% + 0.5px),
+            transparent calc(100% - 20.5px),
+            var(--accent) calc(100% - 20.5px),
+            var(--accent) calc(100% - 19.5px),
+            transparent calc(100% - 19.5px));
+    background-size: 100% 200px;
+}
+
+.vertical-line.left::before {
+    left: -15px;
+    /* Position the ticks to the left of the left line */
+}
+
+.vertical-line.right::before {
+    right: -15px;
+    /* Position the ticks to the right of the right line */
+}
+
+.blog-header {
+    margin-bottom: 1rem;
+}
+
+.blog-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.blog-meta {
+    display: flex;
+    align-items: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.blog-date {
+    margin-right: 1rem;
+}
+
+.blog-tags {
+    display: flex;
+}
+
+.blog-tag {
+    background-color: var(--bg-light);
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+.blog-tag:hover {
+    background-color: var(--accent);
+    color: var(--bg-light);
+}
+
+.blog-content {
+    line-height: 1.6;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+}
+
+.blog-post {
+    padding: 1rem;
+    /* Increase the horizontal padding */
+}
+
+.blog-footer {
+    margin-top: 2rem;
+}
+
+.blog-nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.blog-prev,
+.blog-next {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.blog-prev:hover,
+.blog-next:hover {
+    color: var(--link);
+}

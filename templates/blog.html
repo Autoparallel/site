@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="blog-post">
+  <div class="vertical-line left"></div>
+  <div class="vertical-line right"></div>
+
+  <header class="blog-header">
+    <h1 class="blog-title">{{ page.title }}</h1>
+    <div class="blog-meta">
+      <span class="blog-date">{{ page.date }}</span>
+      <div class="blog-tags">
+        {% for tag in page.taxonomies.tags %}
+        <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="blog-tag">{{ tag }}</a>
+        {% endfor %}
+      </div>
+      <p class="blog-description">{{ page.description }}</p>
+    </div>
+  </header>
+
+  <div class="blog-content">
+    {{ page.content | safe }}
+  </div>
+
+  <footer class="blog-footer">
+    <div class="blog-nav">
+      {% if page.earlier %}
+      <a href="{{ page.earlier.permalink }}" class="blog-prev">&#8592; Previous Post</a>
+      {% endif %}
+      {% if page.later %}
+      <a href="{{ page.later.permalink }}" class="blog-next">Next Post &#8594;</a>
+      {% endif %}
+    </div>
+  </footer>
+</article>
+{% endblock content %}

@@ -1,9 +1,12 @@
 +++
 title = "algebra as computation"
 date = "2024-04-13"
-[extra]
+template = "blog.html"
+description = "Every journey begins with reflection. We'll speedrun the wonderful history of cryptography and then focus on the applications of cryptography in the modern world."
+[taxonomies]
 tags = ["math", "algebra", "category theory"]
 +++
+---
 
 **Warning:** This blurb started out as a dive into Clifford algebras and I ended up nerd sniping myself into writing this from a far more categorical perspective -- hopefully it illuminates *why* we define structures in the way we do from a perspective of computation!
 
