@@ -30,10 +30,10 @@ Ultimately operations at the structural level descend to operations on the objec
 
 **sums**
 
-First, take a collection of vector spaces $V_1, V_2, \dots$ then the *direct sum* $\oplus$ combines a pair of vector spaces into $V_i \oplus V_j$ which consists of all vectors $v_i \oplus v_j$ where $v_i \in V_i$ and $v_j \in V_j$.
-Typically, if it were that $v_j=\boldsymbol{0}$, we have:
+First, take a collection of vector spaces $V_1, V_2, \dots$ then the *direct sum* $\oplus$ combines a pair of vector spaces into $V_i \oplus V_j$ which consists of all vectors $\boldsymbol{v_i} \oplus \boldsymbol{v_j}$ where $\boldsymbol{v_i} \in V_i$ and $\boldsymbol{v_j} \in V_j$.
+Typically, if it were that $\boldsymbol{v_j}=\boldsymbol{0}$, we have:
 $$
-v_i \oplus v_j = v_i \oplus \boldsymbol{0} = v_i.
+\boldsymbol{v_i} \oplus \boldsymbol{v_j} = \boldsymbol{v_i} \oplus \boldsymbol{0} = \boldsymbol{v_i}.
 $$
 This is an important note -- we can always add the zero vector to any vector and it doesn't change the vector.
 
@@ -46,9 +46,9 @@ $$
 $$
 and an element of this space is a summation 
 $$
-v_1 \oplus v_2 \oplus \dots \oplus v_n
+\boldsymbol{v_1} \oplus \boldsymbol{v_2} \oplus \dots \oplus \boldsymbol{v_n}
 $$
-where $v_i \in V_i$.
+where $\boldsymbol{v_i} \in V_i$.
 I refer to this subscripting here as *tagging* as it marks which vector space each element comes from.
 
 All of the above is actually equivalent to the *direct product* which I'll write as $\times$.
@@ -57,7 +57,16 @@ In the infinite case,
 $$
 \bigoplus_{i=1}^\infty V_i
 $$
-we require that all but finitely many of the $v_i$ are zero, and this is where the direct sum and direct product differ.
+we require that all but finitely many of the $\boldsymbol{v_i}$ are zero, and this is where the direct sum and direct product differ.
+
+Let's just take a pair of spaces $V$ and $W$ for a bit.
+To think of these objects, we can think of them as a pair of arrays of real numbers.
+(**Warning:** please ignore the re-use of notation, but I was previously using boldface to denote vectors, now I will use the same characters without boldface to denote components of vectors.)
+For instance, if we have $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$, then:
+$$
+\begin{bmatrix} v_1 \\\\ v_2 \\\\ \vdots \\\\ v_m \end{bmatrix} \oplus \begin{bmatrix} w_1 \\\\ w_2 \\\\ \vdots \\\\ w_n \end{bmatrix} = \begin{bmatrix} v_1 \\\\ v_2 \\\\ \vdots \\\\ v_m \\\\ w_1 \\\\ w_2 \\\\ \vdots \\\\ w_n \end{bmatrix}.
+$$
+The caveat here is that with the direct sum, if, for instance $\boldsymbol{w}\in W = \boldsymbol{0}$, then we can collapse the array to just that of $\boldsymbol{v}$.
 
 This coproduct construction is often called in computer science a *tagged union* type.
 For instance, in Rust, you maybe have something like:
@@ -75,20 +84,19 @@ where you can select either a array of "real numbers" (actually floats) of lengt
 An important distinction here is you could not create an instance of `SumVector` that chooses both `V` and `W` at the same time in Rust!
 
 Let's think about this diagramatically.
-First, let's just take a pair of spaces $V$ and $W$.
 We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfies the following universal property:
 - Let $\iota_V$ and $\iota_W$ be the inclusion maps from $V$ and $W$ into $V \oplus W$ respectively, defined like:
 $$
-(v,w) \mapsto v \oplus w.
+(\boldsymbol{v},\boldsymbol{w}) \mapsto \boldsymbol{v} \oplus \boldsymbol{w}.
 $$
 - For any other vector space $Z$ and linear maps $f_V: V \to Z$ and $f_W: W \to Z$, there exists a unique linear map $h: V \oplus W \to Z$ such that the following diagram "commutes" (that is, "makes sense"):
 
 ![coproduct](/images/blurbs/computational_clifford_algebras/coproduct.svg)
 
 Okay, but how do you define such an $f$ given the above?
-Well, if we have $f_V(v) = z_v$ and $f_W(w)=z_w$ then:
+Well, if we have $f_V(\boldsymbol{v}) = \boldsymbol{z_v}$ and $f_W(\boldsymbol{w})=\boldsymbol{z_w}$ then:
 $$
-f(v \oplus w) = z_v + z_w
+f(\boldsymbol{v} \oplus \boldsymbol{w}) = \boldsymbol{z_v} + \boldsymbol{z_w}
 $$
 which makes this diagram commute since, for example,
 $$
@@ -152,8 +160,8 @@ fn injective(sum_vec: SumVector<M, N>) -> ProductVector<M, N> {
     }
 }
 ```
-Note that if we compose `surjective(injective(sum_vec))` we get back the original `sum_vec` and if we compose `injective(surjective(prod_vec))` we get back the original `prod_vec` if an only if one of the `v` or `w` was all zeros.
-The issue here is solely due to the fact that Rust allows only a single variant of the tagged union type to be selected at a time whereas our general coproduct $\oplus$ allows for any combination of $V$ and $W$ to be selected!
+Note that if we compose `surjective(injective(sum_vec))` we get back the original `sum_vec` and if we compose `injective(surjective(prod_vec))` we get back the original `prod_vec` if an only if one of the `v` or `w` was all zeros, hence the `assert!`.
+The issue here and why we require `assert!` is solely due to the fact that Rust allows only a single variant of the tagged union type to be selected at a time whereas our general coproduct $\oplus$ allows for any combination of $V$ and $W$ to be selected!
 
 At any rate, this is the *sum* operation we will want on vector spaces that will give us a sum on vector-like objects in the long run!
 In the case we are using it on spaces, we should think of this computation as a *formation* (or *construction*) rule.
@@ -165,6 +173,7 @@ For us, this will be the *tensor* product of vector spaces.
 
 Let's also take a look at this formally. 
 A tensor product $V \otimes W$ of vector spaces $V$ and $W$ is a vector space that is the "freest" vector space that contains all the elements of $V$ and $W$.
+By freest, I mean that instead of just attaching one vector to another by extending an array 
 
 
 ![tensor product](/images/blurbs/computational_clifford_algebras/tensor_product.svg)
