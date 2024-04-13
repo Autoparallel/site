@@ -1,6 +1,6 @@
 +++
 title = "algebra as computation"
-date = "2024-04-12"
+date = "2024-04-13"
 [extra]
 tags = ["math", "algebra", "category theory"]
 +++
@@ -50,6 +50,7 @@ $$
 $$
 where $\boldsymbol{v_i} \in V_i$.
 I refer to this subscripting here as *tagging* as it marks which vector space each element comes from.
+One may also argue that this is quite similar to an `OR` operation where we are allowing ourselves to pick from any of the $V_i$ and combine them into a single "statement" (and that's because `OR` is also a coproduct).
 
 All of the above is actually equivalent to the *direct product* which I'll write as $\times$.
 Specifically, that's true so long as the summation above is finite as in Eq. (1) because the category of vector spaces is *additive*.
@@ -68,6 +69,13 @@ $$
 $$
 The caveat here is that with the direct sum, if, for instance $\boldsymbol{w}\in W = \boldsymbol{0}$, then we can collapse the array to just that of $\boldsymbol{v}$.
 
+With this construction we can still add and scalar multiply vectors in the direct sum in the usual way.
+Just for show:
+$$
+\boldsymbol{v} \oplus \boldsymbol{w} + \boldsymbol{v\'} \oplus \boldsymbol{w\'} = (\boldsymbol{v} + \boldsymbol{v\'}) \oplus (\boldsymbol{w} + \boldsymbol{w\'})\\\\
+\alpha (\boldsymbol{v} \oplus \boldsymbol{w}) = (\alpha \boldsymbol{v}) \oplus (\alpha \boldsymbol{w}).
+$$
+
 This coproduct construction is often called in computer science a *tagged union* type.
 For instance, in Rust, you maybe have something like:
 ```rust
@@ -75,6 +83,7 @@ For instance, in Rust, you maybe have something like:
 struct V<const M: usize>([f64; M]);
 struct W<const N: usize>([f64; N]);
 
+#[derive(Add)]
 enum SumVector<const M: usize, const N: usize> {
     V(V<M>),
     W(W<N>),
@@ -82,6 +91,7 @@ enum SumVector<const M: usize, const N: usize> {
 ```
 where you can select either a array of "real numbers" (actually floats) of length (dimension) $M$ or a array of length $N$ using this enumeration.
 An important distinction here is you could not create an instance of `SumVector` that chooses both `V` and `W` at the same time in Rust!
+Comparing this to the notion of the `OR` operation I brought up before, Rust takes their enumerations as more of an `XOR` operation.
 
 Let's think about this diagramatically.
 We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfies the following universal property:
@@ -89,9 +99,9 @@ We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfi
 $$
 (\boldsymbol{v},\boldsymbol{w}) \mapsto \boldsymbol{v} \oplus \boldsymbol{w}.
 $$
-- For any other vector space $Z$ and linear maps $f_V: V \to Z$ and $f_W: W \to Z$, there exists a unique linear map $h: V \oplus W \to Z$ such that the following diagram "commutes" (that is, "makes sense"):
+- For any other vector space $Z$ and linear maps $f_V: V \to Z$ and $f_W: W \to Z$, there exists a unique linear map $f: V \oplus W \to Z$ such that the following diagram "commutes" (that is, "makes sense"):
 
-![coproduct](/images/blurbs/computational_clifford_algebras/coproduct.svg)
+![coproduct](/images/longform/holy_trinity/algebra_as_computation/coproduct.svg)
 
 Okay, but how do you define such an $f$ given the above?
 Well, if we have $f_V(\boldsymbol{v}) = \boldsymbol{z_v}$ and $f_W(\boldsymbol{w})=\boldsymbol{z_w}$ then:
@@ -126,6 +136,36 @@ fn f(v: SumVector<M, N>) -> T {
 }
 ```
 where we can see that the `match` statement is the unique map $f$ in the diagram above.
+In fact, we needed this same technology to define the `Add` trait for the `SumVector` type in Rust.
+See by:
+```rust
+impl Add for V<M> {
+    type Output = V<M>;
+    fn add(self, other: V<M>) -> V<M> {
+        let mut sum = self;
+        for i in 0..M {
+            sum[i] += other[i];
+        }
+        sum
+    }
+}
+
+impl Add for W<N> {
+    // same as above but for `W`
+}
+
+impl Add for SumVector<M, N> {
+    type Output = SumVector<M, N>;
+    fn add(self, other: SumVector<M, N>) -> SumVector<M, N> {
+        match (self, other) {
+            (V(v), V(v_other)) => SumVector::V(v + v_other),
+            (W(w), W(w_other)) => SumVector::W(w + w_other),
+            _ => panic!("This is not possible in Rust!"),
+        }
+    }
+}
+```
+and we panic only due to the `XOR` nature of Rust's enumeration.
 
 There's a relationship here between our coproduct definition and the product definition.
 Importantly, this coproduct type **does not** force a requirement that we must have one of each $V$ and $W$ to make up an element $V \oplus W$ and insteaad says "you can have one or the other or both."
@@ -140,6 +180,22 @@ struct ProductVector<const M: usize, const N: usize> {
 }
 ```
 where you must have both a `V` and a `W` to create a `Vector`. 
+Note that in this case, you can actually define the `Add` trait for the `ProductVector` type in Rust without any issues:
+```rust
+impl Add for ProductVector<M, N> {
+    type Output = ProductVector<M, N>;
+    fn add(self, other: ProductVector<M, N>) -> ProductVector<M, N> {
+        ProductVector {
+            v: self.v + other.v,
+            w: self.w + other.w,
+        }
+    }
+}
+```
+since Rust requires both `v` and `w` to be present in the `ProductVector` type.
+In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically..
+
+
 To see why we have (almost) equality between these specific coproduct and product types in Rust for this case, we can define:
 ```rust
 fn surjective(prod_vec: ProductVector<M, N>) -> SumVector<M, N> {
@@ -161,7 +217,7 @@ fn injective(sum_vec: SumVector<M, N>) -> ProductVector<M, N> {
 }
 ```
 Note that if we compose `surjective(injective(sum_vec))` we get back the original `sum_vec` and if we compose `injective(surjective(prod_vec))` we get back the original `prod_vec` if an only if one of the `v` or `w` was all zeros, hence the `assert!`.
-The issue here and why we require `assert!` is solely due to the fact that Rust allows only a single variant of the tagged union type to be selected at a time whereas our general coproduct $\oplus$ allows for any combination of $V$ and $W$ to be selected!
+The issue here and why we require `assert!` is solely due to the fact that Rust allows only a single variant of the tagged union type to be selected at a time whereas our general coproduct $\oplus$ allows for any combination of $V$ and $W$ to be selected (i.e., this is `OR` versus `XOR` again)!
 
 At any rate, this is the *sum* operation we will want on vector spaces that will give us a sum on vector-like objects in the long run!
 In the case we are using it on spaces, we should think of this computation as a *formation* (or *construction*) rule.
@@ -173,7 +229,17 @@ For us, this will be the *tensor* product of vector spaces.
 
 Let's also take a look at this formally. 
 A tensor product $V \otimes W$ of vector spaces $V$ and $W$ is a vector space that is the "freest" vector space that contains all the elements of $V$ and $W$.
-By freest, I mean that instead of just attaching one vector to another by extending an array 
+By freest, I mean that instead of just attaching one vector to another by extending an array, we are able to form higher dimensional arrays that contain all possible combinations of vectors from $V$ and $W$.
 
+We write elements of the space $V\otimes W$ as $\boldsymbol{v}\otimes \boldsymbol{w}$. 
+To see how we work with these elements and compare it to the direct sum or direct product. 
+For once, we can not do a reduction 
+$$
+\boldsymbol{v} \otimes \boldsymbol{0} \neq \boldsymbol{v}
+$$
+as we could with the direct sum, hence the term "product" being used in tensor product.
 
-![tensor product](/images/blurbs/computational_clifford_algebras/tensor_product.svg)
+But how does this differ from the direct product then?
+For one, it will use the direct product as a building block, but prior to that we can see the differences.
+
+![tensor product](/images/longform/holy_trinity/algebra_as_computation/tensor_product.svg)
