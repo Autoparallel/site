@@ -387,11 +387,11 @@ and even further we could do the following:
 ```rust
 // specific choice of coefficients of w
 let w = W([1.0; N]);
-let linear_functional_on_V = Fn(V<M>) -> f64 = |v| fn(coefficients, v, w);
+let linear_functional_on_V = Fn(V<M>) -> f64 = |v| bilinear_map(coefficients, v, w);
 
 // specific choice of coefficients of v
 let v = V([1.0; M]);
-let linear_functional_on_W = Fn(W<N>) -> f64 = |w| fn(coefficients, v, w);
+let linear_functional_on_W = Fn(W<N>) -> f64 = |w| bilinear_map(coefficients, v, w);
 ```
 Notice that the tensor product is yielding quite a flexible powerhouse of mappings!
 
@@ -408,3 +408,8 @@ fn linear_map_from_V_to_W<const M: usize, const N: usize>(tensor: Tensor<M,N>, v
     }
 }
 ```
+The same can be done to yield a map from $W$ to $V$ if you wish. 
+Indeed, one may notice that we effectively used the definitions of the `linear_functional_on_V` to define the `linear_map_from_V_to_W` function and then iterated over and summed this into the components of the output vector to get the desired output.
+
+What we should reflect on here momentarily is that we have actually just created a wrapper type with `Tensor<M, N>` and we could have (almost) just as well have worked directly with the `bilinear_map`.
+That is, except for the fact that we could not have defined all this functionality on the primitive function pointer type in Rust.
