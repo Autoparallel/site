@@ -314,19 +314,97 @@ I hate to do this, but we can do a counting exercise if we invoke a basis for $V
 To this end, let $\boldsymbol{v_1}, \boldsymbol{v_2}, \dots, \boldsymbol{v_m}$ be a basis for $V$ and $\boldsymbol{w_1}, \boldsymbol{w_2}, \dots, \boldsymbol{w_n}$ be a basis for $W$.
 
 {% proof(name="$V \otimes W$ is dimension $mn$") %}
-**Proof ($V \otimes W$ is dimension $mn$):** Take the basis we had above for both $V$ and $W$.
+Take the basis we had above for both $V$ and $W$.
 Then we have $v_i \otimes w_j$ which consists of $mn$ elements. 
 On the basis, we can note:
 $$
 \tilde{h}(\boldsymbol{v_i} \otimes \boldsymbol{w_j}) = \boldsymbol{z_{i,j}}
 $$
-which, by choosing $Z$ to be at least $mn$ dimensional, we can pick an element $\boldsymbol{z_{i,j}} \in Z$ that is linearly independent from each other $\boldsymbol{z_{i\',j\'}}$.
+which, by choosing $Z$ to be at least $mn$ dimensional, we can pick an element $\boldsymbol{z_{i,j}} \in Z$ that is linearly independent from each other $\boldsymbol{z_{i',j'}}$.
 Illustratively, we let $\boldsymbol{z_{i,j}}$ be an $m\times n$ matrix where all entries are zero except for the $i,j$ entry which is one noting that the $m \times n $ matrices are themselves a vector space of dimension $mn$.
 {% end %}
 
+For example of the above proof, let's take $\dim(V)==3$ and $\dim(W)=2$ for instance.
+Then we can choose $\tilde{h}$ to be a map into $3\times 2$ matrices like so:
+$$
+\boldsymbol{v} \otimes \boldsymbol{w} = \begin{bmatrix} v_1 \\\\ v_2 \\\\ v_3 \end{bmatrix} \otimes \begin{bmatrix} w_1 \\\\ w_2 \end{bmatrix} = \begin{bmatrix} v_1 w_1 & v_1 w_2 \\\\ v_2 w_1 & v_2 w_2 \\\\ v_3w_1 & v_3w_2 \end{bmatrix}.
+$$
+where the components of each vector are the entries of the matrix.
+By no means do we have to choose this arrangement, but by doing so we can actually illuminate the structure of the tensor product space as a collection of bilinear mappings into the base field. 
+To see this, note that you could take a matrix like so, and multiply from the left and the right by the vectors from $V$ (transposed) and $W$ respectively and get a bilinear map (linear in both the left and right side) into the field.
 
 Comparing this to the case for the direct product, we had:
 $$
 f(\boldsymbol{v_i},\boldsymbol{w_j}) = (\boldsymbol{z_{i}},\boldsymbol{z_{j}})
 $$
 which yields up to $m+n$ linearly independent values (pick $Z$ to be a vector space with dimension $m+n$ or larger).
+
+{% proof(name="$V \times W$ is dimension $m+n$") %}
+Take the basis we had above for both $V$ and $W$.
+Then with the mapping 
+$$
+f(\boldsymbol{v_i},\boldsymbol{w_j}) = (\boldsymbol{z_{i}},\boldsymbol{z_{j}})
+$$
+Note that we can generate $m+n$ linearly independent values by first mapping $f(\boldsymbol{v_i}, \boldsymbol{0})$ to $(\boldsymbol{z_{i}},\boldsymbol{0})$ for $i \in \{0,\dots, m\}$ and likewise $f(\boldsymbol{0}, \boldsymbol{w_j})$ to $(\boldsymbol{0},\boldsymbol{z_{j}})$ for $j\in \{0,\dots, n\}$. 
+
+To see this is at most dimension $m+n$, we can note that for any other pair $(\boldsymbol{z_{i'}},\boldsymbol{z_{j'}})$ we can write as a linear combination of the above pairs.
+{% end %}
+
+Now, how would we define the tensor product type in Rust?
+
+Working with our $V<M>$ and $W<N>$, we can use our universal property intuition for construction:
+```rust
+struct Tensor<const M: usize, const N: usize>
+where
+    [(); M * N]:,
+{
+    bilinear_map: fn([f64; M * N], V<M>, W<N>) -> f64,
+}
+```
+Note that in the above, the first input into the `bilinear_map` is a vector of length $mn$ which is the collection of coefficients used for the mapping itself.
+Perhaps it seems a bit hacky to define things knowing that these are just arrays of floats, but this is a clean way to do it in Rust without checking that the `bilinear_map` field is actually bilinear. 
+It is not too difficult to prove by hand that the only way to get linearity is to just multiply components of constant arrays together and sum them up, so we can take this as a given.
+
+Just for instance, we can define the `bilinear_map` by:
+```rust
+fn bilinear_map(coefficients: [f64; M * N], v: V<M>, w: W<N>) -> f64 {
+    let mut sum = 0.0;
+    for i in 0..M {
+        for j in 0..N {
+            sum += coefficients[i * N + j] * v[i] * w[j];
+        }
+    }
+    sum
+}
+```
+What we have also given ourselves is flexibility via Rust's functional capabilities. For instance, by applying the mapping like so:
+```rust
+// specific choice of coefficients of tensor
+let coefficients = [1.0; M * N]; 
+let bilinear_map: Fn(V<M>, W<N>) -> f64 = |v,w| fn(coefficients, v, w);
+```
+and even further we could do the following:
+```rust
+// specific choice of coefficients of w
+let w = W([1.0; N]);
+let linear_functional_on_V = Fn(V<M>) -> f64 = |v| fn(coefficients, v, w);
+
+// specific choice of coefficients of v
+let v = V([1.0; M]);
+let linear_functional_on_W = Fn(W<N>) -> f64 = |w| fn(coefficients, v, w);
+```
+Notice that the tensor product is yielding quite a flexible powerhouse of mappings!
+
+Actually, out of this data structure, we can get even more. For instance, we can use this to define a mapping $V \to W$ by:
+```rust
+fn linear_map_from_V_to_W<const M: usize, const N: usize>(tensor: Tensor<M,N>, v: V<M>) -> W<N> {
+    let mut w = W([0.0; N]);
+    for i in 0..N {
+        let mut sum = 0.0;
+        for j in 0..M {
+            sum += tensor.bilinear_map[i * N + j] * v[j];
+        }
+        w[i] = sum;
+    }
+}
+```
