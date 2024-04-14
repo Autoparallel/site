@@ -357,33 +357,29 @@ Working with our $V<M>$ and $W<N>$, we can use our universal property intuition 
 struct Tensor<const M: usize, const N: usize>
 where
     [(); M * N]:,
-{
-    bilinear_map: fn([f64; M * N], V<M>, W<N>) -> f64,
+{   
+    coefficients: [f64; M * N],
 }
-```
-Note that in the above, the first input into the `bilinear_map` is a vector of length $mn$ which is the collection of coefficients used for the mapping itself.
-Perhaps it seems a bit hacky to define things knowing that these are just arrays of floats, but this is a clean way to do it in Rust without checking that the `bilinear_map` field is actually bilinear. 
-It is not too difficult to prove by hand that the only way to get linearity is to just multiply components of constant arrays together and sum them up, so we can take this as a given.
 
-Just for instance, we can define the `bilinear_map` by:
-```rust
-fn bilinear_map(coefficients: [f64; M * N], v: V<M>, w: W<N>) -> f64 {
-    let mut sum = 0.0;
-    for i in 0..M {
-        for j in 0..N {
-            sum += coefficients[i * N + j] * v[i] * w[j];
+impl<const M: usize, const N: usize> Tensor<M, N> {
+    fn bilinear_map(&self, v: V<M>, w: W<N>) -> f64 {
+        let mut sum = 0.0;
+        for i in 0..M {
+            for j in 0..N {
+                sum += self.coefficients[i * N + j] * v[i] * w[j];
+            }
         }
+        sum
     }
-    sum
 }
 ```
+where we have a collection of coefficients that we can use to define a bilinear map on the tensor product space.
+
+Note that in the above, the first input into the `bilinear_map` is the `Tensor<M, N>` itself (.e., a vector of length $mn$ which is the collection of coefficients used for the mapping).
+Perhaps it seems a bit hacky to define things knowing that these are just arrays of floats, but this is a clean way to do it in Rust without checking that the `bilinear_map` field is actually bilinear (in other langauges we could have the proof of bilinearity be in the type definition). 
+However, it is not too difficult to prove by hand that the only way to get linearity is to just multiply components of constant arrays together and sum them up, so we can take this as a given and so our `impl` block satisfies this "proof by hand".
+
 What we have also given ourselves is flexibility via Rust's functional capabilities. For instance, by applying the mapping like so:
-```rust
-// specific choice of coefficients of tensor
-let coefficients = [1.0; M * N]; 
-let bilinear_map: Fn(V<M>, W<N>) -> f64 = |v,w| fn(coefficients, v, w);
-```
-and even further we could do the following:
 ```rust
 // specific choice of coefficients of w
 let w = W([1.0; N]);
@@ -394,15 +390,16 @@ let v = V([1.0; M]);
 let linear_functional_on_W = Fn(W<N>) -> f64 = |w| bilinear_map(coefficients, v, w);
 ```
 Notice that the tensor product is yielding quite a flexible powerhouse of mappings!
+We could move these functions here defined as closures into the `impl` block for the `Tensor<M, N>` struct.
 
-Actually, out of this data structure, we can get even more. For instance, we can use this to define a mapping $V \to W$ by:
+Actually, out of this `Tensor<M, N>` data structure, we can get even more. For instance, we can use this to define a mapping $V \to W$ by adding this method to the `impl` block:
 ```rust
-fn linear_map_from_V_to_W<const M: usize, const N: usize>(tensor: Tensor<M,N>, v: V<M>) -> W<N> {
+fn linear_map_from_V_to_W<const M: usize, const N: usize>(self, v: V<M>) -> W<N> {
     let mut w = W([0.0; N]);
     for i in 0..N {
         let mut sum = 0.0;
         for j in 0..M {
-            sum += tensor.bilinear_map[i * N + j] * v[j];
+            sum += self.bilinear_map[i * N + j] * v[j];
         }
         w[i] = sum;
     }
@@ -413,3 +410,45 @@ Indeed, one may notice that we effectively used the definitions of the `linear_f
 
 What we should reflect on here momentarily is that we have actually just created a wrapper type with `Tensor<M, N>` and we could have (almost) just as well have worked directly with the `bilinear_map`.
 That is, except for the fact that we could not have defined all this functionality on the primitive function pointer type in Rust.
+
+Note that we do not have a constructor yet for `Tensor<M, N>`, but we showed an earlier example of one that follows from the universal property of the tensor product.
+That is, we have a mapping $\varphi \colon V \times W \to V\otimes W$ which yields our constructor in Rust by:
+```rust
+impl<const M: usize, const N: usize> Tensor<M, N> {
+    fn tensor_product(v: V<M>, w: W<N>) -> Self {
+        let mut coefficients = [0.0; M * N];
+        for i in 0..M {
+            for j in 0..N {
+                coefficients[i * N + j] = v[i] * w[j];
+            }
+        }
+        Tensor { coefficients }
+    }
+}
+```
+This above constructor (which we do not have to use, mind you!) is often called the *outer product*.
+Note that not every instance of a tensor product is an outer product, but every outer product is a tensor product (at most using `tensor_product` yields a rank-1 tensor).
+What is true, however, is that you can supply a collection of vectors and get a tensor product out can be any tensor you wish. 
+For instance:
+```rust
+impl<const M: usize, const N: usize, const P: usize> Tensor<M, N> {
+    fn tensor_product(v: [V<M>; P], w: [W<N>; P]) -> Self {
+        let mut coefficients = [0.0; M * N];
+        for p in 0..P {
+            for i in 0..M {
+                for j in 0..N {
+                    coefficients[i * N + j] += v[p][i] * w[p][j];
+                }
+            }
+        }
+        Tensor { coefficients }
+    }
+}
+```
+This also seems to hinge on the fact that we can add tensors together, which we can.
+
+
+TODO: Add the "outer product" constructor function for the tensor.
+TODO: Likewise talk about how we can define an add on `Tensor<M, N>` that is also type-safe. 
+TODO: Show all these different things are vector spaces and stuff.
+TODO: Organize
