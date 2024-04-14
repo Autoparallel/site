@@ -431,8 +431,8 @@ Note that not every instance of a tensor product is an outer product, but every 
 What is true, however, is that you can supply a collection of vectors and get a tensor product out can be any tensor you wish. 
 For instance:
 ```rust
-impl<const M: usize, const N: usize, const P: usize> Tensor<M, N> {
-    fn tensor_product(v: [V<M>; P], w: [W<N>; P]) -> Self {
+impl<const M: usize, const N: usize> Tensor<M, N> {
+    fn tensor_product<const P: usize>(v: [V<M>; P], w: [W<N>; P]) -> Self {
         let mut coefficients = [0.0; M * N];
         for p in 0..P {
             for i in 0..M {
@@ -446,9 +446,34 @@ impl<const M: usize, const N: usize, const P: usize> Tensor<M, N> {
 }
 ```
 This also seems to hinge on the fact that we can add tensors together, which we can.
+In general, tensors are themselves a vector space and we implement this by,
+```rust
+impl<const M: usize, const N: usize> Add for Tensor<M, N> {
+    type Output = Tensor<M, N>;
+    fn add(self, other: Tensor<M, N>) -> Tensor<M, N> {
+        let mut sum = Tensor { coefficients: [0.0; M * N] };
+        for i in 0..M * N {
+            sum.coefficients[i] = self.coefficients[i] + other.coefficients[i];
+        }
+        sum
+    }
+}
+
+impl<const M: usize, const N: usize> Mul<f64> for Tensor<M, N> {
+    type Output = Tensor<M, N>;
+    fn mul(self, scalar: f64) -> Tensor<M, N> {
+        let mut product = Tensor { coefficients: [0.0; M * N] };
+        for i in 0..M * N {
+            product.coefficients[i] = self.coefficients[i] * scalar;
+        }
+        product
+    }
+}
+```
 
 
 TODO: Add the "outer product" constructor function for the tensor.
 TODO: Likewise talk about how we can define an add on `Tensor<M, N>` that is also type-safe. 
 TODO: Show all these different things are vector spaces and stuff.
+TODO: Some of this could be expressed as traits instead (e.g., the tensor could be a trait with all the functionality described and maybe then you could have choices of bases and stuff)
 TODO: Organize
