@@ -110,3 +110,16 @@ img[src$=".svg"] {
 p {
   margin-bottom: 1em;
 }
+
+/* Math proof */
+.math-proof {
+  padding-left: 0.5em;
+  margin-bottom: 1em;
+  border-left: 3px solid var(--border);
+  overflow: auto;
+  /* This property will contain the floated elements inside the div */
+}
+
+.proof-end {
+  float: right;
+}

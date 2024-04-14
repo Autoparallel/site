@@ -2,16 +2,17 @@
 title = "algebra as computation"
 date = "2024-04-13"
 template = "blog.html"
-description = "Every journey begins with reflection. We'll speedrun the wonderful history of cryptography and then focus on the applications of cryptography in the modern world."
+description = "It's good to start with an example, and one I am quite fond of is the construction of Clifford algebras. These are miraculously ubiquitous objects whether you are in physics, computer science, or mathematics. They generalize  the complex numbers and quaternions, matrices and exterior algebras, lie algebras and spinors, and more. We get lovely geometry and a beautiful set of computationally efficient rules! Let's do this from a categorical perspective."
 [taxonomies]
 tags = ["math", "algebra", "category theory"]
 +++
 ---
 
-**Warning:** This blurb started out as a dive into Clifford algebras and I ended up nerd sniping myself into writing this from a far more categorical perspective -- hopefully it illuminates *why* we define structures in the way we do from a perspective of computation!
+**Warning:** This blog started as a blurb and I ended up nerd sniping myself into writing this from a far more categorical perspective -- hopefully it illuminates *why* we define structures in the way we do from a perspective of computation!
 
 ---
 
+## motivation for Clifford algebra
 Have you ever thought to yourself: "I wish I could multiply vectors together?"
 I can assure you that nearly every one of my students tried this in some way when they first learned about vectors.
 The ideas of dot products and cross products and how they differ in dimension 2 and 3 really seemed to confuse them.
@@ -25,14 +26,12 @@ The reason why isn't to be confusing or overly abstract, but to hopefully bridge
 From a philosphical perspective, I believe algebra is a means of constructing data structures and computational rules via their relationships to one another.
 We should take this approach and build up this technology in a rigorous way.
 
-**algebraic structure**
-
+## algebraic structure
 Take a finite dimensional vector space $V$ over a field $\mathbb{F}$.
 Let's review some operations we can do on vector spaces themselves so that we have our modular structures in place.
 Ultimately operations at the structural level descend to operations on the object level (e.g., on the vectors).
 
-**sums**
-
+### sum type
 First, take a collection of vector spaces $V_1, V_2, \dots$ then the *direct sum* $\oplus$ combines a pair of vector spaces into $V_i \oplus V_j$ which consists of all vectors $\boldsymbol{v_i} \oplus \boldsymbol{v_j}$ where $\boldsymbol{v_i} \in V_i$ and $\boldsymbol{v_j} \in V_j$.
 Typically, if it were that $\boldsymbol{v_j}=\boldsymbol{0}$, we have:
 $$
@@ -113,7 +112,7 @@ f(\boldsymbol{v} \oplus \boldsymbol{w}) = \boldsymbol{z_v} + \boldsymbol{z_w}
 $$
 which makes this diagram commute since, for example,
 $$
-f \circ \iota_W (w) = f(w) = z_w.
+f \circ \iota_W (\boldsymbol{w}) = f(\boldsymbol{w}) = \boldsymbol{z_w}.
 $$
 
 We should think about what the arrows of this diagram (called the *universal property* for the *coproduct*) tell us about how to compute with these objects.
@@ -173,7 +172,27 @@ and we panic only due to the `XOR` nature of Rust's enumeration.
 There's a relationship here between our coproduct definition and the product definition.
 Importantly, this coproduct type **does not** force a requirement that we must have one of each $V$ and $W$ to make up an element $V \oplus W$ and insteaad says "you can have one or the other or both."
 
+### product type
 If you do want the requirement that you must have one of each, then you are looking for a *product* type.
+To be clear, we don't actually need this to construct the Clifford algebra, but it is a useful structure to have and compare against.
+The diagram is the same as the coproduct, but with the arrows reversed.
+![product](/images/longform/holy_trinity/algebra_as_computation/product.svg)
+
+Let's spend a moment thinking about this diagram and using it to understand what we are guaranteed when working with the *direct product* of vector spaces $V \times W$.
+Note that in the direct product, we typically write vectors as pairs $(\boldsymbol{v},\boldsymbol{w})$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$.
+First, $Z$ is an arbitary vector space and $f_V$ and $f_W$ are linear maps from $Z$ into $V$ and $W$ respectively.
+The mappings $\pi_V$ and $\pi_W$ are the *projection* maps from $V \times W$ into $V$ and $W$ respectively which are defined as:
+$$
+\begin{align*}
+\pi_V(\boldsymbol{v},\boldsymbol{w}) &= \boldsymbol{v} \\\\
+\pi_W(\boldsymbol{v},\boldsymbol{w}) &= \boldsymbol{w}.
+\end{align*}
+$$
+The unique map $f$ is then defined as:
+$$
+f(\boldsymbol{v},\boldsymbol{w}) = (f_V(\boldsymbol{v}), f_W(\boldsymbol{w})).
+$$
+
 The coproduct and product types are the same for (finite sums or products) of vector spaces since I can assume $\boldsymbol{0}$ can take the place of a missing vector in the sum to create a product, or I can remove it in the case of a product to yield a sum (this was argued before).
 In Rust, the product type is the `struct` type:
 ```rust
@@ -196,9 +215,21 @@ impl Add for ProductVector<M, N> {
 }
 ```
 since Rust requires both `v` and `w` to be present in the `ProductVector` type.
-In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically..
+In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically.
 
+The maps $\pi_V$ and $\pi_W$ are also quite useful in Rust as they are the `field_access` of the structs for the `ProductVector` type:
+```rust
+fn pi_V(prod_vec: ProductVector<M, N>) -> V<M> {
+    prod_vec.v
+}
 
+fn pi_W(prod_vec: ProductVector<M, N>) -> W<N> {
+    prod_vec.w
+}
+
+```
+
+### comparison of sum and product types
 To see why we have (almost) equality between these specific coproduct and product types in Rust for this case, we can define:
 ```rust
 fn surjective(prod_vec: ProductVector<M, N>) -> SumVector<M, N> {
@@ -225,8 +256,7 @@ The issue here and why we require `assert!` is solely due to the fact that Rust 
 At any rate, this is the *sum* operation we will want on vector spaces that will give us a sum on vector-like objects in the long run!
 In the case we are using it on spaces, we should think of this computation as a *formation* (or *construction*) rule.
 
-**tensor products**
-
+### tensor product type
 Next, we want to define a multiplicative operation on vector spaces which will descend to a *multiplication* operation on the vector-like objects we are building.
 For us, this will be the *tensor* product of vector spaces. 
 
@@ -245,4 +275,58 @@ as we could with the direct sum, hence the term "product" being used in tensor p
 But how does this differ from the direct product then?
 For one, it will use the direct product as a building block, but prior to that we can see the differences.
 
+Take a look at the universal property below of the tensor product:
 ![tensor product](/images/longform/holy_trinity/algebra_as_computation/tensor_product.svg)
+In the diagram the spaces are, $V\times W$ is the direct product, $V \otimes W$ is the tensor product, and $Z$ is any arbitary vector space.
+As for the mappings we have  $\varphi$ is the application of the tensor product from a pair, i.e., $\varphi(\boldsymbol{v},\boldsymbol{w}) = \boldsymbol{v}\otimes \boldsymbol{w}$ into the tensor product space, $h$ is a *bilinear* map from $V\times W$ into $Z$, i.e., it is linear in both components, and finally this determines a unique linear map $\tilde{h}$ from the tensor product into some arbitrary $Z$.
+
+Given any $h$ then, it is our job to define $\tilde{h}$ which, if this is truly some universal construction, restrict the definition of the tensor product space $V\otimes W$ to be the only space that satisfies this property.
+At least, that is the idea and what we have seen with the other diagrams.
+
+For one, we let:
+$$
+h(\boldsymbol{v},\boldsymbol{w}) = \boldsymbol{z_{v,w}}
+$$
+then if we have $\boldsymbol{v} \otimes \boldsymbol{w}$ in the tensor product space, we can define:
+$$
+\tilde{h} (\boldsymbol{v} \otimes \boldsymbol{w}) = \boldsymbol{z_{v,w}}.
+$$
+This is our solution, and now we just have to see what this means for the structure of the tensor product space.
+
+At first this may seem almost trivial, but notice a difference here between the direct product and the tensor product, and it turns out the tensor product is, in general, a lot "freer" (or, perhaps, "wider").
+
+Note that in the direct product we had this uniquely defined mapping from the universal product:
+$$
+f(\boldsymbol{v},\boldsymbol{w}) = (f_V(\boldsymbol{v}), f_W(\boldsymbol{w}))
+$$
+so if we change $f_V$ alone, it will not change what $f$ does to the $\boldsymbol{w}$ part of pair as we still just use $f_W$.
+In this way, there is a "separation" of the two components of the pair in the direct product (and likewise for the direct sum as argued previously).
+
+This is not true for the tensor product.
+Note that if we change $h$ such that 
+$$
+h\'(\boldsymbol{v},\boldsymbol{w}) = \boldsymbol{z\'_{v,w}}
+$$ 
+then we must also change as such, and there is no clear way to separate the two components of the pair in the tensor product.
+This is because the tensor product is "freer" in that it does not have a restriction to act component-wise on the pair (i.e., dilineated to just the $V$ or $W$ components).
+
+I hate to do this, but we can do a counting exercise if we invoke a basis for $V$ and $W$ and it is quite instrumental to see how the tensor product differs from the direct product or direct sum. 
+To this end, let $\boldsymbol{v_1}, \boldsymbol{v_2}, \dots, \boldsymbol{v_m}$ be a basis for $V$ and $\boldsymbol{w_1}, \boldsymbol{w_2}, \dots, \boldsymbol{w_n}$ be a basis for $W$.
+
+{% proof(name="$V \otimes W$ is dimension $mn$") %}
+**Proof ($V \otimes W$ is dimension $mn$):** Take the basis we had above for both $V$ and $W$.
+Then we have $v_i \otimes w_j$ which consists of $mn$ elements. 
+On the basis, we can note:
+$$
+\tilde{h}(\boldsymbol{v_i} \otimes \boldsymbol{w_j}) = \boldsymbol{z_{i,j}}
+$$
+which, by choosing $Z$ to be at least $mn$ dimensional, we can pick an element $\boldsymbol{z_{i,j}} \in Z$ that is linearly independent from each other $\boldsymbol{z_{i\',j\'}}$.
+Illustratively, we let $\boldsymbol{z_{i,j}}$ be an $m\times n$ matrix where all entries are zero except for the $i,j$ entry which is one noting that the $m \times n $ matrices are themselves a vector space of dimension $mn$.
+{% end %}
+
+
+Comparing this to the case for the direct product, we had:
+$$
+f(\boldsymbol{v_i},\boldsymbol{w_j}) = (\boldsymbol{z_{i}},\boldsymbol{z_{j}})
+$$
+which yields up to $m+n$ linearly independent values (pick $Z$ to be a vector space with dimension $m+n$ or larger).

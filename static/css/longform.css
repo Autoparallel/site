@@ -18,6 +18,7 @@
     text-align: justify;
     text-justify: inter-word;
     hyphens: auto;
+    line-height: 1.25;
 }
 
 .post-cards-container {
@@ -90,6 +91,7 @@
     hyphens: auto;
     hyphens: auto;
     font-size: .9rem;
+    line-height: 1.25;
 }
 
 .post-date {
