@@ -1,7 +1,7 @@
 +++
 title = "categorical complexes"
 date = "2024-04-04"
-[extra]
+[taxonomies]
 tags = ["math", "category theory", "topology"]
 +++
 

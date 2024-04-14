@@ -1,7 +1,7 @@
 +++
 title = "deep isometry"
 date = "2024-04-09"
-[extra]
+[taxonomies]
 tags = ["math", "geometry", "topology", "algebra"]
 +++
 

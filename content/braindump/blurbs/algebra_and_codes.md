@@ -1,7 +1,7 @@
 +++
 title = "algebra and codes"
 date = "2024-04-08"
-[extra]
+[taxonomies]
 tags = ["math", "algebra", "codes"]
 +++
 

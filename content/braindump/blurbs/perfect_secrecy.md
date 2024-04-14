@@ -1,7 +1,7 @@
 +++
 title = "perfect secrecy"
 date = "2024-04-06"
-[extra]
+[taxonomies]
 tags = ["math", "cryptography"]
 +++
 

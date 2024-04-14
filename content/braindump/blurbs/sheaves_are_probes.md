@@ -1,7 +1,7 @@
 +++
 title = "sheaves are probes"
 date = "2024-04-07"
-[extra]
+[taxonomies]
 tags = ["math", "category theory", "topology"]
 +++
 

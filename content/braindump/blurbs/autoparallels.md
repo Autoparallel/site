@@ -1,7 +1,7 @@
 +++
 title = "autoparallels"
 date = "2024-04-05"
-[extra]
+[taxonomies]
 tags = ["math", "geometry", "physics"]
 +++
 

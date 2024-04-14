@@ -1,7 +1,7 @@
 +++
 title = "inductive Rust types"
 date = "2024-04-04"
-[extra]
+[taxonomies]
 tags = ["rust", "programming", "type theory"]
 +++
 

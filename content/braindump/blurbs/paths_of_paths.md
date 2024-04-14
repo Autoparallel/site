@@ -1,7 +1,7 @@
 +++
 title = "paths of paths"
 date = "2024-04-03"
-[extra]
+[taxonomies]
 tags = ["math", "topology"]
 +++
 

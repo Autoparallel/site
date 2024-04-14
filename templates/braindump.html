@@ -30,7 +30,8 @@
 <div id="blurb-list">
     {% for page in subsection.pages %}
     {% set slug = page.title | slugify %}
-    <div class="blurb" id="{{ slug }}" data-tags="{{ page.extra.tags | join(sep=',') }}" data-date="{{ page.date }}">
+    <div class="blurb" id="{{ slug }}" data-tags="{{ page.taxonomies.tags | join(sep=',') }}"
+        data-date="{{ page.date }}">
         <div class="blurb-header">
             <div class="blurb-title">
                 <a href="#{{ slug }}" class="blurb-link" onclick="copyLink(event, '#{{ slug }}')">#</a>
@@ -41,7 +42,7 @@
                 <div class="tags-container">
                     <div class="tags-button" onclick="toggleTagsList(this)">tags</div>
                     <div class="tags-list">
-                        {% for tag in page.extra.tags | sort %}
+                        {% for tag in page.taxonomies.tags | sort %}
                         <span class="tag">{{ tag }}</span>
                         {% endfor %}
                     </div>

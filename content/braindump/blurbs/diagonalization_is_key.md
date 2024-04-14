@@ -1,7 +1,7 @@
 +++
 title = "diagonalization is key"
 date = "2024-04-10"
-[extra]
+[taxonomies]
 tags = ["math", "algebra", "linear algebra"]
 +++
 
