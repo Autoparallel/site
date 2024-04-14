@@ -43,7 +43,7 @@
                     <div class="tags-button" onclick="toggleTagsList(this)">tags</div>
                     <div class="tags-list">
                         {% for tag in page.taxonomies.tags | sort %}
-                        <span class="tag">{{ tag }}</span>
+                        <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag">{{ tag }}</a>
                         {% endfor %}
                     </div>
                 </div>

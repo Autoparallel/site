@@ -117,3 +117,80 @@ body {
 .blog-next:hover {
     color: var(--link);
 }
+
+.blog-header {
+    margin-bottom: 2rem;
+}
+
+.blog-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.blog-meta {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.blog-date {
+    color: var(--text-light);
+    margin-right: 1rem;
+}
+
+.tags-container {
+    position: relative;
+    display: inline-block;
+}
+
+.tags-button {
+    background-color: var(--bg-light);
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tags-button:hover {
+    background-color: var(--text);
+    color: var(--bg-light);
+}
+
+.tags-list {
+    display: none;
+    position: absolute;
+    background-color: var(--bg-light);
+    padding: 5px;
+    border-radius: 3px;
+    z-index: 1;
+    right: 0;
+    min-width: 100px;
+    border: 1px solid var(--border);
+}
+
+.tags-container:hover .tags-list,
+.tags-list.active {
+    display: block;
+}
+
+.tag {
+    display: block;
+    background-color: var(--bg-light);
+    color: var(--accent);
+    padding: 3px 8px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.tag:hover {
+    background-color: var(--accent);
+    color: var(--bg-light);
+}
+
+.blog-description {
+    color: var(--accent);
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
