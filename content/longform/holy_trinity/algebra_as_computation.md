@@ -2,7 +2,8 @@
 title = "algebra as computation"
 date = "2024-04-13"
 template = "blog.html"
-description = "It's good to start with an example, and one I am quite fond of is the construction of Clifford algebras. These are miraculously ubiquitous objects whether you are in physics, computer science, or mathematics. They generalize  the complex numbers and quaternions, matrices and exterior algebras, lie algebras and spinors, and more. We get lovely geometry and a beautiful set of computationally efficient rules! Let's do this from a categorical perspective."
+description = "It's good to start with an example, and one I am quite fond of is the construction with vector spaces by creating sum types, product types, and the tensor type. These are all miraculously ubiquitous objects whether you are in physics, computer science, or mathematics. We will see how one can go from the algebraic perspective straight into implementation and how we can extract additional features of these objects naturally."
+# They generalize  the complex numbers and quaternions, matrices and exterior algebras, lie algebras and spinors, and more. We get lovely geometry and a beautiful set of computationally efficient rules! Let's do this from a categorical perspective.
 [taxonomies]
 tags = ["math", "algebra", "category theory"]
 +++
