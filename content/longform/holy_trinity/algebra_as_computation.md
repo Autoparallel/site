@@ -13,7 +13,7 @@ tags = ["math", "algebra", "category theory"]
 
 ---
 
-## motivation for Clifford algebra
+# motivation for Clifford algebra
 Have you ever thought to yourself: "I wish I could multiply vectors together?"
 I can assure you that nearly every one of my students tried this in some way when they first learned about vectors.
 The ideas of dot products and cross products and how they differ in dimension 2 and 3 really seemed to confuse them.
@@ -27,12 +27,12 @@ The reason why isn't to be confusing or overly abstract, but to hopefully bridge
 From a philosphical perspective, I believe algebra is a means of constructing data structures and computational rules via their relationships to one another.
 We should take this approach and build up this technology in a rigorous way.
 
-## algebraic structure
+# algebraic structure
 Take a finite dimensional vector space $V$ over a field $\mathbb{F}$.
 Let's review some operations we can do on vector spaces themselves so that we have our modular structures in place.
 Ultimately operations at the structural level descend to operations on the object level (e.g., on the vectors).
 
-### sum type
+## sum type
 First, take a collection of vector spaces $V_1, V_2, \dots$ then the *direct sum* $\oplus$ combines a pair of vector spaces into $V_i \oplus V_j$ which consists of all vectors $\boldsymbol{v_i} \oplus \boldsymbol{v_j}$ where $\boldsymbol{v_i} \in V_i$ and $\boldsymbol{v_j} \in V_j$.
 Typically, if it were that $\boldsymbol{v_j}=\boldsymbol{0}$, we have:
 $$
@@ -173,7 +173,7 @@ and we panic only due to the `XOR` nature of Rust's enumeration.
 There's a relationship here between our coproduct definition and the product definition.
 Importantly, this coproduct type **does not** force a requirement that we must have one of each $V$ and $W$ to make up an element $V \oplus W$ and insteaad says "you can have one or the other or both."
 
-### product type
+## product type
 If you do want the requirement that you must have one of each, then you are looking for a *product* type.
 To be clear, we don't actually need this to construct the Clifford algebra, but it is a useful structure to have and compare against.
 The diagram is the same as the coproduct, but with the arrows reversed.
@@ -230,7 +230,7 @@ fn pi_W(prod_vec: ProductVector<M, N>) -> W<N> {
 
 ```
 
-### comparison of sum and product types
+## comparison of sum and product types
 To see why we have (almost) equality between these specific coproduct and product types in Rust for this case, we can define:
 ```rust
 fn surjective(prod_vec: ProductVector<M, N>) -> SumVector<M, N> {
@@ -257,7 +257,7 @@ The issue here and why we require `assert!` is solely due to the fact that Rust 
 At any rate, this is the *sum* operation we will want on vector spaces that will give us a sum on vector-like objects in the long run!
 In the case we are using it on spaces, we should think of this computation as a *formation* (or *construction*) rule.
 
-### tensor product type
+## tensor product type
 Next, we want to define a multiplicative operation on vector spaces which will descend to a *multiplication* operation on the vector-like objects we are building.
 For us, this will be the *tensor* product of vector spaces. 
 
@@ -473,6 +473,7 @@ impl<const M: usize, const N: usize> Mul<f64> for Tensor<M, N> {
 ```
 
 
+### Testing the lower type
 TODO: Add the "outer product" constructor function for the tensor.
 TODO: Likewise talk about how we can define an add on `Tensor<M, N>` that is also type-safe. 
 TODO: Show all these different things are vector spaces and stuff.
