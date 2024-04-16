@@ -51,9 +51,6 @@ Replace vector spaces with [modules](https://en.wikipedia.org/wiki/Module_(mathe
 
 
 ### operations and diagrams
-
-TODO: NEED TO SHOW THE NEW IMPL HERE WITH THE DEFAULT
-
 Let's review some operations we can do on vector spaces themselves so that we have our modular structures in place.
 Ultimately operations at the structural level descend to operations on the object level (e.g., on the vectors).
 
@@ -73,31 +70,43 @@ How can we code something like this up?
 First, we need some sort of structure to work with and for a vector space we can just take these to be an array of numbers.
 We will define this vector space type in Rust to wrap this array and provide functionality like so:
 ```rust
-struct V<const M: usize, F>([F; M]);
+#[derive(Copy, Clone)]
+pub struct V<const M: usize, F>([F; M]);
+
+impl<const M: usize, F> Default for V<M, F>
+where
+    F: Default + Copy,
+{
+    fn default() -> Self {
+        V([F::default(); M])
+    }
+}
 
 impl<const M: usize, F: Add<Output = F> + Default + Copy> Add for V<M, F> {
     type Output = Self;
     fn add(self, other: V<M, F>) -> Self::Output {
-        let mut sum = [F::default(); M];
+        let mut sum = V::default();
         for i in 0..M {
-            sum[i] = self.0[i] + other.0[i];
+            sum.0[i] = self.0[i] + other.0[i];
         }
-        V(sum)
+        sum
     }
 }
 
 impl<const M: usize, F: Mul<Output = F> + Default + Copy> Mul<F> for V<M, F> {
     type Output = Self;
     fn mul(self, scalar: F) -> Self::Output {
-        let mut product = [F::default(); M];
+        let mut scalar_multiple = V::default();
         for i in 0..M {
-            product[i] = scalar * self.0[i];
+            scalar_multiple.0[i] = scalar * self.0[i];
         }
-        V(product)
+        scalar_multiple
     }
 }
 ```
 In the above, think of `F` as the field we are choosing to work over, $M$ as the number of components of the vectors we are working with (also equivalent to the [dimension](https://en.wikipedia.org/wiki/Dimension_(vector_space))), and the implementations of the `Add` and `Mul<F>` traits are what we defined in the diagrams for the vector addition $V \times V \to V$ and the scalar multiplication $\mathbb{F} \times V \to V$ respectively.
+One should also think of the `Default` implementation as the zero vector in the vector space as it should also be used to select the 0 from the field type `F` (though you do have to be careful here and perhaps you should use an external crate just for num types.).
+The derived traits like `Clone` and `Copy` do not have to inherently be there for the type we are defining, but they are handy with Rust's memory model.
 
 Diagrams like this yield basic rules, and in a language like Rust, it is nice to be able to define these rules in a way that is both clear and concise.
 One thing we do lack in Rust, however, is that it is **not** clear that the properties we require of these operations are satisfied.
@@ -182,7 +191,10 @@ where
 ```
 Our unique $f$ from the diagram *should* have a blanket implementation for any type that implements the `ProductType` trait, but without having some inherent structure to map into, this isn't really possible.
 Hence, this is why we have an additional `construct` function in the trait as this just tells us how the product type is built from the two components.
+The `construct` is just the programmatic equivalent of us choosing to represent objects as $(\boldsymbol{v},\boldsymbol{w}) \in V \times W$.
 Given we do know how to construct the type, we can then define the `f` function in terms of the `construct` function.
+
+**Pause and ask yourself:** Could you have defined a blanket definition `f` in the trait using only the other trait methods in any other way?
 
 It is worth noting that in Rust, the product type is already captured for us by the `struct` or `tuple` types.
 If we look at what we defined above, we essentially just created a wrapper around Rust's internal `struct` type, and within the `ProductType` trait.
@@ -219,7 +231,7 @@ impl<const M: usize, const N: usize, F> ProductType for DirectProduct<M, N, F> {
 and we see that the `f` function is already implemented!
 Remind yourself, this `f`, or $f$ we had in the diagramm, "exists and is unique".
 
-Now, we carry on and can note that in this case, you can actually define the `Add` and `Mul` traits for the `ProductVector` type in Rust without any issues:
+Now, we carry on and can note that in this case, you can actually define the `Add` and trait for the `ProductVector` type in Rust without any issues:
 ```rust
 where
     F: Add<Output = F> + Default + Copy,
@@ -229,7 +241,23 @@ where
         DirectProduct::construct(self.pi_X() + other.pi_X(), self.pi_Y() + other.pi_Y())
     }
 }
+```
+Again, all of this is just wrapping the inherent Rust methods on the `struct` type and the methods we built on `V<M, F>` (and `V<N, F>`).
+We could have, for example, defined `Add` using our the `DirectProduct` struct as the diagram $V \times V \to V$ suggests:
+```rust
+impl<const M: usize, F> Add<()> for DirectProduct<M, M, F>
 
+{
+    type Output = V<M, F>;
+    fn add(self, _other: ()) -> Self::Output {
+        self.pi_X() + self.pi_Y()
+    }
+}
+```
+To make this latter implementation useful, you just have to take two `V<M, F>` types, construct a `DirectProduct<M, M, F>` and then call `add` on it.
+
+As for the scalar multiplication $\mathbb{F} \times V \to V$, we can define this as well:
+```rust
 impl<const M: usize, const N: usize, F> Mul<F> for DirectProduct<M, N, F>
 where
     F: Mul<Output = F> + Default + Copy,
@@ -240,54 +268,52 @@ where
     }
 }
 ```
-Again, all of this is just wrapping the inherent Rust methods on the `struct` type and the methods we built on `V<M, F>` (and `W<N, F>`).
+No funny business here. 
+Everything simply being built up from our methods on the `F`, then `V<M, F>`, and now the `DirectProduct<M, N, F>` types.
 
-
-TODO: LEft off here need to talk about mul
-
-
+### summary
 In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically.
+The product type is a way to combine two objects into a single object and work with them as a single object so that each factor is treated independently.
+There is not much of a point to working with the `ProductType` I defined here in Rust and the reason why is that Rust's `struct` types already capture this completely.
+However, one should note that we can start to see a bit of the lack of expressiveness in Rust's type system when we start to think about the universal property of the product type.
+Without access to Rust's `struct`, could you have defined a `ProductType` that allowed for an arbitary number of types to be combined into a single object?
+Can you parameterize the associated types like `type X` and `type Y` in the `ProductType` trait with some other arbitrary trait?
 
+TODO: Talk about the product as gluing together of arrays?
 
 ## sum type
-First, take a collection of vector spaces $V_1, V_2, \dots$ then the *direct sum* $\oplus$ combines a pair of vector spaces into $V_i \oplus V_j$ which consists of all vectors $\boldsymbol{v_i} \oplus \boldsymbol{v_j}$ where $\boldsymbol{v_i} \in V_i$ and $\boldsymbol{v_j} \in V_j$.
-Typically, if it were that $\boldsymbol{v_j}=\boldsymbol{0}$, we have:
-$$
-\boldsymbol{v_i} \oplus \boldsymbol{v_j} = \boldsymbol{v_i} \oplus \boldsymbol{0} = \boldsymbol{v_i}.
-$$
-This is an important note -- we can always add the zero vector to any vector and it doesn't change the vector.
+One thing we can always do with diagrams is flip them around to create the *dual* of the original diagram.
+We may wonder why the hell we would do this, but it turns out that the dual of a diagram can often serve a great utility like the original diagram, and they are in a sense "independent and opposite" types from one another.
+When we do this diagram reversal, we add the prefix *co* before the name of the other diagram.
+For now, let's take a look then at the *coproduct* (or *sum*) for vector spaces $V$ and $W$ which is often called the *direct sum* and written as $V\oplus W$.
 
-Categorically, the direct sum is the *coproduct* which, intuitively, means we are free to pick a (finite) combination of elements from each of the $V_i$ we have in the product. 
-For instance, we can take:
+Let's start with the diagramatic/algebraic law $V\oplus W$ must follow.
+![coproduct](/images/longform/holy_trinity/algebra_as_computation/coproduct.svg)
+We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfies the following universal property of this diagram in that we must have a unique map $f$ that makes the diagram commute.
+Specifically, there is only one $f$ where $f_V = f \circ \iota_V$ and $f_W = f \circ \iota_W$.
+We will write elements of $V \oplus W$ as $\boldsymbol{v} \oplus \boldsymbol{w}$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$ which gives us a construction to work with.
+In this case, we have two maps $\iota_V$ and $\iota_W$ that are often called [*inclusions*](https://en.wikipedia.org/wiki/Inclusion_map) and they are defined as:
 $$
-\begin{equation}
-\bigoplus_{i=1}^n V_i = V_1 \oplus V_2 \oplus \cdots \oplus V_n.
-\end{equation}
+\begin{align*}
+\iota_V \colon V &\to V \oplus W \\\\
+\boldsymbol{v} &\mapsto \boldsymbol{v}  \\\\
+\end{align*}
 $$
-and an element of this space is a summation 
+and
 $$
-\boldsymbol{v_1} \oplus \boldsymbol{v_2} \oplus \dots \oplus \boldsymbol{v_n}
+\begin{align*}
+\iota_W \colon W &\to V \oplus W \\\\
+\boldsymbol{w} &\mapsto  \boldsymbol{w} \\\\
+\end{align*}
 $$
-where $\boldsymbol{v_i} \in V_i$.
-I refer to this subscripting here as *tagging* as it marks which vector space each element comes from.
-One may also argue that this is quite similar to an `OR` operation where we are allowing ourselves to pick from any of the $V_i$ and combine them into a single "statement" (and that's because `OR` is also a coproduct).
-
-All of the above is actually equivalent to the *direct product* which I'll write as $\times$.
-Specifically, that's true so long as the summation above is finite as in Eq. (1) because the category of vector spaces is *additive*.
-In the infinite case,
+where $\boldsymbol{0}$ is the zero vector in the respective vector space.
+Note that like the product, these maps $\iota$ come as part of the data of the direct sum.
+One may see this as a bit odd as these $\iota$ maps look like they don't do anything, however, they do move that vector into a new space and, if you'd like, you can think of them as a way to tag the vector with the space it comes from and instead put, for example:
 $$
-\bigoplus_{i=1}^\infty V_i
+\iota_V(v) = \boldsymbol{v} \oplus \boldsymbol{0}
 $$
-we require that all but finitely many of the $\boldsymbol{v_i}$ are zero, and this is where the direct sum and direct product differ.
-
-Let's just take a pair of spaces $V$ and $W$ for a bit.
-To think of these objects, we can think of them as a pair of arrays of real numbers.
-(**Warning:** please ignore the re-use of notation, but I was previously using boldface to denote vectors, now I will use the same characters without boldface to denote components of vectors.)
-For instance, if we have $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$, then:
-$$
-\begin{bmatrix} v_1 \\\\ v_2 \\\\ \vdots \\\\ v_m \end{bmatrix} \oplus \begin{bmatrix} w_1 \\\\ w_2 \\\\ \vdots \\\\ w_n \end{bmatrix} = \begin{bmatrix} v_1 \\\\ v_2 \\\\ \vdots \\\\ v_m \\\\ w_1 \\\\ w_2 \\\\ \vdots \\\\ w_n \end{bmatrix}.
-$$
-The caveat here is that with the direct sum, if, for instance $\boldsymbol{w}\in W = \boldsymbol{0}$, then we can collapse the array to just that of $\boldsymbol{v}$.
+The fact that these maps do indeed move the vector to a new space will be even more clear when we do the implementation in Rust.
+Further, we will see this ability to go between $\boldsymbol{v}$ and $\boldsymbol{v} \oplus \boldsymbol{0}$ is special for vector spaces and will correspond to a sneakily implemented trait we have on our vector type in Rust.
 
 With this construction we can still add and scalar multiply vectors in the direct sum in the usual way.
 Just for show:
@@ -296,7 +322,137 @@ $$
 \alpha (\boldsymbol{v} \oplus \boldsymbol{w}) = (\alpha \boldsymbol{v}) \oplus (\alpha \boldsymbol{w}).
 $$
 
-This coproduct construction is often called in computer science a *tagged union* type.
+How can this map be defined?
+Well, if we have $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$, then if we have $f_V(\boldsymbol{v}) = \boldsymbol{z_v}$:
+$$
+f(\boldsymbol{v} \oplus \boldsymbol{w}) = \boldsymbol{z_v} + \boldsymbol{z_w} = f_V(\boldsymbol{v}) + f_W(\boldsymbol{w})
+$$
+
+Let's go ahead and try to implement this in Rust, but as a forewarning, we should note that this implementation a bit more convoluted than the product type and we will form something a bit more usable after.
+```rust
+pub trait Coproduct
+where
+    Self: Sized,
+{
+    type X;
+    type Y;
+
+    fn construct(x: Option<Self::X>, y: Option<Self::Y>) -> Self;
+
+    fn iota_X(x: Option<Self::X>) -> Self {
+        Self::construct(x, None)
+    }
+
+    fn iota_Y(y: Option<Self::Y>) -> Self {
+        Self::construct(None, y)
+    }
+
+    fn f<Z: Add<Output = Z>>(
+        x: Self::X,
+        y: Self::Y,
+        f_X: impl Fn(Self::X) -> Z,
+        f_Y: impl Fn(Self::Y) -> Z,
+    ) -> Z {
+        f_X(x) + f_Y(y)
+    }
+}
+```
+
+
+Now, doing this in Rust requires us to utilize these underlying `Option` types to allow for the possibility of having only one of the two vectors in the sum.
+```rust
+pub struct DirectSum<const M: usize, const N: usize, F> {
+    v: Option<V<M, F>>,
+    w: Option<V<N, F>>,
+}
+```
+The inclusion of the `Options` in the trait definition as well as our struct mean that getting the implementation of the `Coproduct` trait for our `DirectSum` type is extremely straightforward:
+```rust
+impl<const M: usize, const N: usize, F> Coproduct for DirectSum<M, N, F>
+where
+    F: Copy,
+{
+    type X = V<M, F>;
+    type Y = V<N, F>;
+
+    fn construct(v: Option<Self::X>, w: Option<Self::Y>) -> Self {
+        DirectSum { v, w }
+    }
+}
+```
+
+From here, we begin to see more of the weirdness in trying to make a clean implementation of this type in Rust.
+It isn't that the `Add` and `Mul` traits we now need are difficult to implement, but they do rely heavily on the `Option`'s built in functionality.
+In fact, we very nicely see the `Option::or` method coming out which points to the `Coproduct` as being some kind of categorical `OR` operation.
+Nevertheless, here are both the implementations:
+```rust
+impl<const M: usize, const N: usize, F> Add for DirectSum<M, N, F>
+where
+    F: Add<Output = F> + Default + Copy,
+{
+    type Output = Self;
+    fn add(self, other: DirectSum<M, N, F>) -> Self::Output {
+        DirectSum::construct(
+            self.v
+                .zip(other.v)
+                .map(|(v, other_v)| v + other_v)
+                .or(self.v)
+                .or(other.v),
+            self.w
+                .zip(other.w)
+                .map(|(w, other_w)| w + other_w)
+                .or(self.w)
+                .or(other.w),
+        )
+    }
+}
+
+impl<const M: usize, const N: usize, F> Mul<F> for DirectSum<M, N, F>
+where
+    F: Mul<Output = F> + Default + Copy,
+{
+    type Output = Self;
+    fn mul(self, scalar: F) -> Self::Output {
+        DirectSum::construct(self.v.map(|v| v * scalar), self.w.map(|w| w * scalar))
+    }
+}
+```
+In a brief review here, it seems that the ability to toggle between `Some(T)` and `None` in the `Option` enumeration make possible the ability to have a meaningful `Coproduct` type in Rust.
+
+### equivalence of direct sum and direct product
+Right now we have defined two distinct types in Rust that are actually equivalent.
+The reason for this being that the category of vector spaces is [*preadditive*](https://en.wikipedia.org/wiki/Preadditive_category) and the product and coproduct are really a [*biproduct*](https://en.wikipedia.org/wiki/Biproduct) in this category.
+Jargon aside, we can see why this is true both mathematically and programmatically.
+From this, we will discover the nice property of the `Option::unwrap_or_default` as a means of making the `Product` and `Coproduct` types (essentially) equivalent so long as the underlying types are restricted to implementing `Default`.
+
+First, mathematically, we show that $V \times W$ and $V \oplus W$ are isomorphic by creating an invertible linear map between them. 
+Note that we were able to identify $\boldsymbol{v} \oplus \boldsymbol{0} = \boldsymbol{v}$ and $\boldsymbol{w} = \boldsymbol{0} \oplus \boldsymbol{w}$ and so we can define a map:
+$$
+\begin{align*}
+\varphi \colon V\times W &\to V \oplus W \\\\
+(\boldsymbol{v}, \boldsymbol{w}) &\mapsto \boldsymbol{v} \oplus \boldsymbol{w} \\\\
+\end{align*}
+$$
+and as for the inverse:
+$$
+\begin{align*}
+\varphi^{-1} \colon V \oplus W &\to V \times W \\\\
+\boldsymbol{v} \oplus \boldsymbol{w} &\mapsto (\boldsymbol{v}, \boldsymbol{w}) \\\\
+\boldsymbol{v} &\mapsto (\boldsymbol{v}, \boldsymbol{0}) \\\\
+\boldsymbol{w} &\mapsto (\boldsymbol{0}, \boldsymbol{w}) \\\\
+\end{align*}
+$$
+I won't show the details here, but this is a quick exercise in linear algebra to show that these maps are linear and inverses of one another.
+
+The above gives us a way to go between the two types programmatically too.
+To show these types are equivalent when working with vector spaces (i.e., the underlying type `V<M, F>`), we want to show that a construction of one type yields a construction of the other and this is our programmatic proof.
+Let's see how we do this.
+```rust
+
+
+
+## enumeration type
+
 For instance, in Rust, you maybe have something like:
 ```rust
 // We choose the same "field" (`f64`) for both `V` and `W`
@@ -311,17 +467,8 @@ enum SumVector<const M: usize, const N: usize> {
 ```
 where you can select either a array of "real numbers" (actually floats) of length (dimension) $M$ or a array of length $N$ using this enumeration.
 An important distinction here is you could not create an instance of `SumVector` that chooses both `V` and `W` at the same time in Rust!
-Comparing this to the notion of the `OR` operation I brought up before, Rust takes their enumerations as more of an `XOR` operation.
 
-Let's think about this diagramatically.
-We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfies the following universal property:
-- Let $\iota_V$ and $\iota_W$ be the inclusion maps from $V$ and $W$ into $V \oplus W$ respectively, defined like:
-$$
-(\boldsymbol{v},\boldsymbol{w}) \mapsto \boldsymbol{v} \oplus \boldsymbol{w}.
-$$
-- For any other vector space $Z$ and linear maps $f_V: V \to Z$ and $f_W: W \to Z$, there exists a unique linear map $f: V \oplus W \to Z$ such that the following diagram "commutes" (that is, "makes sense"):
 
-![coproduct](/images/longform/holy_trinity/algebra_as_computation/coproduct.svg)
 
 Okay, but how do you define such an $f$ given the above?
 Well, if we have $f_V(\boldsymbol{v}) = \boldsymbol{z_v}$ and $f_W(\boldsymbol{w})=\boldsymbol{z_w}$ then:
@@ -390,7 +537,12 @@ and we panic only due to the `XOR` nature of Rust's enumeration.
 There's a relationship here between our coproduct definition and the product definition.
 Importantly, this coproduct type **does not** force a requirement that we must have one of each $V$ and $W$ to make up an element $V \oplus W$ and insteaad says "you can have one or the other or both."
 
+### summary
+One may also argue that this is quite similar to an `OR` operation where we are allowing ourselves to pick from any of the $V_i$ and combine them into a single "statement" (and that's because `OR` is also a coproduct).
 
+This unique coproduct construction is often called in computer science a *tagged union* type.
+
+Comparing this to the notion of the `OR` operation I brought up before, Rust takes their enumerations as more of an `XOR` operation.
 
 ## comparison of sum and product types
 To see why we have (almost) equality between these specific coproduct and product types in Rust for this case, we can define:
