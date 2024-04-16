@@ -120,7 +120,7 @@ Likewise, though we didn't define the bounds ourself, the `Add` and `Mul` traits
 Moreover, I have done us dirty. 
 I invoked the *direct product* $V \times V$ in our logic here without defining what this means!
 
-## product type
+## product
 The conceptual idea of a *product type*, in general, is to just pair together objects and work with both simultaneously as a single object.
 Given this, we will define the *direct product* of two different vector spaces $V$ and $W$ as $V \times W$.
 This direct product should also be a vector space and, if constructed properly, the computations you do with it should be inherited from $V$ and $W$ *naturally*.
@@ -281,12 +281,14 @@ Can you parameterize the associated types like `type X` and `type Y` in the `Pro
 
 TODO: Talk about the product as gluing together of arrays?
 
-## sum type
+## coproduct
 One thing we can always do with diagrams is flip them around to create the *dual* of the original diagram.
 We may wonder why the hell we would do this, but it turns out that the dual of a diagram can often serve a great utility like the original diagram, and they are in a sense "independent and opposite" types from one another.
 When we do this diagram reversal, we add the prefix *co* before the name of the other diagram.
 For now, let's take a look then at the *coproduct* (or *sum*) for vector spaces $V$ and $W$ which is often called the *direct sum* and written as $V\oplus W$.
 
+
+### diagram
 Let's start with the diagramatic/algebraic law $V\oplus W$ must follow.
 ![coproduct](/images/longform/holy_trinity/algebra_as_computation/coproduct.svg)
 We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfies the following universal property of this diagram in that we must have a unique map $f$ that makes the diagram commute.
@@ -328,6 +330,8 @@ $$
 f(\boldsymbol{v} \oplus \boldsymbol{w}) = \boldsymbol{z_v} + \boldsymbol{z_w} = f_V(\boldsymbol{v}) + f_W(\boldsymbol{w})
 $$
 
+
+### implementation
 Let's go ahead and try to implement this in Rust, but as a forewarning, we should note that this implementation a bit more convoluted than the product type and we will form something a bit more usable after.
 ```rust
 pub trait Coproduct
@@ -347,17 +351,25 @@ where
         Self::construct(None, y)
     }
 
+    fn get_X_via_tag(&self) -> Option<Self::X>;
+
+    fn get_Y_via_tag(&self) -> Option<Self::Y>;
+
     fn f<Z: Add<Output = Z>>(
-        x: Self::X,
-        y: Self::Y,
-        f_X: impl Fn(Self::X) -> Z,
-        f_Y: impl Fn(Self::Y) -> Z,
+        &self,
+        f_X: impl Fn(Option<Self::X>) -> Z,
+        f_Y: impl Fn(Option<Self::Y>) -> Z,
     ) -> Z {
-        f_X(x) + f_Y(y)
+        f_X(self.get_X_via_tag()) + f_Y(self.get_Y_via_tag())
     }
 }
 ```
-
+Note above these extra methods of `get_X_via_tag` and `get_Y_via_tag` are helpful and they come with the definition of the coproduct definition.
+When we wrote out something like $\boldsymbol{v} \oplus \boldsymbol{w}$, we are implicitly tagging which space each came from in this direct sum.
+That is why when we just say $\boldsymbol{v} \in V \oplus W$, we know that $\boldsymbol{v}$ is tagged as coming from $V$.
+Secretly, we have just abused the notation and dropped the tags which come from $\iota_V$ and $\iota_W$.
+That is, we should really write $\iota_V(\boldsymbol{v}) \oplus \iota_W(\boldsymbol{w})$.
+Again, this construction and difference and types will become clear in the [enumeration type](#enumerations-tagged-unions) section
 
 Now, doing this in Rust requires us to utilize these underlying `Option` types to allow for the possibility of having only one of the two vectors in the sum.
 ```rust
@@ -446,355 +458,157 @@ I won't show the details here, but this is a quick exercise in linear algebra to
 
 The above gives us a way to go between the two types programmatically too.
 To show these types are equivalent when working with vector spaces (i.e., the underlying type `V<M, F>`), we want to show that a construction of one type yields a construction of the other and this is our programmatic proof.
+One way to do this in Rust is with the `Into<_>` (or `From<_>`) traits.
 Let's see how we do this.
 ```rust
-
-
-
-## enumeration type
-
-For instance, in Rust, you maybe have something like:
-```rust
-// We choose the same "field" (`f64`) for both `V` and `W`
-struct V<const M: usize>([f64; M]);
-struct W<const N: usize>([f64; N]);
-
-#[derive(Add)]
-enum SumVector<const M: usize, const N: usize> {
-    V(V<M>),
-    W(W<N>),
-}
-```
-where you can select either a array of "real numbers" (actually floats) of length (dimension) $M$ or a array of length $N$ using this enumeration.
-An important distinction here is you could not create an instance of `SumVector` that chooses both `V` and `W` at the same time in Rust!
-
-
-
-Okay, but how do you define such an $f$ given the above?
-Well, if we have $f_V(\boldsymbol{v}) = \boldsymbol{z_v}$ and $f_W(\boldsymbol{w})=\boldsymbol{z_w}$ then:
-$$
-f(\boldsymbol{v} \oplus \boldsymbol{w}) = \boldsymbol{z_v} + \boldsymbol{z_w}
-$$
-which makes this diagram commute since, for example,
-$$
-f \circ \iota_W (\boldsymbol{w}) = f(\boldsymbol{w}) = \boldsymbol{z_w}.
-$$
-
-We should think about what the arrows of this diagram (called the *universal property* for the *coproduct*) tell us about how to compute with these objects.
-The above shows us that we have natural means to include elements from both $V$ and $W$ into the sum $V \oplus W$. 
-
-Back to our Rust example, remember that we can only have one or the other in the tagged union type which is merely a restriction on behalf of Rust.
-However, we can see that the computational rule here imposed by the diagram is given by the syntax of `match`. 
-For instance, take the following:
-```rust
-fn f_V(v: V<M>) -> T {
-    // some computation
-}
-
-fn f_W(w: W<N>) -> T {
-    // some computation
-}
-
-fn f(v: SumVector<M, N>) -> T {
-    match v {
-        Vector::V(v) => f_V(v),
-        Vector::W(w) => f_W(w),
-    }
-}
-```
-where we can see that the `match` statement is the unique map $f$ in the diagram above.
-In fact, we needed this same technology to define the `Add` trait for the `SumVector` type in Rust.
-See by:
-```rust
-impl Add for V<M> {
-    type Output = V<M>;
-    fn add(self, other: V<M>) -> V<M> {
-        let mut sum = self;
-        for i in 0..M {
-            sum[i] += other[i];
-        }
-        sum
+impl<const M: usize, const N: usize, F> Into<DirectSum<M, N, F>> for DirectProduct<M, N, F>
+where
+    F: Add<Output = F> + Default + Copy,
+{
+    fn into(self) -> DirectSum<M, N, F> {
+        DirectSum::iota_X(Some(self.pi_X())) + DirectSum::iota_Y(Some(self.pi_Y()))
     }
 }
 
-impl Add for W<N> {
-    // same as above but for `W`
-}
-
-impl Add for SumVector<M, N> {
-    type Output = SumVector<M, N>;
-    fn add(self, other: SumVector<M, N>) -> SumVector<M, N> {
-        match (self, other) {
-            (V(v), V(v_other)) => SumVector::V(v + v_other),
-            (W(w), W(w_other)) => SumVector::W(w + w_other),
-            _ => panic!("This is not possible in Rust!"),
-        }
+impl<const M: usize, const N: usize, F> Into<DirectProduct<M, N, F>> for DirectSum<M, N, F>
+where
+    F: Add<Output = F> + Default + Copy,
+{
+    fn into(self) -> DirectProduct<M, N, F> {
+        DirectProduct::construct(
+            self.get_X_via_tag().unwrap_or_default(),
+            self.get_Y_via_tag().unwrap_or_default(),
+        )
     }
 }
 ```
-and we panic only due to the `XOR` nature of Rust's enumeration.
+This is quite interesting, actually.
+We have shown that the `DirectProduct` and `DirectSum` types are equivalent in Rust by showing that we can convert between them.
+That is, given a construction of one type, we can construct the other type.
+These constructions are proofs that the two types are equivalent in Rust.
 
-There's a relationship here between our coproduct definition and the product definition.
-Importantly, this coproduct type **does not** force a requirement that we must have one of each $V$ and $W$ to make up an element $V \oplus W$ and insteaad says "you can have one or the other or both."
+Now, there is a caveat here and I should be forthcoming.
+This Rust program doesn't know how to prove that the `DirectProduct` and `DirectSum` types are equivalent.
+I did provide for you an implementation of the `Into` trait from each direction that we can verify by hand can be done back-and-forth with no loss of information, but we would need an additional constraint in place, i.e., we would need to run a program that checks the following:
+```rust
+fn check_equivalence_prod_to_sum<M, N, F>(product: DirectProduct<M, N, F>) -> bool
+where
+    F: Add<Output = F> + Default + Copy,
+{
+    let sum_from_product: DirectSum<M, N, F> = product.into();
+    let product_from_sum: DirectProduct<M, N, F> = sum_from_product.into();
+    assert_eq!(product, product_from_sum);
+}
+
+fn check_equivalence_prod_to_sum<M, N, F>(sum: DirectSum<M, N, F>) -> bool
+where
+    F: Add<Output = F> + Default + Copy,
+{
+    let product_from_sum: DirectProduct<M, N, F> = sum.into();
+    let sum_from_product: DirectSum<M, N, F> = product_from_sum.into();
+    assert_eq!(sum, sum_from_product);
+}
+```
+This is not only a bit of a pain to do, but it is also not possible to do in Rust as you need to do this for every possible `M`, `N`, and `F` you might want to work with.
+This is where other programming languages can allow you to write better "proof carrying code" (e.g., [Haskell](https://www.haskell.org), [Coq](https://coq.inria.fr/), or [Lean](https://lean-lang.org/about/)).
+A benefit for those languages, for sure!
 
 ### summary
-One may also argue that this is quite similar to an `OR` operation where we are allowing ourselves to pick from any of the $V_i$ and combine them into a single "statement" (and that's because `OR` is also a coproduct).
+If we thought of the product type as something akin to logical `AND`, it would hopefully be the case that the dual construction, the coproduct, is like the logical `OR` operation.
+In fact, it is so.
+For the coproduct we created, we are allowing ourselves to pick from either of the $V$ or the $W$ and combine them into a single type.
+Creating this coproduct type in Rust was a bit of a pain, mostly because we had to deal with the `Option` type and the `unwrap_or_default` method.
+However, what we can see is that we certainly can do it.
 
-This unique coproduct construction is often called in computer science a *tagged union* type.
-
-Comparing this to the notion of the `OR` operation I brought up before, Rust takes their enumerations as more of an `XOR` operation.
-
-## comparison of sum and product types
-To see why we have (almost) equality between these specific coproduct and product types in Rust for this case, we can define:
+We found that for our vector space type, the product and coproduct type were found to be the same type (i.e., they are mathematically isomorphic).
+Now, a quick check here really comes via the fact that for our inclusions $\iota$ and our projections $\pi$, we have the relationship:
+$$
+\pi_V \circ \iota_V = \text{id}_V \quad \text{and} \quad \pi_W \circ \iota_W = \text{id}_W \\\\
+\pi_V \circ \iota_W = 0 \quad \text{and} \quad \pi_W \circ \iota_V = 0
+$$
+Now, programmatically, we were able to attain this exact relationship between the mappings `Option::Some` and `Option::unwrap_or_default`.
+Why? 
+Well, we have:
 ```rust
-fn surjective(prod_vec: ProductVector<M, N>) -> SumVector<M, N> {
-    let ProductVector { v, w } = prod_vec;
-    if v == V([0.0; M]) {
-        SumVector::W(w)
-    } else if w == W([0.0; N]) {
-        SumVector::V(v)
-    } else {
-        panic!("This is not invertible in Rust!")
-    }
-}
+let true = Some::<V<M, F>>(v).unwrap_or_default() == v; 
+let true = None::<V<M, F>>.unwrap_or_default() == <V<M, F>>::default();
+```
+In particular, we have that `T::default` gives us the ability to pick out the zero element of a vector space and this is the set of requirements seen [here](https://en.wikipedia.org/wiki/Biproduct#Definition)!
+This, programmatically, is how we see that our `V<M, F>` falls into a preadditive category.
 
-fn injective(sum_vec: SumVector<M, N>) -> ProductVector<M, N> {
-    match sum_vec {
-        SumVector::V(v) => ProductVector { v, w: W([0.0; N]) },
-        SumVector::W(w) => ProductVector { v: V([0.0; M]), w },
-    }
+
+If you'd like, you could try applying this coproduct on a struct like so:
+```rust
+struct DisjointUnion<T,U> {
+    t: HashSet<T>,
+    u: HashSet<U>,
 }
 ```
-Note that if we compose `surjective(injective(sum_vec))` we get back the original `sum_vec` and if we compose `injective(surjective(prod_vec))` we get back the original `prod_vec` if an only if one of the `v` or `w` was all zeros, hence the `assert!`.
-The issue here and why we require `assert!` is solely due to the fact that Rust allows only a single variant of the tagged union type to be selected at a time whereas our general coproduct $\oplus$ allows for any combination of $V$ and $W$ to be selected (i.e., this is `OR` versus `XOR` again)!
+to create the [disjoint union](https://en.wikipedia.org/wiki/Disjoint_union) of two sets, which is the same as the coproduct of two sets in the category of sets.
 
-At any rate, this is the *sum* operation we will want on vector spaces that will give us a sum on vector-like objects in the long run!
-In the case we are using it on spaces, we should think of this computation as a *formation* (or *construction*) rule.
+## enumerations (tagged unions)
+Now, there is a type in Rust called an *enumeration* or *enum* that exhibits behavioral patterns that are extremely similar to an `XOR` version of the coproduct (if we think of a coproduct as a categorical `OR` constructor, that is).
+This data structure works extremely well as it allows you to exhaustively pattern match against the different cases of the enumeration knowing that at least one will be occupied (just like the coproduct, we know we can have at least one of the two types in the sum).
+The difference is, at most, one of the types can be occupied in the enumeration type.
 
-**NOTES FROM BEFORE**
-
-The coproduct and product types are the same for (finite sums or products) of vector spaces since I can assume $\boldsymbol{0}$ can take the place of a missing vector in the sum to create a product, or I can remove it in the case of a product to yield a sum (this was argued before).
-
-
-## tensor product type
-Next, we want to define a multiplicative operation on vector spaces which will descend to a *multiplication* operation on the vector-like objects we are building.
-For us, this will be the *tensor* product of vector spaces. 
-
-Let's also take a look at this formally. 
-A tensor product $V \otimes W$ of vector spaces $V$ and $W$ is a vector space that is the "freest" vector space that contains all the elements of $V$ and $W$.
-By freest, I mean that instead of just attaching one vector to another by extending an array, we are able to form higher dimensional arrays that contain all possible combinations of vectors from $V$ and $W$.
-
-We write elements of the space $V\otimes W$ as $\boldsymbol{v}\otimes \boldsymbol{w}$. 
-To see how we work with these elements and compare it to the direct sum or direct product. 
-For once, we can not do a reduction 
-$$
-\boldsymbol{v} \otimes \boldsymbol{0} \neq \boldsymbol{v}
-$$
-as we could with the direct sum, hence the term "product" being used in tensor product.
-
-But how does this differ from the direct product then?
-For one, it will use the direct product as a building block, but prior to that we can see the differences.
-
-Take a look at the universal property below of the tensor product:
-![tensor product](/images/longform/holy_trinity/algebra_as_computation/tensor_product.svg)
-In the diagram the spaces are, $V\times W$ is the direct product, $V \otimes W$ is the tensor product, and $Z$ is any arbitary vector space.
-As for the mappings we have  $\varphi$ is the application of the tensor product from a pair, i.e., $\varphi(\boldsymbol{v},\boldsymbol{w}) = \boldsymbol{v}\otimes \boldsymbol{w}$ into the tensor product space, $h$ is a *bilinear* map from $V\times W$ into $Z$, i.e., it is linear in both components, and finally this determines a unique linear map $\tilde{h}$ from the tensor product into some arbitrary $Z$.
-
-Given any $h$ then, it is our job to define $\tilde{h}$ which, if this is truly some universal construction, restrict the definition of the tensor product space $V\otimes W$ to be the only space that satisfies this property.
-At least, that is the idea and what we have seen with the other diagrams.
-
-For one, we let:
-$$
-h(\boldsymbol{v},\boldsymbol{w}) = \boldsymbol{z_{v,w}}
-$$
-then if we have $\boldsymbol{v} \otimes \boldsymbol{w}$ in the tensor product space, we can define:
-$$
-\tilde{h} (\boldsymbol{v} \otimes \boldsymbol{w}) = \boldsymbol{z_{v,w}}.
-$$
-This is our solution, and now we just have to see what this means for the structure of the tensor product space.
-
-At first this may seem almost trivial, but notice a difference here between the direct product and the tensor product, and it turns out the tensor product is, in general, a lot "freer" (or, perhaps, "wider").
-
-Note that in the direct product we had this uniquely defined mapping from the universal product:
-$$
-f(\boldsymbol{v},\boldsymbol{w}) = (f_V(\boldsymbol{v}), f_W(\boldsymbol{w}))
-$$
-so if we change $f_V$ alone, it will not change what $f$ does to the $\boldsymbol{w}$ part of pair as we still just use $f_W$.
-In this way, there is a "separation" of the two components of the pair in the direct product (and likewise for the direct sum as argued previously).
-
-This is not true for the tensor product.
-Note that if we change $h$ such that 
-$$
-h\'(\boldsymbol{v},\boldsymbol{w}) = \boldsymbol{z\'_{v,w}}
-$$ 
-then we must also change as such, and there is no clear way to separate the two components of the pair in the tensor product.
-This is because the tensor product is "freer" in that it does not have a restriction to act component-wise on the pair (i.e., dilineated to just the $V$ or $W$ components).
-
-I hate to do this, but we can do a counting exercise if we invoke a basis for $V$ and $W$ and it is quite instrumental to see how the tensor product differs from the direct product or direct sum. 
-To this end, let $\boldsymbol{v_1}, \boldsymbol{v_2}, \dots, \boldsymbol{v_m}$ be a basis for $V$ and $\boldsymbol{w_1}, \boldsymbol{w_2}, \dots, \boldsymbol{w_n}$ be a basis for $W$.
-
-{% proof(name="$V \otimes W$ is dimension $mn$") %}
-Take the basis we had above for both $V$ and $W$.
-Then we have $v_i \otimes w_j$ which consists of $mn$ elements. 
-On the basis, we can note:
-$$
-\tilde{h}(\boldsymbol{v_i} \otimes \boldsymbol{w_j}) = \boldsymbol{z_{i,j}}
-$$
-which, by choosing $Z$ to be at least $mn$ dimensional, we can pick an element $\boldsymbol{z_{i,j}} \in Z$ that is linearly independent from each other $\boldsymbol{z_{i',j'}}$.
-Illustratively, we let $\boldsymbol{z_{i,j}}$ be an $m\times n$ matrix where all entries are zero except for the $i,j$ entry which is one noting that the $m \times n $ matrices are themselves a vector space of dimension $mn$.
-{% end %}
-
-For example of the above proof, let's take $\dim(V)==3$ and $\dim(W)=2$ for instance.
-Then we can choose $\tilde{h}$ to be a map into $3\times 2$ matrices like so:
-$$
-\boldsymbol{v} \otimes \boldsymbol{w} = \begin{bmatrix} v_1 \\\\ v_2 \\\\ v_3 \end{bmatrix} \otimes \begin{bmatrix} w_1 \\\\ w_2 \end{bmatrix} = \begin{bmatrix} v_1 w_1 & v_1 w_2 \\\\ v_2 w_1 & v_2 w_2 \\\\ v_3w_1 & v_3w_2 \end{bmatrix}.
-$$
-where the components of each vector are the entries of the matrix.
-By no means do we have to choose this arrangement, but by doing so we can actually illuminate the structure of the tensor product space as a collection of bilinear mappings into the base field. 
-To see this, note that you could take a matrix like so, and multiply from the left and the right by the vectors from $V$ (transposed) and $W$ respectively and get a bilinear map (linear in both the left and right side) into the field.
-
-Comparing this to the case for the direct product, we had:
-$$
-f(\boldsymbol{v_i},\boldsymbol{w_j}) = (\boldsymbol{z_{i}},\boldsymbol{z_{j}})
-$$
-which yields up to $m+n$ linearly independent values (pick $Z$ to be a vector space with dimension $m+n$ or larger).
-
-{% proof(name="$V \times W$ is dimension $m+n$") %}
-Take the basis we had above for both $V$ and $W$.
-Then with the mapping 
-$$
-f(\boldsymbol{v_i},\boldsymbol{w_j}) = (\boldsymbol{z_{i}},\boldsymbol{z_{j}})
-$$
-Note that we can generate $m+n$ linearly independent values by first mapping $f(\boldsymbol{v_i}, \boldsymbol{0})$ to $(\boldsymbol{z_{i}},\boldsymbol{0})$ for $i \in \{0,\dots, m\}$ and likewise $f(\boldsymbol{0}, \boldsymbol{w_j})$ to $(\boldsymbol{0},\boldsymbol{z_{j}})$ for $j\in \{0,\dots, n\}$. 
-
-To see this is at most dimension $m+n$, we can note that for any other pair $(\boldsymbol{z_{i'}},\boldsymbol{z_{j'}})$ we can write as a linear combination of the above pairs.
-{% end %}
-
-Now, how would we define the tensor product type in Rust?
-
-Working with our $V<M>$ and $W<N>$, we can use our universal property intuition for construction:
+### implementation
+For instance, in Rust, you maybe have something like:
 ```rust
-struct Tensor<const M: usize, const N: usize>
+pub enum UniqueDirectSum<const M: usize, const N: usize, F> {
+    V(V<M, F>),
+    W(V<N, F>),
+}
+```
+It is quite clear that this is a selector between two types and, in general, two elements of this type cannot successfully be added together.
+Nevertheless, we can implement a `Add` trait for this type and it will be type-safe.
+```rust
+impl<const M: usize, const N: usize, F> Add for UniqueDirectSum<M, N, F>
 where
-    [(); M * N]:,
-{   
-    coefficients: [f64; M * N],
-}
-
-impl<const M: usize, const N: usize> Tensor<M, N> {
-    fn bilinear_map(&self, v: V<M>, w: W<N>) -> f64 {
-        let mut sum = 0.0;
-        for i in 0..M {
-            for j in 0..N {
-                sum += self.coefficients[i * N + j] * v[i] * w[j];
-            }
+    F: Add<Output = F> + Default + Copy,
+{
+    type Output = Self;
+    fn add(self, other: UniqueDirectSum<M, N, F>) -> Self::Output {
+        match (self, other) {
+            (UniqueDirectSum::V(v), UniqueDirectSum::V(w)) => UniqueDirectSum::V(V::add(v, w)),
+            (UniqueDirectSum::W(v), UniqueDirectSum::W(w)) => UniqueDirectSum::W(V::add(v, w)),
+            _ => panic!("Cannot add V and W with Rust `UniqueDirectSum`!"),
         }
-        sum
     }
 }
 ```
-where we have a collection of coefficients that we can use to define a bilinear map on the tensor product space.
+Notice that we will hit a different case of `panic!` if we try to add a `V` and a `W` together.
+This is an important distinction between the enumeration type and the coproduct type from earlier as with that type, we had the ability to add any combination of the two types together.
 
-Note that in the above, the first input into the `bilinear_map` is the `Tensor<M, N>` itself (.e., a vector of length $mn$ which is the collection of coefficients used for the mapping).
-Perhaps it seems a bit hacky to define things knowing that these are just arrays of floats, but this is a clean way to do it in Rust without checking that the `bilinear_map` field is actually bilinear (in other langauges we could have the proof of bilinearity be in the type definition). 
-However, it is not too difficult to prove by hand that the only way to get linearity is to just multiply components of constant arrays together and sum them up, so we can take this as a given and so our `impl` block satisfies this "proof by hand".
-
-What we have also given ourselves is flexibility via Rust's functional capabilities. For instance, by applying the mapping like so:
+As for the scalar multiplication, we can implement this as well:
 ```rust
-// specific choice of coefficients of w
-let w = W([1.0; N]);
-let linear_functional_on_V = Fn(V<M>) -> f64 = |v| bilinear_map(coefficients, v, w);
-
-// specific choice of coefficients of v
-let v = V([1.0; M]);
-let linear_functional_on_W = Fn(W<N>) -> f64 = |w| bilinear_map(coefficients, v, w);
-```
-Notice that the tensor product is yielding quite a flexible powerhouse of mappings!
-We could move these functions here defined as closures into the `impl` block for the `Tensor<M, N>` struct.
-
-Actually, out of this `Tensor<M, N>` data structure, we can get even more. For instance, we can use this to define a mapping $V \to W$ by adding this method to the `impl` block:
-```rust
-fn linear_map_from_V_to_W<const M: usize, const N: usize>(self, v: V<M>) -> W<N> {
-    let mut w = W([0.0; N]);
-    for i in 0..N {
-        let mut sum = 0.0;
-        for j in 0..M {
-            sum += self.bilinear_map[i * N + j] * v[j];
+impl<const M: usize, const N: usize, F> Mul<F> for UniqueDirectSum<M, N, F>
+where
+    F: Mul<Output = F> + Default + Copy,
+{
+    type Output = Self;
+    fn mul(self, scalar: F) -> Self::Output {
+        match self {
+            UniqueDirectSum::V(v) => UniqueDirectSum::V(v * scalar),
+            UniqueDirectSum::W(w) => UniqueDirectSum::W(w * scalar),
         }
-        w[i] = sum;
     }
 }
 ```
-The same can be done to yield a map from $W$ to $V$ if you wish. 
-Indeed, one may notice that we effectively used the definitions of the `linear_functional_on_V` to define the `linear_map_from_V_to_W` function and then iterated over and summed this into the components of the output vector to get the desired output.
+where there is no issue that can cause a `panic!` here. 
 
-What we should reflect on here momentarily is that we have actually just created a wrapper type with `Tensor<M, N>` and we could have (almost) just as well have worked directly with the `bilinear_map`.
-That is, except for the fact that we could not have defined all this functionality on the primitive function pointer type in Rust.
+### diagram?
+This forces us to go the other way and try to derive a diagram from the Rust code.
+To do so, we can instead think of the coproduct of the the sets of the vectors from each space which I will write as $\\{V\\}$ and $\\{W\\}$.
+Working with these, we can add additional logic to implement a selector function that will allow us to choose between the two types inside the tagged union.
+![tagged union](/images/longform/holy_trinity/algebra_as_computation/tagged_union.svg)
 
-Note that we do not have a constructor yet for `Tensor<M, N>`, but we showed an earlier example of one that follows from the universal property of the tensor product.
-That is, we have a mapping $\varphi \colon V \times W \to V\otimes W$ which yields our constructor in Rust by:
-```rust
-impl<const M: usize, const N: usize> Tensor<M, N> {
-    fn tensor_product(v: V<M>, w: W<N>) -> Self {
-        let mut coefficients = [0.0; M * N];
-        for i in 0..M {
-            for j in 0..N {
-                coefficients[i * N + j] = v[i] * w[j];
-            }
-        }
-        Tensor { coefficients }
-    }
-}
-```
-This above constructor (which we do not have to use, mind you!) is often called the *outer product*.
-Note that not every instance of a tensor product is an outer product, but every outer product is a tensor product (at most using `tensor_product` yields a rank-1 tensor).
-What is true, however, is that you can supply a collection of vectors and get a tensor product out can be any tensor you wish. 
-For instance:
-```rust
-impl<const M: usize, const N: usize> Tensor<M, N> {
-    fn tensor_product<const P: usize>(v: [V<M>; P], w: [W<N>; P]) -> Self {
-        let mut coefficients = [0.0; M * N];
-        for p in 0..P {
-            for i in 0..M {
-                for j in 0..N {
-                    coefficients[i * N + j] += v[p][i] * w[p][j];
-                }
-            }
-        }
-        Tensor { coefficients }
-    }
-}
-```
-This also seems to hinge on the fact that we can add tensors together, which we can.
-In general, tensors are themselves a vector space and we implement this by,
-```rust
-impl<const M: usize, const N: usize> Add for Tensor<M, N> {
-    type Output = Tensor<M, N>;
-    fn add(self, other: Tensor<M, N>) -> Tensor<M, N> {
-        let mut sum = Tensor { coefficients: [0.0; M * N] };
-        for i in 0..M * N {
-            sum.coefficients[i] = self.coefficients[i] + other.coefficients[i];
-        }
-        sum
-    }
-}
+Above, we have $s_V$ which is a choice of a map of a singleton into the set of vectors of $V$. 
+Naturally, we also have the inclusion $\iota_V$ for taking the set into its coproduct (the disjoint union) which maps an element of $V$ into the tagged union along with its tag.
+From there, we have a map $T$ which takes an element of the tagged union and outputs its tag, show here as being either 1 or 2 for $V$ and $W$ respectively.
+The detail we must have is that given a choice of $s_V$, we must have a unique map $s_T$ that selects the tag of the element of the tagged union and makes the above diagram commute.
 
-impl<const M: usize, const N: usize> Mul<f64> for Tensor<M, N> {
-    type Output = Tensor<M, N>;
-    fn mul(self, scalar: f64) -> Tensor<M, N> {
-        let mut product = Tensor { coefficients: [0.0; M * N] };
-        for i in 0..M * N {
-            product.coefficients[i] = self.coefficients[i] * scalar;
-        }
-        product
-    }
-}
-```
+Programmatically, this selector is captured by pattern matching via the `match` statement or `if let` statement.
+It is built into the Rust language and is a very powerful tool for working with tagged unions!
 
-
-### Testing the lower type
-TODO: Add the "outer product" constructor function for the tensor.
-TODO: Likewise talk about how we can define an add on `Tensor<M, N>` that is also type-safe. 
-TODO: Show all these different things are vector spaces and stuff.
-TODO: Some of this could be expressed as traits instead (e.g., the tensor could be a trait with all the functionality described and maybe then you could have choices of bases and stuff)
-TODO: Organize
+At the moment, I am not totally satisfied with this diagramatic perspective of the tagged union/enum type of Rust.
+This leaves me wanting a deeper explanation by connecting this into *type theory* which we will do as we connect all of the elements of the Curry-Howard-Lambek correspondence.
