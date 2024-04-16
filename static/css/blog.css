@@ -139,12 +139,12 @@ body {
 
 
 .toc-level-3 {
-    counter-reset: toc-level-2-counter;
+    counter-reset: toc-level-3-counter;
     margin-left: 1rem;
 }
 
 .toc-level-3>li {
-    counter-increment: toc-level-2-counter;
+    counter-increment: toc-level-3-counter;
 }
 
 .toc-level-3>li::before {

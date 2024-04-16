@@ -13,24 +13,241 @@ tags = ["math", "algebra", "category theory"]
 
 ---
 
-# motivation for Clifford algebra
+# motivation
 Have you ever thought to yourself: "I wish I could multiply vectors together?"
 I can assure you that nearly every one of my students tried this in some way when they first learned about vectors.
 The ideas of dot products and cross products and how they differ in dimension 2 and 3 really seemed to confuse them.
 Nevermind the fact that the cross product fails to generalize into higher dimensions.
+At the same time, we often teach ways to combine vectors, yet we don't quite give all the background that I think is instrumental for people to go out and get their hands dirty.
+I don't want this to be the case.
 
-Maybe you are someone who loves complex numbers or maybe you have worked with quaternions.
-Well, I have good news for you: there is a way to generalize all of these ideas into higher dimensions in a quite modular way.
+Thinking of this concept of vector multiplication leads us down a road for what it means to extend, algebraically, vectors beyond just the space that they come packaged in.
+For this, we will pass through a landscape of general constructions that can be applied to more places than just the vectors.
+We'll also see why vectors are inherently nice, and we'll visit the notion of a *tensor* along the way.
+The concept of tensor seems to be one that I get many questions about, so my hope here is we can do some mental yoga prior to defining this concept only for the tensor to emerge as something clear, albeit tersely defined.
 
 So, let's take an approach that is very algebraic and categorical in nature.
 The reason why isn't to be confusing or overly abstract, but to hopefully bridge a gap into how this is all defines a means of computation whereby I mean "your ability to write software using these tools."
 From a philosphical perspective, I believe algebra is a means of constructing data structures and computational rules via their relationships to one another.
 We should take this approach and build up this technology in a rigorous way.
 
+I firmly believe that being able to go from these abstract constructions of diagrams to implementation is a valuable skill that will enhance your ability to write elegant and safe programs.
+
 # algebraic structure
-Take a finite dimensional vector space $V$ over a field $\mathbb{F}$.
+By algebra and structure, I mean the following:
+- **Algebra**: We are working with a set of objects, operations, and relations on these objects.
+- **Structure**: We are imposing rules on these objects and operations that make them behave in a certain way given the relations.
+
+There's many places we could begin with algebraic structure, but vector spaces are a nice place to start due to their ubiquity, flexibility, and they also have many nice properties.
+
+These structures will come about in programming as [*interfaces*](https://en.wikipedia.org/wiki/API).
+As with an interface, structures do not require a specific implementation, but they do require that certain operations are defined and that they satisfy certain relationships.
+Your specific problems will call out to you to make your specific implementations!
+
+## vector spaces
+Throughout this longform piece, we will work with finite dimensional [*vector spaces* $V$](https://en.wikipedia.org/wiki/Vector_space) over some [field $\mathbb{F}$](https://en.wikipedia.org/wiki/Field_(mathematics)).
+We won't really care about what field we use to be the numbers we pile into vectors, we really just care that the multiplication of these *scalars* (elements of the underlying field) are commutative and we can find inverses for everything other than the $0$ element. 
+Replace vector spaces with [modules](https://en.wikipedia.org/wiki/Module_(mathematics)) if you want to be more general or feel free to remove the restriction of finite-dimensionality (though be careful with both!).
+
+
+### operations and diagrams
+
+TODO: NEED TO SHOW THE NEW IMPL HERE WITH THE DEFAULT
+
 Let's review some operations we can do on vector spaces themselves so that we have our modular structures in place.
 Ultimately operations at the structural level descend to operations on the object level (e.g., on the vectors).
+
+In a vector space $V$ we can take linear combinations using vectors $\boldsymbol{v},\boldsymbol{v\'} \in V$ and scalars $a, b \in \mathbb{F}$ to get new vectors in $V$:
+$$
+a\cdot \boldsymbol{v} + b \cdot \boldsymbol{v\'}
+$$
+
+Diagramatically, we have the following:
+$$
+\+ \colon V\times V \to V \\\\ ~ \\\\
+\cdot \colon \mathbb{F} \times V \to V
+$$
+We usually drop the $\cdot$ notation and just put $a\boldsymbol{v}$ for scalar multiplication, but the above was just to be clear.
+
+How can we code something like this up?
+First, we need some sort of structure to work with and for a vector space we can just take these to be an array of numbers.
+We will define this vector space type in Rust to wrap this array and provide functionality like so:
+```rust
+struct V<const M: usize, F>([F; M]);
+
+impl<const M: usize, F: Add<Output = F> + Default + Copy> Add for V<M, F> {
+    type Output = Self;
+    fn add(self, other: V<M, F>) -> Self::Output {
+        let mut sum = [F::default(); M];
+        for i in 0..M {
+            sum[i] = self.0[i] + other.0[i];
+        }
+        V(sum)
+    }
+}
+
+impl<const M: usize, F: Mul<Output = F> + Default + Copy> Mul<F> for V<M, F> {
+    type Output = Self;
+    fn mul(self, scalar: F) -> Self::Output {
+        let mut product = [F::default(); M];
+        for i in 0..M {
+            product[i] = scalar * self.0[i];
+        }
+        V(product)
+    }
+}
+```
+In the above, think of `F` as the field we are choosing to work over, $M$ as the number of components of the vectors we are working with (also equivalent to the [dimension](https://en.wikipedia.org/wiki/Dimension_(vector_space))), and the implementations of the `Add` and `Mul<F>` traits are what we defined in the diagrams for the vector addition $V \times V \to V$ and the scalar multiplication $\mathbb{F} \times V \to V$ respectively.
+
+Diagrams like this yield basic rules, and in a language like Rust, it is nice to be able to define these rules in a way that is both clear and concise.
+One thing we do lack in Rust, however, is that it is **not** clear that the properties we require of these operations are satisfied.
+For instance, we require that the addition of vectors is [commutative](https://en.wikipedia.org/wiki/Commutative_property), is it clear that this is true as defined?
+We will run into other issues down the road.
+
+You see here that we have constructed an interfacial component in your software.
+The `V<M, F>` is generic and can be specifically implemented in many different ways.
+Likewise, though we didn't define the bounds ourself, the `Add` and `Mul` traits are interfaces that we can implement for our `V` type which are, in essence, inherited from the field type `F` we are working over.
+
+Moreover, I have done us dirty. 
+I invoked the *direct product* $V \times V$ in our logic here without defining what this means!
+
+## product type
+The conceptual idea of a *product type*, in general, is to just pair together objects and work with both simultaneously as a single object.
+Given this, we will define the *direct product* of two different vector spaces $V$ and $W$ as $V \times W$.
+This direct product should also be a vector space and, if constructed properly, the computations you do with it should be inherited from $V$ and $W$ *naturally*.
+
+### diagram
+How do we do this?
+Take a look at the diagram below:
+![product](/images/longform/holy_trinity/algebra_as_computation/product.svg)
+In the diagram, we see a collection of vector spaces $V$, $W$, and $Z$ as well as a collection of maps (all [*linear*](https://en.wikipedia.org/wiki/Linear_map)) $f_V$, $f_W$, $f$, $\pi_V$, and $\pi_W$.
+The only requirement of the diagram is that it *commutes* which means that if you follow the arrows in any way, you get the same result.
+Specifically, the composition of the maps $\pi_V \circ f = f_V$ should be the same map, and likewise $\pi_W \circ f = f_W$.
+
+Note that the dashed line for $f$ has special meaning -- it is a *unique* map that exists due to the existence of the other maps and the diagram itself.
+This is the key to the [*universal property*](https://en.wikipedia.org/wiki/Universal_property) of the direct product $V \times W$.
+
+Let's spend a moment thinking about this diagram and using it to understand what we are guaranteed when working with the *direct product* of vector spaces $V \times W$.
+Note that in the direct product, we typically write vectors as tuples $(\boldsymbol{v},\boldsymbol{w})$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$.
+Now, the direct product *is* the collection $(V \times W, \pi_V, \pi_W)$ that makes the whole diagram commute given the distinctly defined mappings:
+$$
+\begin{align*}
+\pi_V \colon V \times W& \to V \\\\
+(\boldsymbol{v}, \boldsymbol{w}) &\mapsto \boldsymbol{v} \\\\
+\end{align*}
+$$
+and
+$$
+\begin{align*}
+\pi_W \colon V \times W& \to W \\\\
+(\boldsymbol{v}, \boldsymbol{w}) &\mapsto \boldsymbol{w} \\\\
+\end{align*}
+$$
+The maps $\pi_V$ and $\pi_W$ are often called [*projections*](https://en.wikipedia.org/wiki/Projection_(mathematics)).
+
+Now, if let's define some maps by letting $f_V(\boldsymbol{z})=\boldsymbol{v_z}$ and $f_W(\boldsymbol{z})=\boldsymbol{w_z}$.
+My claim now is that there is only one map $f$ that makes the diagram commute.
+The unique map $f$ is then defined as:
+$$
+f(\boldsymbol{v},\boldsymbol{w}) = (f_V(\boldsymbol{v}), f_W(\boldsymbol{w})) = (\boldsymbol{v_z}, \boldsymbol{w_z}).
+$$
+This may seem trivial, but it is a powerful statement.
+It says that if you have a map from the direct product into some other vector space, then you can always decompose it into two maps that act on the individual components of the pair.
+This is exactly what we need to go about implementing the direct product in Rust.
+
+
+### implementation
+Let's try to take our diagram and implement it in Rust.
+Before we even restrict ourselves to our vector type from before, we can write this out generally.
+We need to define an interfacial component with two types `X` and `Y`, and three functions, `pi_X`, `pi_Y` and `f`.
+The final function $f$, should allow for some other type `Z`, but not need inherent knowledge of `X` and `Y`.
+```rust
+pub trait ProductType
+where
+    Self: Sized,
+{
+    type X;
+    type Y;
+
+    fn construct(x: Self::X, y: Self::Y) -> Self;
+
+    fn pi_X(&self) -> Self::X;
+
+    fn pi_Y(&self) -> Self::Y;
+
+    fn f<Z>(z: Z, f_X: impl Fn(Z) -> Self::X, f_Y: impl Fn(Z) -> Self::Y) -> Self {
+        Self::construct(f_X(z), f_Y(z))
+    }
+}
+```
+Our unique $f$ from the diagram *should* have a blanket implementation for any type that implements the `ProductType` trait, but without having some inherent structure to map into, this isn't really possible.
+Hence, this is why we have an additional `construct` function in the trait as this just tells us how the product type is built from the two components.
+Given we do know how to construct the type, we can then define the `f` function in terms of the `construct` function.
+
+It is worth noting that in Rust, the product type is already captured for us by the `struct` or `tuple` types.
+If we look at what we defined above, we essentially just created a wrapper around Rust's internal `struct` type, and within the `ProductType` trait.
+Let's see how.
+
+For our case of vector spaces, we can define the `DirectProduct` as follows:
+```rust
+struct DirectProduct<const M: usize, const N: usize, F> {
+    v: V<M, F>,
+    w: W<N, F>,
+}
+```
+where you must have both a `V` and a `W` to create a `Vector`. 
+This struct allows us to pair together two different sized vector spaces over the same field and work with them as a single unified product object.
+Now, we can implement the `ProductType` trait for this `DirectProduct` type using just the inherent Rust methods on structs:
+```rust
+impl<const M: usize, const N: usize, F> ProductType for DirectProduct<M, N, F> {
+    type X = V<M, F>;
+    type Y = V<N, F>;
+
+    fn construct(v: Self::X, w: Self::Y) -> Self {
+        DirectProduct { v, w }
+    }
+
+    fn pi_X(&self) -> Self::X {
+        self.v
+    }
+
+    fn pi_Y(&self) -> Self::Y {
+        self.w
+    }
+}
+```
+and we see that the `f` function is already implemented!
+Remind yourself, this `f`, or $f$ we had in the diagramm, "exists and is unique".
+
+Now, we carry on and can note that in this case, you can actually define the `Add` and `Mul` traits for the `ProductVector` type in Rust without any issues:
+```rust
+where
+    F: Add<Output = F> + Default + Copy,
+{
+    type Output = Self;
+    fn add(self, other: DirectProduct<M, N, F>) -> Self::Output {
+        DirectProduct::construct(self.pi_X() + other.pi_X(), self.pi_Y() + other.pi_Y())
+    }
+}
+
+impl<const M: usize, const N: usize, F> Mul<F> for DirectProduct<M, N, F>
+where
+    F: Mul<Output = F> + Default + Copy,
+{
+    type Output = Self;
+    fn mul(self, scalar: F) -> Self::Output {
+        DirectProduct::construct(self.pi_X() * scalar, self.pi_Y() * scalar)
+    }
+}
+```
+Again, all of this is just wrapping the inherent Rust methods on the `struct` type and the methods we built on `V<M, F>` (and `W<N, F>`).
+
+
+TODO: LEft off here need to talk about mul
+
+
+In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically.
+
 
 ## sum type
 First, take a collection of vector spaces $V_1, V_2, \dots$ then the *direct sum* $\oplus$ combines a pair of vector spaces into $V_i \oplus V_j$ which consists of all vectors $\boldsymbol{v_i} \oplus \boldsymbol{v_j}$ where $\boldsymbol{v_i} \in V_i$ and $\boldsymbol{v_j} \in V_j$.
@@ -173,62 +390,7 @@ and we panic only due to the `XOR` nature of Rust's enumeration.
 There's a relationship here between our coproduct definition and the product definition.
 Importantly, this coproduct type **does not** force a requirement that we must have one of each $V$ and $W$ to make up an element $V \oplus W$ and insteaad says "you can have one or the other or both."
 
-## product type
-If you do want the requirement that you must have one of each, then you are looking for a *product* type.
-To be clear, we don't actually need this to construct the Clifford algebra, but it is a useful structure to have and compare against.
-The diagram is the same as the coproduct, but with the arrows reversed.
-![product](/images/longform/holy_trinity/algebra_as_computation/product.svg)
 
-Let's spend a moment thinking about this diagram and using it to understand what we are guaranteed when working with the *direct product* of vector spaces $V \times W$.
-Note that in the direct product, we typically write vectors as pairs $(\boldsymbol{v},\boldsymbol{w})$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$.
-First, $Z$ is an arbitary vector space and $f_V$ and $f_W$ are linear maps from $Z$ into $V$ and $W$ respectively.
-The mappings $\pi_V$ and $\pi_W$ are the *projection* maps from $V \times W$ into $V$ and $W$ respectively which are defined as:
-$$
-\begin{align*}
-\pi_V(\boldsymbol{v},\boldsymbol{w}) &= \boldsymbol{v} \\\\
-\pi_W(\boldsymbol{v},\boldsymbol{w}) &= \boldsymbol{w}.
-\end{align*}
-$$
-The unique map $f$ is then defined as:
-$$
-f(\boldsymbol{v},\boldsymbol{w}) = (f_V(\boldsymbol{v}), f_W(\boldsymbol{w})).
-$$
-
-The coproduct and product types are the same for (finite sums or products) of vector spaces since I can assume $\boldsymbol{0}$ can take the place of a missing vector in the sum to create a product, or I can remove it in the case of a product to yield a sum (this was argued before).
-In Rust, the product type is the `struct` type:
-```rust
-struct ProductVector<const M: usize, const N: usize> {
-    v: V<M>,
-    w: W<N>,
-}
-```
-where you must have both a `V` and a `W` to create a `Vector`. 
-Note that in this case, you can actually define the `Add` trait for the `ProductVector` type in Rust without any issues:
-```rust
-impl Add for ProductVector<M, N> {
-    type Output = ProductVector<M, N>;
-    fn add(self, other: ProductVector<M, N>) -> ProductVector<M, N> {
-        ProductVector {
-            v: self.v + other.v,
-            w: self.w + other.w,
-        }
-    }
-}
-```
-since Rust requires both `v` and `w` to be present in the `ProductVector` type.
-In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically.
-
-The maps $\pi_V$ and $\pi_W$ are also quite useful in Rust as they are the `field_access` of the structs for the `ProductVector` type:
-```rust
-fn pi_V(prod_vec: ProductVector<M, N>) -> V<M> {
-    prod_vec.v
-}
-
-fn pi_W(prod_vec: ProductVector<M, N>) -> W<N> {
-    prod_vec.w
-}
-
-```
 
 ## comparison of sum and product types
 To see why we have (almost) equality between these specific coproduct and product types in Rust for this case, we can define:
@@ -256,6 +418,11 @@ The issue here and why we require `assert!` is solely due to the fact that Rust 
 
 At any rate, this is the *sum* operation we will want on vector spaces that will give us a sum on vector-like objects in the long run!
 In the case we are using it on spaces, we should think of this computation as a *formation* (or *construction*) rule.
+
+**NOTES FROM BEFORE**
+
+The coproduct and product types are the same for (finite sums or products) of vector spaces since I can assume $\boldsymbol{0}$ can take the place of a missing vector in the sum to create a product, or I can remove it in the case of a product to yield a sum (this was argued before).
+
 
 ## tensor product type
 Next, we want to define a multiplicative operation on vector spaces which will descend to a *multiplication* operation on the vector-like objects we are building.
