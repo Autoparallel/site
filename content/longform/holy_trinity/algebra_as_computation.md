@@ -1,6 +1,6 @@
 +++
 title = "algebra as computation"
-date = "2024-04-13"
+date = "2024-04-17"
 template = "blog.html"
 description = "It's good to start with an example, and one I am quite fond of is the construction with vector spaces by creating sum types and product types. These all are miraculously ubiquitous objects whether you are in physics, computer science, or mathematics. We will see how one can go from the algebraic perspective straight into implementation and how we can extract additional features of these objects naturally."
 [taxonomies]
@@ -603,7 +603,7 @@ Earlier I mentioned that I would come back to the mappings $\iota_V$ and $\iota_
 let v = UniqueDirectSum::V(v);
 let w = UniqueDirectSum::W(w);
 ```
-To reiterate, the `UniqueDirectSum::V` is a mapping from `V<M, F>` into `UniqueDirectSum<M, N, F>` and the `UniqueDirectSum::W` is a mapping from `V<N, F>` into `UniqueDirectSum<M, N, F>` just as `\iota_V` and `\iota_W` were mappings from `V` and `W` into the coproduct $V \oplus W$.
+To reiterate, the `UniqueDirectSum::V` is a mapping from `V<M, F>` into `UniqueDirectSum<M, N, F>` and the `UniqueDirectSum::W` is a mapping from `V<N, F>` into `UniqueDirectSum<M, N, F>` just as $\iota_V$ and $\iota_W$ were mappings from `V` and `W` into the coproduct $V \oplus W$.
 This tagging may appear quite natural now!
 
 Carrying on, we can implement a `Add` trait for this type and it will be type-safe.
