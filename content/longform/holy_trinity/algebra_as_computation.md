@@ -2,8 +2,7 @@
 title = "algebra as computation"
 date = "2024-04-13"
 template = "blog.html"
-description = "It's good to start with an example, and one I am quite fond of is the construction with vector spaces by creating sum types, product types, and the tensor type. These are all miraculously ubiquitous objects whether you are in physics, computer science, or mathematics. We will see how one can go from the algebraic perspective straight into implementation and how we can extract additional features of these objects naturally."
-# They generalize  the complex numbers and quaternions, matrices and exterior algebras, lie algebras and spinors, and more. We get lovely geometry and a beautiful set of computationally efficient rules! Let's do this from a categorical perspective.
+description = "It's good to start with an example, and one I am quite fond of is the construction with vector spaces by creating sum types and product types. These all are miraculously ubiquitous objects whether you are in physics, computer science, or mathematics. We will see how one can go from the algebraic perspective straight into implementation and how we can extract additional features of these objects naturally."
 [taxonomies]
 tags = ["math", "algebra", "category theory"]
 +++
@@ -14,19 +13,11 @@ tags = ["math", "algebra", "category theory"]
 ---
 
 # motivation
-Have you ever thought to yourself: "I wish I could multiply vectors together?"
-I can assure you that nearly every one of my students tried this in some way when they first learned about vectors.
-The ideas of dot products and cross products and how they differ in dimension 2 and 3 really seemed to confuse them.
-Nevermind the fact that the cross product fails to generalize into higher dimensions.
-At the same time, we often teach ways to combine vectors, yet we don't quite give all the background that I think is instrumental for people to go out and get their hands dirty.
-I don't want this to be the case.
+This blog is the first in a series that dives into the intersection of mathematics and computation.
+Ultimately, I know that I want the first few pieces to go and define very rigorously and programmatically the notion of Clifford algebras.
+To get there, we will lay some groundwork and build up fundamentals so we can get to this point.
 
-Thinking of this concept of vector multiplication leads us down a road for what it means to extend, algebraically, vectors beyond just the space that they come packaged in.
-For this, we will pass through a landscape of general constructions that can be applied to more places than just the vectors.
-We'll also see why vectors are inherently nice, and we'll visit the notion of a *tensor* along the way.
-The concept of tensor seems to be one that I get many questions about, so my hope here is we can do some mental yoga prior to defining this concept only for the tensor to emerge as something clear, albeit tersely defined.
-
-So, let's take an approach that is very algebraic and categorical in nature.
+Let's take an approach that is very algebraic and categorical in nature.
 The reason why isn't to be confusing or overly abstract, but to hopefully bridge a gap into how this is all defines a means of computation whereby I mean "your ability to write software using these tools."
 From a philosphical perspective, I believe algebra is a means of constructing data structures and computational rules via their relationships to one another.
 We should take this approach and build up this technology in a rigorous way.
@@ -49,6 +40,8 @@ Throughout this longform piece, we will work with finite dimensional [*vector sp
 We won't really care about what field we use to be the numbers we pile into vectors, we really just care that the multiplication of these *scalars* (elements of the underlying field) are commutative and we can find inverses for everything other than the $0$ element. 
 Replace vector spaces with [modules](https://en.wikipedia.org/wiki/Module_(mathematics)) if you want to be more general or feel free to remove the restriction of finite-dimensionality (though be careful with both!).
 
+If you don't feel comfortable with vector spaces and linear algebra, I would recommend you take a look at [3Blue1Brown's Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) series.
+We will review a bit nonetheless.
 
 ### operations and diagrams
 Let's review some operations we can do on vector spaces themselves so that we have our modular structures in place.
@@ -104,8 +97,8 @@ impl<const M: usize, F: Mul<Output = F> + Default + Copy> Mul<F> for V<M, F> {
     }
 }
 ```
-In the above, think of `F` as the field we are choosing to work over, $M$ as the number of components of the vectors we are working with (also equivalent to the [dimension](https://en.wikipedia.org/wiki/Dimension_(vector_space))), and the implementations of the `Add` and `Mul<F>` traits are what we defined in the diagrams for the vector addition $V \times V \to V$ and the scalar multiplication $\mathbb{F} \times V \to V$ respectively.
-One should also think of the `Default` implementation as the zero vector in the vector space as it should also be used to select the 0 from the field type `F` (though you do have to be careful here and perhaps you should use an external crate just for num types.).
+In the above, think of `F` as the field we are choosing to work over and the method `F::default` as the function that gets the zero element of the field $0\in \mathbb{F}$ (though you do have to be careful here).
+Subsequently, $M$ is the number of components of the vectors we are working with (also equivalent to the [dimension](https://en.wikipedia.org/wiki/Dimension_(vector_space))), and the implementations of the `Add` and `Mul<F>` traits are what we defined in the diagrams for the vector addition $V \times V \to V$ and the scalar multiplication $\mathbb{F} \times V \to V$ respectively.
 The derived traits like `Clone` and `Copy` do not have to inherently be there for the type we are defining, but they are handy with Rust's memory model.
 
 Diagrams like this yield basic rules, and in a language like Rust, it is nice to be able to define these rules in a way that is both clear and concise.
@@ -125,20 +118,49 @@ The conceptual idea of a *product type*, in general, is to just pair together ob
 Given this, we will define the *direct product* of two different vector spaces $V$ and $W$ as $V \times W$.
 This direct product should also be a vector space and, if constructed properly, the computations you do with it should be inherited from $V$ and $W$ *naturally*.
 
+Briefly, if we want to think of vectors as arrays, the product $V \times W$ is concatenation of a pair of arrays.
+We write $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$ as:
+$$
+\boldsymbol{v} = \begin{bmatrix}
+v_1 \\\\
+v_2 \\\\
+\vdots \\\\
+v_M
+\end{bmatrix} \qquad \text{and} \qquad \boldsymbol{w} = \begin{bmatrix}
+w_1 \\\\
+w_2 \\\\
+\vdots \\\\
+w_N
+\end{bmatrix}
+$$
+then we can write the vector $(\boldsymbol{v},\boldsymbol{w}) \in V \times W$ as:
+$$
+(\boldsymbol{v},\boldsymbol{w}) = \begin{bmatrix}
+v_1 \\\\
+v_2 \\\\
+\vdots \\\\
+v_M \\\\
+w_1 \\\\
+w_2 \\\\
+\vdots \\\\
+w_N
+\end{bmatrix}
+$$
+Sometimes this picture can be helpful to think about if you find yourself lost in the abstraction.
+
+With a product we again get a vector space as we know how to add and scalar multiply vectors in $V \times W$:
+$$
+(\boldsymbol{v},\boldsymbol{w}) + (\boldsymbol{v\prime},\boldsymbol{w\prime}) = (\boldsymbol{v} + \boldsymbol{v\prime},\boldsymbol{w} + \boldsymbol{w\prime}) \\\\
+\alpha (\boldsymbol{v},\boldsymbol{w}) = (\alpha \boldsymbol{v},\alpha \boldsymbol{w})
+$$
+where $\alpha \in \mathbb{F}$.
+
 ### diagram
 How do we do this?
 Take a look at the diagram below:
 ![product](/images/longform/holy_trinity/algebra_as_computation/product.svg)
-In the diagram, we see a collection of vector spaces $V$, $W$, and $Z$ as well as a collection of maps (all [*linear*](https://en.wikipedia.org/wiki/Linear_map)) $f_V$, $f_W$, $f$, $\pi_V$, and $\pi_W$.
-The only requirement of the diagram is that it *commutes* which means that if you follow the arrows in any way, you get the same result.
-Specifically, the composition of the maps $\pi_V \circ f = f_V$ should be the same map, and likewise $\pi_W \circ f = f_W$.
-
-Note that the dashed line for $f$ has special meaning -- it is a *unique* map that exists due to the existence of the other maps and the diagram itself.
-This is the key to the [*universal property*](https://en.wikipedia.org/wiki/Universal_property) of the direct product $V \times W$.
-
-Let's spend a moment thinking about this diagram and using it to understand what we are guaranteed when working with the *direct product* of vector spaces $V \times W$.
-Note that in the direct product, we typically write vectors as tuples $(\boldsymbol{v},\boldsymbol{w})$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$.
-Now, the direct product *is* the collection $(V \times W, \pi_V, \pi_W)$ that makes the whole diagram commute given the distinctly defined mappings:
+In the diagram, we see a collection of vector spaces $V$, $W$, and $Z$ as well as a collection of maps $f_V$, $f_W$, $f$, $\pi_V$, and $\pi_W$ (all of which are [*linear*](https://en.wikipedia.org/wiki/Linear_map)).
+Importantly, $\pi_V$ and $\pi_W$ are considered an implicit part of the data of the direct product $V \times W$ and they are defined as:
 $$
 \begin{align*}
 \pi_V \colon V \times W& \to V \\\\
@@ -154,9 +176,18 @@ $$
 $$
 The maps $\pi_V$ and $\pi_W$ are often called [*projections*](https://en.wikipedia.org/wiki/Projection_(mathematics)).
 
+The only requirement of the diagram is that it *commutes* which means that if you follow the arrows in any way, you get the same result.
+Specifically, the composition of the maps $\pi_V \circ f = f_V$ should be the same map and likewise $\pi_W \circ f = f_W$.
+
+Note that the dashed line for $f$ has special meaning -- it is a *unique* map that exists due to the existence of the other maps and the diagram itself.
+This is the key to the [*universal property*](https://en.wikipedia.org/wiki/Universal_property) of the direct product $V \times W$.
+
+Let's spend a moment thinking about this diagram and using it to understand what we are guaranteed when working with the *direct product* of vector spaces $V \times W$.
+Note that in the direct product, we typically write vectors as tuples $(\boldsymbol{v},\boldsymbol{w})$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$.
+
 Now, if let's define some maps by letting $f_V(\boldsymbol{z})=\boldsymbol{v_z}$ and $f_W(\boldsymbol{z})=\boldsymbol{w_z}$.
 My claim now is that there is only one map $f$ that makes the diagram commute.
-The unique map $f$ is then defined as:
+The unique map $f$ **must be** defined as:
 $$
 f(\boldsymbol{v},\boldsymbol{w}) = (f_V(\boldsymbol{v}), f_W(\boldsymbol{w})) = (\boldsymbol{v_z}, \boldsymbol{w_z}).
 $$
@@ -189,7 +220,7 @@ where
     }
 }
 ```
-Our unique $f$ from the diagram *should* have a blanket implementation for any type that implements the `ProductType` trait, but without having some inherent structure to map into, this isn't really possible.
+Our unique $f$ from the diagram *should* have a blanket implementation for any type that implements the `ProductType` trait, but without having some inherent structure to map into, this isn't really possible as we need to tell a computer how to place this in memory.
 Hence, this is why we have an additional `construct` function in the trait as this just tells us how the product type is built from the two components.
 The `construct` is just the programmatic equivalent of us choosing to represent objects as $(\boldsymbol{v},\boldsymbol{w}) \in V \times W$.
 Given we do know how to construct the type, we can then define the `f` function in terms of the `construct` function.
@@ -204,7 +235,7 @@ For our case of vector spaces, we can define the `DirectProduct` as follows:
 ```rust
 struct DirectProduct<const M: usize, const N: usize, F> {
     v: V<M, F>,
-    w: W<N, F>,
+    w: V<N, F>,
 }
 ```
 where you must have both a `V` and a `W` to create a `Vector`. 
@@ -229,7 +260,8 @@ impl<const M: usize, const N: usize, F> ProductType for DirectProduct<M, N, F> {
 }
 ```
 and we see that the `f` function is already implemented!
-Remind yourself, this `f`, or $f$ we had in the diagramm, "exists and is unique".
+We note as well that the `pi_X` and `pi_Y` come as part of the data of the implementation of the interface we've defined here, and we must also build these as only we, the implementer, know how to yield memory from the computer to represent the object in our language.
+Remind yourself, this `f`, or $f$ we had in the diagram, "exists and is unique".
 
 Now, we carry on and can note that in this case, you can actually define the `Add` and trait for the `ProductVector` type in Rust without any issues:
 ```rust
@@ -272,18 +304,22 @@ No funny business here.
 Everything simply being built up from our methods on the `F`, then `V<M, F>`, and now the `DirectProduct<M, N, F>` types.
 
 ### summary
-In this sense, the product type is essentially like logical `AND` and, in fact, `AND` is also a product categorically.
+In this sense, the product type is essentially like logical `AND` as it requires us to fill each and every one of its components.
+In fact, `AND` is also a categorical product.
 The product type is a way to combine two objects into a single object and work with them as a single object so that each factor is treated independently.
+
 There is not much of a point to working with the `ProductType` I defined here in Rust and the reason why is that Rust's `struct` types already capture this completely.
+Succinctly: `struct` **is** a product type.
 However, one should note that we can start to see a bit of the lack of expressiveness in Rust's type system when we start to think about the universal property of the product type.
 Without access to Rust's `struct`, could you have defined a `ProductType` that allowed for an arbitary number of types to be combined into a single object?
 Can you parameterize the associated types like `type X` and `type Y` in the `ProductType` trait with some other arbitrary trait?
 
-TODO: Talk about the product as gluing together of arrays?
+Lastly, give this some thought with `tuples` instead of `struct` types.
+Everything should essentially be the same, but it will also line up clearly with the work we've done here (we wrote the product vector as a tuple, actually) and you should take a challenge to work through the case of products that are arbitrarily long.
 
 ## coproduct
 One thing we can always do with diagrams is flip them around to create the *dual* of the original diagram.
-We may wonder why the hell we would do this, but it turns out that the dual of a diagram can often serve a great utility like the original diagram, and they are in a sense "independent and opposite" types from one another.
+We may wonder why the hell we would do this, but it turns out that the dual of a diagram can often serve a great utility like the original diagram, and they are often "independent and opposite" types from one another.
 When we do this diagram reversal, we add the prefix *co* before the name of the other diagram.
 For now, let's take a look then at the *coproduct* (or *sum*) for vector spaces $V$ and $W$ which is often called the *direct sum* and written as $V\oplus W$.
 
@@ -291,43 +327,43 @@ For now, let's take a look then at the *coproduct* (or *sum*) for vector spaces 
 ### diagram
 Let's start with the diagramatic/algebraic law $V\oplus W$ must follow.
 ![coproduct](/images/longform/holy_trinity/algebra_as_computation/coproduct.svg)
-We define the coproduct/direct sum $V \oplus W$ as the vector space that satisfies the following universal property of this diagram in that we must have a unique map $f$ that makes the diagram commute.
+We define the direct sum $V \oplus W$ as the vector space that satisfies the following universal property of this diagram in that we must have a unique map $f$ that makes the diagram commute.
 Specifically, there is only one $f$ where $f_V = f \circ \iota_V$ and $f_W = f \circ \iota_W$.
 We will write elements of $V \oplus W$ as $\boldsymbol{v} \oplus \boldsymbol{w}$ where $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$ which gives us a construction to work with.
 In this case, we have two maps $\iota_V$ and $\iota_W$ that are often called [*inclusions*](https://en.wikipedia.org/wiki/Inclusion_map) and they are defined as:
 $$
 \begin{align*}
 \iota_V \colon V &\to V \oplus W \\\\
-\boldsymbol{v} &\mapsto \boldsymbol{v}  \\\\
+\boldsymbol{v} &\mapsto \boldsymbol{v}_V  \\\\
 \end{align*}
 $$
 and
 $$
 \begin{align*}
 \iota_W \colon W &\to V \oplus W \\\\
-\boldsymbol{w} &\mapsto  \boldsymbol{w} \\\\
+\boldsymbol{w} &\mapsto  \boldsymbol{w}_W \\\\
 \end{align*}
 $$
-where $\boldsymbol{0}$ is the zero vector in the respective vector space.
-Note that like the product, these maps $\iota$ come as part of the data of the direct sum.
-One may see this as a bit odd as these $\iota$ maps look like they don't do anything, however, they do move that vector into a new space and, if you'd like, you can think of them as a way to tag the vector with the space it comes from and instead put, for example:
+Note that like the product, these maps $\iota$ come as an implicit part of the data of the direct sum.
+One may see this as a bit odd as these $\iota$ maps look like they don't do anything other than apply a tag, however, they do move that vector into a new space and, if you'd like, for example:
 $$
-\iota_V(v) = \boldsymbol{v} \oplus \boldsymbol{0}
+\iota_V(v) = \boldsymbol{v}_V \oplus \boldsymbol{0}_W
 $$
+The tag is not a common notation by the way, but I believe it is helpful so I've added it.
 The fact that these maps do indeed move the vector to a new space will be even more clear when we do the implementation in Rust.
-Further, we will see this ability to go between $\boldsymbol{v}$ and $\boldsymbol{v} \oplus \boldsymbol{0}$ is special for vector spaces and will correspond to a sneakily implemented trait we have on our vector type in Rust.
+Further, we will see this ability to go between $\boldsymbol{v}_V$ and $\boldsymbol{v}_V \oplus \boldsymbol{0}_W$ is special for vector spaces and will correspond to a sneakily implemented trait we have on our vector type in Rust.
 
 With this construction we can still add and scalar multiply vectors in the direct sum in the usual way.
 Just for show:
 $$
-\boldsymbol{v} \oplus \boldsymbol{w} + \boldsymbol{v\'} \oplus \boldsymbol{w\'} = (\boldsymbol{v} + \boldsymbol{v\'}) \oplus (\boldsymbol{w} + \boldsymbol{w\'})\\\\
-\alpha (\boldsymbol{v} \oplus \boldsymbol{w}) = (\alpha \boldsymbol{v}) \oplus (\alpha \boldsymbol{w}).
+\boldsymbol{v}_V \oplus \boldsymbol{w}_W + \boldsymbol{v\'}_V \oplus \boldsymbol{w\'}_W = (\boldsymbol{v}_V + \boldsymbol{v\'}_V) \oplus (\boldsymbol{w} + \boldsymbol{w\'})\\\\
+\alpha (\boldsymbol{v}_V \oplus \boldsymbol{w}_W) = (\alpha \boldsymbol{v}_V) \oplus (\alpha \boldsymbol{w}_W).
 $$
 
 How can this map be defined?
 Well, if we have $\boldsymbol{v} \in V$ and $\boldsymbol{w} \in W$, then if we have $f_V(\boldsymbol{v}) = \boldsymbol{z_v}$:
 $$
-f(\boldsymbol{v} \oplus \boldsymbol{w}) = \boldsymbol{z_v} + \boldsymbol{z_w} = f_V(\boldsymbol{v}) + f_W(\boldsymbol{w})
+f(\boldsymbol{v}_V \oplus \boldsymbol{w}_V) = \boldsymbol{z_v} + \boldsymbol{z_w} = f_V(\boldsymbol{v}) + f_W(\boldsymbol{w})
 $$
 
 
@@ -365,10 +401,11 @@ where
 }
 ```
 Note above these extra methods of `get_X_via_tag` and `get_Y_via_tag` are helpful and they come with the definition of the coproduct definition.
-When we wrote out something like $\boldsymbol{v} \oplus \boldsymbol{w}$, we are implicitly tagging which space each came from in this direct sum.
-That is why when we just say $\boldsymbol{v} \in V \oplus W$, we know that $\boldsymbol{v}$ is tagged as coming from $V$.
-Secretly, we have just abused the notation and dropped the tags which come from $\iota_V$ and $\iota_W$.
-That is, we should really write $\iota_V(\boldsymbol{v}) \oplus \iota_W(\boldsymbol{w})$.
+When we wrote out something like $\boldsymbol{v}_V \oplus \boldsymbol{w}_W$, I explicitly wrote the tagging for which space each came from in this direct sum.
+We could have also kept this tag by simply leaving the inclusion map present:
+$$
+\iota_V(\boldsymbol{v}) \oplus \iota_W(\boldsymbol{w}).
+$$
 Again, this construction and difference and types will become clear in the [enumeration type](#enumerations-tagged-unions) section
 
 Now, doing this in Rust requires us to utilize these underlying `Option` types to allow for the possibility of having only one of the two vectors in the sum.
@@ -431,54 +468,54 @@ where
 ```
 In a brief review here, it seems that the ability to toggle between `Some(T)` and `None` in the `Option` enumeration make possible the ability to have a meaningful `Coproduct` type in Rust.
 
-### equivalence of direct sum and direct product
+### equivalence of sum and product for vector spaces
 Right now we have defined two distinct types in Rust that are actually equivalent.
 The reason for this being that the category of vector spaces is [*preadditive*](https://en.wikipedia.org/wiki/Preadditive_category) and the product and coproduct are really a [*biproduct*](https://en.wikipedia.org/wiki/Biproduct) in this category.
 Jargon aside, we can see why this is true both mathematically and programmatically.
 From this, we will discover the nice property of the `Option::unwrap_or_default` as a means of making the `Product` and `Coproduct` types (essentially) equivalent so long as the underlying types are restricted to implementing `Default`.
 
 First, mathematically, we show that $V \times W$ and $V \oplus W$ are isomorphic by creating an invertible linear map between them. 
-Note that we were able to identify $\boldsymbol{v} \oplus \boldsymbol{0} = \boldsymbol{v}$ and $\boldsymbol{w} = \boldsymbol{0} \oplus \boldsymbol{w}$ and so we can define a map:
+Note that we were able to identify $\boldsymbol{v}_V \oplus \boldsymbol{0}_W = \boldsymbol{v}_V$ and $\boldsymbol{w}_W = \boldsymbol{0}_V \oplus \boldsymbol{w}_W$ and so we can define a map:
 $$
 \begin{align*}
 \varphi \colon V\times W &\to V \oplus W \\\\
-(\boldsymbol{v}, \boldsymbol{w}) &\mapsto \boldsymbol{v} \oplus \boldsymbol{w} \\\\
+(\boldsymbol{v}, \boldsymbol{w}) &\mapsto \boldsymbol{v}_V \oplus \boldsymbol{w}_W \\\\
 \end{align*}
 $$
 and as for the inverse:
 $$
 \begin{align*}
 \varphi^{-1} \colon V \oplus W &\to V \times W \\\\
-\boldsymbol{v} \oplus \boldsymbol{w} &\mapsto (\boldsymbol{v}, \boldsymbol{w}) \\\\
-\boldsymbol{v} &\mapsto (\boldsymbol{v}, \boldsymbol{0}) \\\\
-\boldsymbol{w} &\mapsto (\boldsymbol{0}, \boldsymbol{w}) \\\\
+\boldsymbol{v}_V \oplus \boldsymbol{w}_W &\mapsto (\boldsymbol{v}, \boldsymbol{w}) \\\\
+\boldsymbol{v}_V &\mapsto (\boldsymbol{v}, \boldsymbol{0}) \\\\
+\boldsymbol{w}_W &\mapsto (\boldsymbol{0}, \boldsymbol{w}) \\\\
 \end{align*}
 $$
 I won't show the details here, but this is a quick exercise in linear algebra to show that these maps are linear and inverses of one another.
 
 The above gives us a way to go between the two types programmatically too.
-To show these types are equivalent when working with vector spaces (i.e., the underlying type `V<M, F>`), we want to show that a construction of one type yields a construction of the other and this is our programmatic proof.
-One way to do this in Rust is with the `Into<_>` (or `From<_>`) traits.
+To show these types are equivalent when working with vector spaces (i.e., the underlying type `V<M, F>`), we want to show that a construction of one type yields a one-to-one construction of the other to get our programmatic proof.
+One way to do this in Rust is with the `From<_>` (or `Into<_>`) traits.
 Let's see how we do this.
 ```rust
-impl<const M: usize, const N: usize, F> Into<DirectSum<M, N, F>> for DirectProduct<M, N, F>
+impl<const M: usize, const N: usize, F> From<DirectSum<M, N, F>> for DirectProduct<M, N, F>
 where
     F: Add<Output = F> + Default + Copy,
 {
-    fn into(self) -> DirectSum<M, N, F> {
-        DirectSum::iota_X(Some(self.pi_X())) + DirectSum::iota_Y(Some(self.pi_Y()))
+    fn from(sum: DirectSum<M, N, F>) -> DirectProduct<M, N, F> {
+        DirectProduct::construct(
+            sum.get_X_via_tag().unwrap_or_default(),
+            sum.get_Y_via_tag().unwrap_or_default(),
+        )
     }
 }
 
-impl<const M: usize, const N: usize, F> Into<DirectProduct<M, N, F>> for DirectSum<M, N, F>
+impl<const M: usize, const N: usize, F> From<DirectProduct<M, N, F>> for DirectSum<M, N, F>
 where
     F: Add<Output = F> + Default + Copy,
 {
-    fn into(self) -> DirectProduct<M, N, F> {
-        DirectProduct::construct(
-            self.get_X_via_tag().unwrap_or_default(),
-            self.get_Y_via_tag().unwrap_or_default(),
-        )
+    fn from(prod: DirectProduct<M, N, F>) -> DirectSum<M, N, F> {
+        DirectSum::iota_X(Some(prod.pi_X())) + DirectSum::iota_Y(Some(prod.pi_Y()))
     }
 }
 ```
@@ -489,7 +526,7 @@ These constructions are proofs that the two types are equivalent in Rust.
 
 Now, there is a caveat here and I should be forthcoming.
 This Rust program doesn't know how to prove that the `DirectProduct` and `DirectSum` types are equivalent.
-I did provide for you an implementation of the `Into` trait from each direction that we can verify by hand can be done back-and-forth with no loss of information, but we would need an additional constraint in place, i.e., we would need to run a program that checks the following:
+I did provide for you an implementation of the `From` trait from each direction that we can verify by hand can be done back-and-forth with no loss of information, but we would need an additional constraint in place, i.e., we would need to run a program that checks the following:
 ```rust
 fn check_equivalence_prod_to_sum<M, N, F>(product: DirectProduct<M, N, F>) -> bool
 where
@@ -552,7 +589,7 @@ This data structure works extremely well as it allows you to exhaustively patter
 The difference is, at most, one of the types can be occupied in the enumeration type.
 
 ### implementation
-For instance, in Rust, you maybe have something like:
+For instance, in Rust, you have something like:
 ```rust
 pub enum UniqueDirectSum<const M: usize, const N: usize, F> {
     V(V<M, F>),
@@ -560,7 +597,16 @@ pub enum UniqueDirectSum<const M: usize, const N: usize, F> {
 }
 ```
 It is quite clear that this is a selector between two types and, in general, two elements of this type cannot successfully be added together.
-Nevertheless, we can implement a `Add` trait for this type and it will be type-safe.
+
+Earlier I mentioned that I would come back to the mappings $\iota_V$ and $\iota_W$ and the tagged union and we can see that these appear explicitly in Rust as the variant constructors:
+```rust
+let v = UniqueDirectSum::V(v);
+let w = UniqueDirectSum::W(w);
+```
+To reiterate, the `UniqueDirectSum::V` is a mapping from `V<M, F>` into `UniqueDirectSum<M, N, F>` and the `UniqueDirectSum::W` is a mapping from `V<N, F>` into `UniqueDirectSum<M, N, F>` just as `\iota_V` and `\iota_W` were mappings from `V` and `W` into the coproduct $V \oplus W$.
+This tagging may appear quite natural now!
+
+Carrying on, we can implement a `Add` trait for this type and it will be type-safe.
 ```rust
 impl<const M: usize, const N: usize, F> Add for UniqueDirectSum<M, N, F>
 where
@@ -596,9 +642,12 @@ where
 ```
 where there is no issue that can cause a `panic!` here. 
 
+The syntax of `match` plays an important role here as it exhaustively checks all the possible cases of the enumeration type knowing all along that only one variant may be occupied at a time.
+I would argue that this capability outweighs the ability to add any combination of the two types together as we had with the coproduct type at least as far as programming goes.
+
 ### diagram?
-This forces us to go the other way and try to derive a diagram from the Rust code.
-To do so, we can instead think of the coproduct of the the sets of the vectors from each space which I will write as $\\{V\\}$ and $\\{W\\}$.
+We've been given a challenge to go the other way and try to derive a diagram from the Rust type itself.
+To do so, we can instead think of the coproduct of the the sets of the vectors from each space which I will write as $\\{V\\}$ and $\\{W\\}$ and put $\\{V \\} \amalg \\{W \\}$ to represent the coproduct (disjoint union) of the two sets.
 Working with these, we can add additional logic to implement a selector function that will allow us to choose between the two types inside the tagged union.
 ![tagged union](/images/longform/holy_trinity/algebra_as_computation/tagged_union.svg)
 
@@ -607,8 +656,28 @@ Naturally, we also have the inclusion $\iota_V$ for taking the set into its copr
 From there, we have a map $T$ which takes an element of the tagged union and outputs its tag, show here as being either 1 or 2 for $V$ and $W$ respectively.
 The detail we must have is that given a choice of $s_V$, we must have a unique map $s_T$ that selects the tag of the element of the tagged union and makes the above diagram commute.
 
-Programmatically, this selector is captured by pattern matching via the `match` statement or `if let` statement.
+Programmatically, this selector $s_T$ is captured by pattern matching via the `match` statement or `if let` statement.
 It is built into the Rust language and is a very powerful tool for working with tagged unions!
+One distinction here, however, is that when we apply the selector $s_T$, we also need to retain the type structure of the tagged union.
+For example, in the above we had:
+```rust
+match our_enum: UniqueDirectSum<M, N, F> {
+    UniqueDirectSum::V(v) => UniqueDirectSum::V(v * scalar),
+    UniqueDirectSum::W(w) => UniqueDirectSum::W(w * scalar),
+}
+```
+`match` applies the type selector, but we gain introspection into the inner types via looking inside of the `UniqueDirectSum::V` and `UniqueDirectSum::W` (or equivalently `\iota_V` and `\iota_W`) mappings.
+Essentially, we have "glued" the diagram of the selector $s_T$ into the coproduct diagram $V \oplus W$.
 
 At the moment, I am not totally satisfied with this diagramatic perspective of the tagged union/enum type of Rust.
 This leaves me wanting a deeper explanation by connecting this into *type theory* which we will do as we connect all of the elements of the Curry-Howard-Lambek correspondence.
+
+# where to go from here
+This piece has been a bit of a whirlwind to explain some common constructions in mathematics and how they can made programmatic specifically using Rust.
+From here, I would like to carry on with some further examples and move into some constructions I found extremely useful in my own work that I have not had the chance to explain here such as *tensors* and *Clifford algebras*.
+
+Eventually, I also want to get into type theory and how these categorical constructions relate to type-theoretic constructions.
+This will require us learning about special types of categories, but I think it will be a fun journey to take together.
+
+Furthermore, I want to provide the complete code for the above constructions in a more usable form.
+They can be found at this repository: [Autoparallel/tensor](https://github.com/Autoparallel/tensor) with commit hash `c8bd132`.

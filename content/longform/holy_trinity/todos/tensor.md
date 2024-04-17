@@ -5,6 +5,18 @@ date = "2024-04-16"
 tags = ["algebra"]
 +++
 
+Have you ever thought to yourself: "I wish I could multiply vectors together?"
+I can assure you that nearly every one of my students tried this in some way when they first learned about vectors.
+The ideas of dot products and cross products and how they differ in dimension 2 and 3 really seemed to confuse them.
+Nevermind the fact that the cross product fails to generalize into higher dimensions.
+At the same time, we often teach ways to combine vectors, yet we don't quite give all the background that I think is instrumental for people to go out and get their hands dirty.
+I don't want this to be the case.
+
+Thinking of this concept of vector multiplication leads us down a road for what it means to extend, algebraically, vectors beyond just the space that they come packaged in.
+For this, we will pass through a landscape of general constructions that can be applied to more places than just the vectors.
+We'll also see why vectors are inherently nice, and we'll visit the notion of a *tensor* along the way.
+The concept of tensor seems to be one that I get many questions about, so my hope here is we can do some mental yoga prior to defining this concept only for the tensor to emerge as something clear, albeit tersely defined.
+
 ## tensor product type
 Next, we want to define a multiplicative operation on vector spaces which will descend to a *multiplication* operation on the vector-like objects we are building.
 For us, this will be the *tensor* product of vector spaces. 
