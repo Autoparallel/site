@@ -9,7 +9,7 @@ Taking a look at [paths of paths](/braindump/#paths-of-paths) we could see that 
 Considering categories which consist purely of morphisms (functions), we can start to build up their geometric structure.
 
 Take a category with objects $A$ and $B$.
-Functions/morphisms between these objects are arrows $f$ and $g$. 
+Functions/morphisms between these objects are arrows $f_1$ and $f_2$. 
 Morphisms or paths between these functions can sometimes be built as well, call them $H_1$ and $H_2$.
 We can continue this process and have morphisms between $H_1$ and $H_2$, call it $\Phi$.
 We are building up a complex of morphisms and we can draw a diagram:
