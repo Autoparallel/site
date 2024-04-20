@@ -10,6 +10,10 @@ highlight_theme = "dracula"
 smart_punctuation = true
 render_shortcodes = true
 generate_toc = true
+extra_syntaxes_and_themes = ["syntaxes/lean.sublime-syntax"]
+# name = "lean"
+# sublime_syntax = 
+
 
 [extra]
 image = "og_image.png"
