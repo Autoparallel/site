@@ -1,13 +1,3 @@
-ol,
-ul {
-    margin-top: .25rem;
-    margin-bottom: .25rem;
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: auto;
-}
-
-
 details,
 td,
 th {
@@ -157,17 +147,25 @@ a:hover {
     color: var(--bg)
 }
 
+ol,
+ul {
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+}
+
 ul {
     list-style: none;
 }
-
 
 ol {
     list-style-type: decimal
 }
 
 li {
-    margin-bottom: .125rem
+    margin-left: 0;
 }
 
 ul li::before {
@@ -605,4 +603,5 @@ p {
     text-align: justify;
     text-justify: inter-word;
     hyphens: auto;
+
 }
