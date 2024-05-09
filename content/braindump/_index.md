@@ -16,5 +16,5 @@ template = "braindump.html"
   - [ ] read: "[An Introduction to Mathematical Cryptography](https://link.springer.com/book/10.1007/978-0-387-77993-5)"
 - [ ] read: Shannon's papers.
     - [x] read: "[A Mathematical Theory of Communication](https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)"
-    - [ ] read: "[Communication Theory of Secrecy Systems](https://www.cs.miami.edu/home/burt/learning/csc685.211/bstj28-4-656.pdf)"
+    - [x] read: "[Communication Theory of Secrecy Systems](https://www.cs.miami.edu/home/burt/learning/csc685.211/bstj28-4-656.pdf)"
     - [ ] read: "[Communication in the Presence of Noise](https://fab.cba.mit.edu/classes/S62.12/docs/Shannon_noise.pdf)"
