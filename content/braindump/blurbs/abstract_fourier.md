@@ -28,10 +28,18 @@ We will get to details of characters later on.
 First, we see that $L^2_\mathbb{F}(G)$ is an algebra under convolution (as multiplication) and pointwise addition.
 Let $u, v \in L^2_\mathbb{F}(G)$, then the *convolution* of $u$ and $v$ written as $u \ast v$ is defined by:
 $$(u \ast v)(g) = \int_{h \in G} u(h) v(gh^{-1}) d\lambda(h)$$
-where, concatenation is the multiplication in $\mathbb{F}$, and we write the group operation in the (commutative, for now) group $G$ as concatenation with inverse as the superscript $-1$.
+where, concatenation is the multiplication in $\mathbb{F}$, and we write the group operation in the group $G$ as concatenation with inverse as the superscript $-1$.
 Further, I have appended a measure on $G$ via $d\lambda$ which is a translation invariant measure on $G$ called the [**Haar measure**](https://en.wikipedia.org/wiki/Haar_measure).
 This means $d\lambda(gh) = d\lambda(g)$ for all $h \in G$ which, in a sense, means that $\lambda$ sees all of $G$ as homogeneous (there's no lumpiness or concentration of mass in $G$ that $\lambda$ sees).
-The important property is that in some respect, the mapping $L^2_\mathbb{F}(G) \times L^2_\mathbb{F}(G) \to \mathbb{F}$ via:
+
+Now, the convolution theorem states that the Fourier transform $\mathcal{F}$ is an isomorphism of algebras in that 
+$$
+\mathcal{F}(u\ast v) = \mathcal{F}(u) \cdot \mathcal{F}(v)
+$$
+where $\cdot$ is pointwise multiplication in $L^2(\widehat{G}_\mathbb{F})$.
+This is where we want to construct since this property is immensely powerful.
+
+Also very important is that the mapping $L^2_\mathbb{F}(G) \times L^2_\mathbb{F}(G) \to \mathbb{F}$ via:
 $$
 \langle u, v\rangle \coloneqq \frac{1}{|G|}\int_{g \in G} u(g)^{\textrm{op}} v(g) d\lambda (g)
 $$
@@ -114,7 +122,7 @@ Given now that we have the Fourier transform as a an algebra isomorphism $\mathc
 $$
 \mathcal{F}(u \ast v) = \mathcal{F}(u) \cdot \mathcal{F}(v)
 $$
-where $\cdot$ is pointwise multiplication in $L^2(\widehat{G}_\mathbb{F})$ and so we have:
+and:
 $$
 \mathcal{F}(u) = \mathcal{F}(u \ast \delta) = \mathcal{F}(u) \cdot \mathcal{F}(\delta) = \mathcal{F}(u)
 $$
@@ -130,6 +138,8 @@ $$
 
 This is where I'll leave off, but we have set the stage for a lot more.
 I'll point to [Pontryagin duality](https://en.wikipedia.org/wiki/Pontryagin_duality) which we have almost come to here which is closely related to [space and quantity duality](../braindump/#space-and-quantity-duality).
+For the latter point, we see that in a space of functions (quantities) with rich algebraic structure like the multiplicative characters $\chi \colon G \to \mathbb{F}$, we can identify the space itself such as a $g \in $G$ with quantities $\delta_g \in L^2_\mathbb{F}(G)$.
+In the best cases, we can topologize the set of such $\delta_g$ and recover the group $G$ itself.
 
 
 ---
