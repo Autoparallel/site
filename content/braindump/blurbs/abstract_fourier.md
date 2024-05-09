@@ -11,17 +11,17 @@ So, we'll start with at least something here.
 As always, there's a tendency to lack a bit of rigor and devout formalism in these blurbs, so take what I'm saying with a grain of salt and DYOR (I hope this pushes you to DYOR!).
 
 What is perhaps the most basic property of the Fourier transform (or anything like it)?
-The key concept is algebraic in that the Fourier transform is a homomorphism that maps convolution to pointwise multiplication which is given in the [convolution theorem](https://en.wikipedia.org/wiki/Convolution_theorem).
+The key concept is algebraic in that the Fourier transform is a isomorphism of algebras that maps convolution to pointwise multiplication which is given in the [convolution theorem](https://en.wikipedia.org/wiki/Convolution_theorem).
 In precise settings, you may get more from this property than you might expect.
 
-Let $G$ be a group, then the **Fourier transform** is an isomorphism of algebras $\mathcal{F} : L^2_\mathbb{F}(G) \to L^2_\mathbb{F}(\widehat{G_\mathbb{F}})$ where $\widehat{G}$ is the dual group of $G$.
+Let $G$ be a group, then the **Fourier transform** is an isomorphism of algebras $\mathcal{F} : L^2_\mathbb{F}(G) \to L^2_\mathbb{F}(\widehat{G_\mathbb{F}})$ where $\widehat{G_\mathbb{F}}$ is the dual group of $G$.
 Briefly, I am obsessively tagging these items with subscripted $\mathbb{F}$ whereas you may see nothing of the sort elsewhere.
 What are all of these things?
 
 - $L^2_\mathbb{F}(G)$ is the Hilbert space of square-integrable $\mathbb{F}$-valued functions on $G$ where $\mathbb{F}$ is some field (some of this can be done with a ring $R$ instead and some of this is easiest with $\mathbb{F}=\mathbb{C}$) -- note that I am not really assuming that $G$ is some smooth group or anything as I will mean integration in a very general sense (e.g., sums in discrete land).
 
 - The dual group $\widehat{G}_\mathbb{F}$ is the set of all (continuous) **characters**
-$$\chi : G \to \mathbb{F}$$.
+$$\chi : G \to \mathbb{F}.$$
 The additional important restriction here is that characters are invariant over conjugacy classes in $G$, that is $\chi(hgh^{-1})=\chi(g)$
 We will get to details of characters later on.
 
@@ -29,32 +29,14 @@ First, we see that $L^2_\mathbb{F}(G)$ is an algebra under convolution (as multi
 Let $u, v \in L^2_\mathbb{F}(G)$, then the *convolution* of $u$ and $v$ written as $u \ast v$ is defined by:
 $$(u \ast v)(g) = \int_{h \in G} u(h) v(gh^{-1}) d\lambda(h)$$
 where, concatenation is the multiplication in $\mathbb{F}$, and we write the group operation in the (commutative, for now) group $G$ as concatenation with inverse as the superscript $-1$.
-Further, I have appended a measure on $G$ via $d\lambda$ which is a translation (conjugacy class) invariant measure on $G$ called the [**Haar measure**](https://en.wikipedia.org/wiki/Haar_measure).
+Further, I have appended a measure on $G$ via $d\lambda$ which is a translation invariant measure on $G$ called the [**Haar measure**](https://en.wikipedia.org/wiki/Haar_measure).
+This means $d\lambda(gh) = d\lambda(g)$ for all $h \in G$ which, in a sense, means that $\lambda$ sees all of $G$ as homogeneous (there's no lumpiness or concentration of mass in $G$ that $\lambda$ sees).
 The important property is that in some respect, the mapping $L^2_\mathbb{F}(G) \times L^2_\mathbb{F}(G) \to \mathbb{F}$ via:
 $$
 \langle u, v\rangle \coloneqq \frac{1}{|G|}\int_{g \in G} u(g)^{\textrm{op}} v(g) d\lambda (g)
 $$
 is an inner product on $L^2_\mathbb{F}(G)$ and $\textrm{op}$ signifies a relevant adjoint used if necessary (we can always construct this inner product and they will always be proportional see [here](http://sporadic.stanford.edu/bump/group/gind2_3.html) which will be helpful later too).
 This is where the conjugacy class invariance will really shine.
-
-First, let's try to think of a function $\delta$ where we can compute the convolution with any function $u$ and get back $u$, i.e., $u \ast \delta = u$ where $v$ is the multiplicative identity element of the convolution algebra.
-By definition, we have:
-$$
-(u \ast \delta)(g) = \int_{h \in G} u(h) \delta(gh^{-1}) = u(g).
-$$
-Note that we can also write $\delta_g(h) = \delta(gh^{-1})$ by which we see that $\delta_e(h)=\delta(h)$ where $e\in G$ is the identity of $G$. 
-Our question now is, given some group $G$, what is this $\delta$?
-
-But thinking back to our definition of the Fourier transform $\mathcal{F}$, we wanted it to be an isomorphism $\mathcal{F} \colon L^2_\mathbb{F}(G) \to L^2_\mathbb{F}(\widehat{G_K})$, then we have:
-$$
-\mathcal{F}(u \ast v) = \mathcal{F}(u) \cdot \mathcal{F}(v)
-$$
-where $\cdot$ is pointwise multiplication in $L^2(\widehat{G}_K)$ and so we have:
-$$
-\mathcal{F}(u) = \mathcal{F}(u \ast \delta) = \mathcal{F}(u) \cdot \mathcal{F}(\delta) = \mathcal{F}(u)
-$$
-and we see that the isomorphism (as is required) drags the identity in $L^2_K(G)$ to the identity in $K$.
-
 
 Here's where things get amazing.
 Let's use the following theorem which is, in a sense, a generalization of [Maschke's theorem](https://en.wikipedia.org/wiki/Maschke%27s_theorem) for finite groups which can be proven using the [Wedderburn-Artin theorem](https://en.wikipedia.org/wiki/Wedderburn–Artin_theorem).
@@ -63,24 +45,24 @@ Let's use the following theorem which is, in a sense, a generalization of [Masch
 $$
 L^2_\mathbb{F}(G) = \overline{\bigoplus_{\pi \in \Sigma}} E_\pi^{\oplus \dim E_\pi}
 $$
-where $\Sigma$ is the set of isomorphism classes of irreducible (unitary) representations of $G$ and the overline denotes the closure in $L^2(G)$.
+where $\Sigma$ is the set of isomorphism classes of irreducible representations of $G$ and the overline denotes the closure in $L^2_\mathbb{F}(G)$.
 
-Now, if we can just find a way to project onto the [irreducible representations](https://en.wikipedia.org/wiki/Irreducible_representation), we can decompose any function in $L^2(G)$ into its characteristic components and with any luck, we tie up some loose ends in my above ramblings.
+Now, if we can just find a way to project onto the [irreducible representations](https://en.wikipedia.org/wiki/Irreducible_representation), we can decompose any function in $L^2_\mathbb{F}(G)$ into its characteristic components and with any luck, we tie up some loose ends in my above ramblings.
 The means to do so is using another immense result.
-First, our notion of characters was as conjugacy class invariant maps $\chi \colon G \to K$
-which pair together with perfectly with the class-invariant measure in our inner product and the following result:
+First, our notion of characters was as conjugacy class invariant maps $\chi \colon G \to \mathbb{F}$
+which (when they're morphisms) pair together with perfectly with the translation invariant measure in our inner product along with the following result give us the power we need:
 
 **Lemma (Schur):** Let $R$ be a ring and $M, N$ be simple $R$-modules. Let $\varphi \in \text{Hom}_R(M, N)$, then $\varphi$ is either an isomorphism or the zero map. 
 
-Now, if we look above, we see that $L^2_\mathbb{F}(G)$ is split into non-isomorphic irreducible representations which just so happen to be simple $\mathbb{F}[G]$-modules (a brief on the relationship [here](https://en.wikipedia.org/wiki/Simple_module#:~:text=If%20k%20is%20a%20field,also%20known%20as%20irreducible%20representations.)).
+If we look above, we see that $L^2_\mathbb{F}(G)$ is split into non-isomorphic irreducible representations which just so happen to be simple $\mathbb{F}[G]$-modules (a brief on the relationship [here](https://en.wikipedia.org/wiki/Simple_module#:~:text=If%20k%20is%20a%20field,also%20known%20as%20irreducible%20representations.)).
 
 Then, we can project onto these irreducible representations using the irreducible characters of $G$ since these characters are exactly the functions that split $L^2_\mathbb{F}(G)$ as:
 
 **Corollary:** The projection of $u \in L^2_\mathbb{F}(G)$ onto the irreducible representation $E_\pi$ is given by virtue of the orthogonality of characters as:
 $$
-\langle \chi_\pi, \chi_{\pi\'} \rangle = \frac{1}{|G|}\int_{g \in G} \chi_\pi(g)^{\textrm{op}} \chi_{\pi\'}(g) d\lambda(g) = \begin{cases} d & \pi = \pi\' \\\\ 0 & \pi \neq \pi\' \end{cases}
+\langle \chi_\pi, \chi_{\pi\'} \rangle = \frac{1}{|G|}\int_{g \in G} \chi_\pi(g)^{\textrm{op}} \chi_{\pi\'}(g) d\lambda(g) = \begin{cases} d_{\pi \pi\'} & \pi = \pi\' \\\\ 0 & \pi \neq \pi\' \end{cases}
 $$
-where $d\neq 0$. 
+where $d_{\pi \pi\'}\neq 0$ for all $\pi, \pi\'$. 
 
 Hence, we now have a mapping $\mathcal{F} : L^2\_\mathbb{F}(G) \to L^2\_\mathbb{F}(\widehat{G}\_\mathbb{F})$ which is an isomorphism of algebras and we can project onto the irreducible representations of $G$ using the characters of $G$.
 In particular, let $u\in L^2_\mathbb{F}(G)$ then the map $\mathcal{F}$ is given by:
@@ -91,7 +73,7 @@ which now is a sum of $\mathbb{F}$-linear combinations of the irreducible charac
 
 The inverse Fourier transform is given by:
 $$
-\mathcal{F}^{-1}(\mathcal{F}(u)) = \int_{\pi\' \in \Sigma} \left\langle \int_{\pi \in \Sigma} \langle u, \chi_\pi \rangle \chi_\pi, \chi_{\pi\'} \right\rangle \chi_{\pi\'} = u
+\mathcal{F}^{-1}(\mathcal{F}(u)) = \int_{\pi\' \in \Sigma} d_{\pi \pi\'}^{-1}\left\langle \int_{\pi \in \Sigma} \langle u, \chi_\pi \rangle \chi_\pi, \chi_{\pi\'} \right\rangle \chi_{\pi\'} = u
 $$
 where we have used the orthogonality of characters in the inner product.
 
@@ -118,9 +100,26 @@ $$
 
 Now, we have a nice result that:
 
-**Theorem:** Let $G$ be an abelian group. Then the irreducible representations are 1-dimensional and the Fourier transform is an isomorphism of algebras. That is, all characters of irreducible representations are multiplicative.
+**Theorem:** Let $G$ be an abelian group. Then the irreducible representations are 1-dimensional and the Fourier transform is an isomorphism of algebras. That is, all characters of irreducible representations are multiplicative. Lastly, $d_{\pi \pi\'} = 1$ for all $\pi, \pi\'$.
 
-Thinking back, we also proposed that there was an identity $\delta$ in $L^2_\mathbb{F}(G)$ such that $u \ast \delta = u$.
+Let's try to think of a function $\delta$ where we can compute the convolution with any function $u$ and get back $u$, i.e., $u \ast \delta = u$ where $v$ is the multiplicative identity element of the convolution algebra.
+By definition, we have:
+$$
+(u \ast \delta)(g) = \int_{h \in G} u(h) \delta(gh^{-1}) = u(g).
+$$
+Note that we can also write $\delta_g(h) = \delta(gh^{-1})$ by which we see that $\delta_e(h)=\delta(h)$ where $e\in G$ is the identity of $G$. 
+Our question now is, given some group $G$, what is this $\delta$?
+
+Given now that we have the Fourier transform as a an algebra isomorphism $\mathcal{F} \colon L^2_\mathbb{F}(G) \to L^2_\mathbb{F}(\widehat{G_\mathbb{F}})$, then we have:
+$$
+\mathcal{F}(u \ast v) = \mathcal{F}(u) \cdot \mathcal{F}(v)
+$$
+where $\cdot$ is pointwise multiplication in $L^2(\widehat{G}_\mathbb{F})$ and so we have:
+$$
+\mathcal{F}(u) = \mathcal{F}(u \ast \delta) = \mathcal{F}(u) \cdot \mathcal{F}(\delta) = \mathcal{F}(u)
+$$
+and we see that the isomorphism (as is required) drags the identity in $L^2\_\mathbb{F}(G)$ to the identity in $\mathbb{F}$.
+
 Given our results, we can use the inverse Fourier transform to find this $\delta$.
 In particular, we have that the multiplicative identity in $L^2_\mathbb{F}(\widehat{G_\mathbb{F}})$ is $1$ and hence we have:
 $$
