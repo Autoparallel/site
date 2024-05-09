@@ -1,6 +1,6 @@
 +++
-title = "init Fourier"
-date = "2024-05-02"
+title = "abstract Fourier"
+date = "2024-05-09"
 [taxonomies]
 tags = ["math", "algebra"]
 +++
@@ -27,12 +27,12 @@ We will get to details of characters later on.
 
 First, we see that $L^2_\mathbb{F}(G)$ is an algebra under convolution (as multiplication) and pointwise addition.
 Let $u, v \in L^2_\mathbb{F}(G)$, then the *convolution* of $u$ and $v$ written as $u \ast v$ is defined by:
-$$(u \ast v)(g) = \int_{h \in G} u(h) \cdot v(gh^{-1}) d\lambda(h)$$
-where, specifically, $\cdot$ is the multiplication in $\mathbb{F}$, and we write the group operation in the (commutative, for now) group $G$ as concatenation with inverse as the superscript $-1$.
+$$(u \ast v)(g) = \int_{h \in G} u(h) v(gh^{-1}) d\lambda(h)$$
+where, concatenation is the multiplication in $\mathbb{F}$, and we write the group operation in the (commutative, for now) group $G$ as concatenation with inverse as the superscript $-1$.
 Further, I have appended a measure on $G$ via $d\lambda$ which is a translation (conjugacy class) invariant measure on $G$ called the [**Haar measure**](https://en.wikipedia.org/wiki/Haar_measure).
 The important property is that in some respect, the mapping $L^2_\mathbb{F}(G) \times L^2_\mathbb{F}(G) \to \mathbb{F}$ via:
 $$
-\langle u, v\rangle \coloneqq \frac{1}{|G|}\int_{g \in G} u(g)^{\textrm{op}} \cdot v(g) d\lambda (g)
+\langle u, v\rangle \coloneqq \frac{1}{|G|}\int_{g \in G} u(g)^{\textrm{op}} v(g) d\lambda (g)
 $$
 is an inner product on $L^2_\mathbb{F}(G)$ and $\textrm{op}$ signifies a relevant adjoint used if necessary (we can always construct this inner product and they will always be proportional see [here](http://sporadic.stanford.edu/bump/group/gind2_3.html) which will be helpful later too).
 This is where the conjugacy class invariance will really shine.
@@ -40,7 +40,7 @@ This is where the conjugacy class invariance will really shine.
 First, let's try to think of a function $\delta$ where we can compute the convolution with any function $u$ and get back $u$, i.e., $u \ast \delta = u$ where $v$ is the multiplicative identity element of the convolution algebra.
 By definition, we have:
 $$
-(u \ast \delta)(g) = \int_{h \in G} u(h) \cdot \delta(gh^{-1}) = u(g).
+(u \ast \delta)(g) = \int_{h \in G} u(h) \delta(gh^{-1}) = u(g).
 $$
 Note that we can also write $\delta_g(h) = \delta(gh^{-1})$ by which we see that $\delta_e(h)=\delta(h)$ where $e\in G$ is the identity of $G$. 
 Our question now is, given some group $G$, what is this $\delta$?
@@ -78,7 +78,7 @@ Then, we can project onto these irreducible representations using the irreducibl
 
 **Corollary:** The projection of $u \in L^2_\mathbb{F}(G)$ onto the irreducible representation $E_\pi$ is given by virtue of the orthogonality of characters as:
 $$
-\langle \chi_\pi, \chi_{\pi\'} \rangle = \frac{1}{|G|}\int_{g \in G} \chi_\pi(g)^{\textrm{op}} \cdot \chi_{\pi\'}(g) d\lambda(g) = \begin{cases} d & \pi = \pi\' \\\\ 0 & \pi \neq \pi\' \end{cases}
+\langle \chi_\pi, \chi_{\pi\'} \rangle = \frac{1}{|G|}\int_{g \in G} \chi_\pi(g)^{\textrm{op}} \chi_{\pi\'}(g) d\lambda(g) = \begin{cases} d & \pi = \pi\' \\\\ 0 & \pi \neq \pi\' \end{cases}
 $$
 where $d\neq 0$. 
 
@@ -96,13 +96,43 @@ $$
 where we have used the orthogonality of characters in the inner product.
 
 This shows that the Fourier transform is an isomorphism of $\mathbb{F}$-vector spaces, but we need to show that it is an isomorphism of algebras.
-Now, if we take:
+Now, if we take specifically the component of $u \ast v$ in the irreducible representation $E_\pi$, we have that:
 $$
 \begin{align*}
 \mathcal{F}\_{\chi\_\pi}(u \ast v) &= \langle u \ast v, \chi\_\pi \rangle \\\\
-&= \left \langle \int_{h \in G} u(h) \cdot v(gh^{-1}) d\lambda(h), \chi_\pi\right \rangle \\\\
-&= \int_{\ell \in G} \int_{h \in G} u(h) \cdot v(\ell h^{-1}) \chi_\pi(\ell) d\lambda(h) d\lambda(\ell) \\\\
-&\vdots\\\\
-&= \langle u, \chi_\pi \rangle \cdot \langle v, \chi_\pi \rangle
+&= \left \langle \int_{h \in G} u(h) v(gh^{-1}) d\lambda(h), \chi_\pi\right \rangle \\\\
+&= \int_{l \in G} \int_{h \in G} u(h) v(l h^{-1}) \chi_\pi(l) d\lambda(h) d\lambda(l)
 \end{align*}
 $$
+and we realize that, to get to our intended answer, we need something slightly stronger. 
+In particular, if $\chi \colon G \to \mathbb{F}$ is *multiplicative* (i.e., $\chi(gh)=\chi(g)\chi(h)$), then we have that we can do a change of variables $l \mapsto k = lh$ and we get:
+$$
+\begin{align*}
+\mathcal{F}\_{\chi\_\pi}(u \ast v) &= \int_{l \in G} \int_{h \in G} u(h) v(l h^{-1}) \chi_\pi(l) d\lambda(h) d\lambda(l) \\\\
+&=\int_{k \in G}\int_{h\in G} u(h) v(k h^{-1}) \chi_{\pi}(k) d\lambda(h) d\lambda(k)\\\\
+&= \int_{k \in G} \int_{h \in G} u(h) v(l) \chi_\pi(h)\chi_\pi(l) d\lambda(h) d\lambda(k) & \text{by multiplicativity} \\\\
+&= \int_{h \in G} u(h) u(h) \chi_\pi(h) d\lambda(h) \cdot \ \int_{l \in G} v(l) \chi_\pi(l) d\lambda(l) & \text{by translation invariance of $\lambda$}\\\\
+&= \mathcal{F}\_{\chi\_\pi}(u) \cdot \mathcal{F}\_{\chi\_\pi}(v)
+\end{align*}
+$$
+
+Now, we have a nice result that:
+
+**Theorem:** Let $G$ be an abelian group. Then the irreducible representations are 1-dimensional and the Fourier transform is an isomorphism of algebras. That is, all characters of irreducible representations are multiplicative.
+
+Thinking back, we also proposed that there was an identity $\delta$ in $L^2_\mathbb{F}(G)$ such that $u \ast \delta = u$.
+Given our results, we can use the inverse Fourier transform to find this $\delta$.
+In particular, we have that the multiplicative identity in $L^2_\mathbb{F}(\widehat{G_\mathbb{F}})$ is $1$ and hence we have:
+$$
+\begin{align*}
+\mathcal{F}^{-1}(1) &= \int_{\pi \in \Sigma} \langle 1, \chi_\pi \rangle \chi_\pi \\\\
+\end{align*}
+$$
+
+This is where I'll leave off, but we have set the stage for a lot more.
+I'll point to [Pontryagin duality](https://en.wikipedia.org/wiki/Pontryagin_duality) which we have almost come to here which is closely related to [space and quantity duality](../braindump/#space-and-quantity-duality).
+
+
+---
+It is possible to do this same sort of thing for non-group algebras and the like, but I will leave that for another time.
+In case you're interested, see the [Gelfand representation](https://en.wikipedia.org/wiki/Gelfand_representation) for a generalization of this to non-group algebras (and note, you don't *really* need to use $\mathbb{C}$ in the statements you see there).
