@@ -1,5 +1,5 @@
 +++
-path = "longform"
+# path = "longform"
 title = "/longform/"
 template = "longform.html"
 +++
