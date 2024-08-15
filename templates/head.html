@@ -120,7 +120,7 @@
 {% set twitter_card = config.extra.twitter_card | default(value=true) %}
 {% if twitter_card != false %}
 <meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="{{ url | safe }}">
+<meta property="twitter:url" content="{{ config.extra.twitter_url | safe }}">
 {% if title %}
 <meta property="twitter:title" content="{{ title }}">
 {% endif %}
@@ -128,7 +128,7 @@
 <meta property="twitter:description" content="{{ description }}">
 {% endif %}
 {% if image %}
-<meta property="twitter:image" content="{{ image }}">
+<meta property="twitter:image" content="{{ config.extra.twitter_image }}">
 {% endif %}
 {% endif %}
 <link rel="canonical" href="{{ url | safe }}">
