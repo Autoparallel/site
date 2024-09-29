@@ -245,14 +245,79 @@ impl<const M: usize, const N: usize> Mul<f64> for Tensor<M, N> {
 ```
 
 All of this above was given in structure-form, but it really does not need to be. 
-Consider the following interface:
+We could generalize this to an interface that allows for arbitrary tensor extensions *a-la* something of the form:
 ```rust
-trait TensorProduct<const M: usize, const N: usize, R> {
-    type V: Add + Mul<R>;
-    type W: Add + Mul<R>;
-
-    fn tensor_product(v: V, w: W) -> Self;
-
-    fn ex
-}
+type Tensor<Tensor<M,N>, Tensor<P>>
 ```
+to represent the tensor product space of $V \otimes W \otimes Z$ of dimensions $M$, $N$, and $P$ respectively.
+Given Rust's non-dependent type system, we can't exactly expand to a tensor of arbitrary valence to allow for
+```rust
+type Tensor<M, N, P>
+```
+
+## quotient or elimination
+The above nonsense displays mostly the expansive nature of tensors.
+Much in the way you can give a computer a set of memory to read, it really only becomes a computer when we assign specific sequences of data to instructions that act on the data.
+Some form of interpretation must happen or we are left with an extremely long punch card to read through and only posit on what it could mean.
+
+In comes perhaps one of the most important concepts in mathematics: *quotients* or *elimination rules*.
+Consider the following data. 
+First, fix some vector space of your liking $V$, and consider the vector space of all possible tensors along with the base field $\mathbb{F}$.
+That is, the *tensor algebra*:
+$$
+\mathcal{T}(V) \coloneqq \mathbb{F} \oplus V \oplus (V\otimes V)\oplus(V\otimes V\otimes V) = \bigoplus_{i=0}^\infty V^{\otimes^i}
+$$
+For sake of simplicity on an already complicated item, consider a basis of $V$ given by $\boldsymbol{e}_i$ for $i=1,\dots,n$.
+Then an example item in the tensor algebra could be
+$$
+t = 3 + 2\boldsymbol{e}_1 + 69 \boldsymbol{e}_8 \otimes \boldsymbol{e}_3 \otimes \boldsymbol{e}_{420}\otimes \boldsymbol{e}_{10}
+$$
+Presumably, this item $t$ represents some kind of data, abstractly.
+Most data doesn't require this level of density -- i.e., that we have to write out potentially infinite strings of symbols to get the point across. 
+Rather, data tends to have internal relationships to one another.
+For example, let's assume our data has some kind of null-condition in that we see no difference between $\boldsymbol{e}_i \otimes \boldsymbol{e}_j$ and $\boldsymbol{e}_i \otimes \boldsymbol{e}_j$.
+Said more intuitively, our data can be ordered any way we wish. 
+Can you see why defining this just on pairs implies its jurisdiction on arbitrary length tensors?
+Call this rule $\mathfrak{R}$.
+
+What happens if we then consider a new collection of data consisting only of unique representations of data under this rule?
+Within this circumstance, our goal is really to produce a path between items if we deem them to be equivalent data, this path being an algorithm to produce one item from another.
+Let's denote our new space of items in $\mathcal{T}(V)$ found to be equivalent under our rule $\mathfrak{R}$ with the collection of symbols arranged beautifully as: $\mathcal{T}(V) / \mathfrak{R}$.
+
+Consider the following example items in $\mathcal{T}(V)$:
+$$
+\begin{align*}
+t_1 &= 3 \boldsymbol{e}_1 \otimes \boldsymbol{e}_2 - 3 \boldsymbol{e}_2 \otimes \boldsymbol{e}_1\\
+t_2 &= 2\boldsymbol{e}_1 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_3 - \boldsymbol{e}_2 \otimes \boldsymbol{e}_3 \otimes \boldsymbol{e}_1 - \boldsymbol{e}_3 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_1
+\end{align*}
+$$
+Applying our rules to $t_1$ we can safely swap $\boldsymbol{e}_2 \otimes \boldsymbol{e}_1$ for $\boldsymbol{e}_1 \otimes \boldsymbol{e}_2$ since the order is irrelevant under $\mathfrak{R}$.
+Following this, we realize that $t_1 \equiv 0$ where I put $\equiv$ to mean an equivalence under our rule $\mathfrak{R}$.
+Just to be clear, our path to equivalence was to swap the order of the tensor and then subtract -- two steps.
+
+In the same vein, for $t_2$ we can produce a two-step computational path for:
+$$
+\boldsymbol{e}_2 \otimes \boldsymbol{e}_3 \otimes \boldsymbol{e}_1 \mapsto \boldsymbol{e}_2 \otimes \boldsymbol{e}_1 \otimes \boldsymbol{e}_3 \mapsto \boldsymbol{e}_1 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_3
+$$
+where each step invokes only our pairwise rule $\mathfrak{R}$ and addresses the question I interjected earlier.
+Next step, we can reduce $t_2$ to be:
+$$
+t_2 \equiv \boldsymbol{e}_1 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_3 - \boldsymbol{e}_3 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_1
+$$
+und after four more computational steps, three to get 
+$$
+\boldsymbol{e}_3 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_1 \mapsto \boldsymbol{e}_1 \otimes \boldsymbol{e}_2 \otimes \boldsymbol{e}_3
+$$
+and one final to subtract, we end up with $t_2 \equiv 0$.
+
+We now created computational paths from both $t_1$ and $t_2$ to $0$. 
+Showing equivalence of $t_1$ and $t_2$ hence is realized by the path $t_1 \mapsto 0$ and playing the computation $t_2 \mapsto 0$ in reverse, or vice-versa.
+
+### counting
+If we were to count the dimensionality of $\mathcal{T}(V)$, we'd arrive at the conclusion it is infinite dimensional. 
+Simply add on a "longer" tensor at the end of any item you already have.
+This will necessarily be independent of the prior!
+
+On the other hand, is it the case that $\mathcal{T}(V)/\mathfrak{R}$ is any smaller, really?
+What more does our rule $\mathfrak{R}$ imply?
+
