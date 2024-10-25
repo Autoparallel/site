@@ -10,6 +10,10 @@ Feel free to use any elements from this site.
 I just ask that you give credit where credit is due if you use or reference any of the content.
 Feel free to take any of the code at will.
 
+## Docker
+I no longer self host this site with Docker or LXC, but instead host with Github pages.
+I am leaving the Docker files here for reference.
+
 ---
 
 Any of the wording is mine and only mine and does not represent any other entity.
