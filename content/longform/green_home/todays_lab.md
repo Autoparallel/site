@@ -130,6 +130,10 @@ One use case I have is that owes to (3) is to be able to backup a VI, try to cha
 Similarly, if you want to work with a service, but decide to stop using it, you can create a backup of that service in case you want to go back to using it in the future.
 Two examples of the latter for me are Tailscale and NextCloud -- I may want to use those again some time down the road, but currently don't.
 
+### storage
+Argueably this could have gone in the hardware section, but whatever.
+TODO
+
 ## services
 I don't run a ton of services, but what I do run are things I deem critical, or at least very useful, as well as the odd experiment.
 I constantly look for new services to run to make my life better.
@@ -163,6 +167,9 @@ The reason why is that Omada (or at least my router) does not provide local host
 Yet another point off here.
 Not to mention, getting Omada set up in a container was a pain and it is not indicative of the typical experience of launching a container.
 There's weird versions to manage and Omada only liked some specific Ubuntu version.
+
+#### dynamic DNS
+TODO
 
 #### LAN
 Locally, I use a larger LAN subnet like `x.y.0.0/22` to have a bit clearer delineation between my devices.
@@ -207,3 +214,223 @@ I tend (and you probably do too) to visit many of the same sites throughout the 
 It's not some crazy tech here, but having it remove ads and store this cache makes browsing cleaner and a bit snappier.
 Better than PiHole in my opinion.
 
+#### VPN
+Honestly, this VPN section should probably come earlier because it is likely the most used network infrastructure for me, but I felt like explaining things from the inside out here.
+Perhaps I saved the best for last, then.
+
+My VPN of choice is Wireguard. 
+It is amazingly simple and it just fuckin' works. 
+
+I choose to minimize the amount of openness I give my LAN to WAN.
+Running Wireguard, I solely have to open a single UDP port for forwarding from my LAN to WAN.
+Since the port is UDP, it's not really possible to tell its even alive there if you're knocking.
+
+Likewise, Wireguard uses simple but powerful cryptography.
+In essence, if a message sent to my Wireguard instance over the internet isn't signed by one of my devices that have given a private key to, then Wireguard throws away that message.
+
+Wireguard is how I connect to my LAN when I'm away which is of immense importance.
+If I'm not home, I still need to monitor my services and make sure everything there is okay.
+This has other advantages too, such as the ability to work on VMs as if I am on my LAN.
+Minor things like having my traffic routed the way I want since I can use my home WAN connection from anywhere is a perk.
+I still get to use Blocky, for instance.
+Furthermore, if I wanted to have an upstream VPN from my LAN gateway, I can just keep my persistent Wireguard connection on all of my devices, and enable the upstream VPN anywhere.
+Things like travel routers become simpler.
+
+#### summary
+My network services stack includes:
+- Omada SDN + Omada CoreDNS
+- Caddy reverse proxy
+- Blocky DNS proxy/cache/adblocker
+- Wireguard VPN
+
+Other worthy mentions to try within this realm would be OPNSense, PFSense, OpenWRT, Nginx, and Traefik.
+
+### home
+I'm going to combine a handful of my other services under the category of "home". 
+These are things I use for life around the house and currently don't want to live without at all.
+
+#### home assistant
+Probably the most important non-network service I run.
+This software is unbelievably good with only few exceptions of problems I have had over years of use. 
+Basically, Home Assistant is/was designed for home automation, but it has grown in scope over time to allow for many integrations that fall into a greater category of "home" use (much like my own categorization here).
+
+I use a minimal but enjoyable amount of IoT hardware and I use Home Assistant to manage it.
+My use cases are predominantly lights and light switches, blinds, and doors/locks.
+Once again, I try to be minimal but effective here. 
+I connect none of this to the internet. 
+Everything is ran locally.
+Access to Home Assistant is done via Wireguard.
+
+In reverse order, having persistent status of doors and locks is helpful to me. 
+I can know if the garage door is closed or my door is locked with more certainty.
+If need be, I can control these devices while away to let someone in my home. 
+The devices I currently use in this case are alright, but do have a bit of a lock-in to the Apple ecosystem which can be partially bypassed directly by Home Assistant, actually.
+I hope to replace these moving forward with devices that operate with Matter/Thread.
+
+Speaking of which, Home Assistant is running in VM inside of Home Assistant OS (HAOS). 
+In fact, this is the only service I have in a VM, the rest are in containers.
+HAOS is its own Linux distribution that has a lot of convenience factors.
+You can easily manage versions of components and get access to add-ons using it.
+Similarly, it now comes with a Matter server implementation.
+Today, Matter is a bit clunky and rough around the edges, but I do imagine it progresses.
+
+Back on topic, I also automate lighting using millimeter wave presence detectors. 
+For one floor of my home, I haven't touched a light switch since setting this up and have never felt the need to and I wouldn't ever go back. 
+Ultimately I plan to set this up around the house, but don't want to do it poorly.
+I mostly use smart switches with Philips dim to warm lights as I don't want LAN connectivity to break control of my lights.
+Some day as Thread networks progress, bypassing switches likely becomes more reasonable, but we're not there yet.
+
+Finally, we have lots of plants inside and these plants love natural light!
+We also, fortunately, have lots of windows.
+We replaced the coverings we had with Matter/Thread honeycomb covers.
+These open during at sunrise, and close at sunset.
+Future work is to track sun position and outdoor temperature to selectively close blinds to reduce heating of the home in summer.
+Also, having blackout versions of the blinds in a bedroom is huge for sleep quality.
+
+Other small things are automating my porch light to come on after sunset and to turn off after sunrise and having robovacs clean when both of us leave the home.
+Likewise, I can hit a single button on my phone at night to check that my doors are closed and lock, lock/close them if they aren't, set an alarm, run a robovac in the kitchen, turn on my bedroom fan, and turn on my bedroom lamps which then dim off for 30 minutes.
+
+One of my absolute favorite automations is my morning sequence.
+Thirty minutes prior to when I want to get up (which I can change easily), my bedroom lamps start to dim on for 30 minutes, my bedroom fan turns off, and after the thirty minutes the alarm disarms.
+I haven't woken up with a noisy alarm in so many years at this point and it is my number one suggestion for mornings.
+Having lights come on seems to wake me up very naturally and the fan turning off makes me warm up as well -- both these are known to help trigger your body and brain to wake up.
+
+Aside: I recently got an Eight Sleep which also warms at the time I need to wake up as well.
+Sleep is important, people!
+And one last sleeping based tool I have is an air quality monitor in my bedroom which detects CO2 levels and when they increase beyond a certain point, the central air turns on until it goes below a target.
+
+I want this stuff to make my life simpler.
+I refuse to add needless smart-things just because. 
+Most of this was honed over time and I scrutinize things before I add or change them.
+
+My final note here is that many of these devices and other interesting ones can actually be built from scratch and designed yourself.
+I have worked a bit with ESP32 devices and plan to build my own Thread network with them, and slowly build my own smart devices to replace others.
+This is not only to exit lock in of ecosystem (e.g., Apple), but just as a hobby.
+It's fun to tinker with hardware (incase this post has not made that blatantly obvious!).
+Plus, ESP32 development can be done in Rust and there's even a nice async library to use!
+
+#### cameras
+In my home we have a few cameras for a few different purposes, but they are not a huge thing for me.
+The most used camera is my doorbell cam which is certainly indespensible. 
+Knowing when someone comes by or a package is delivered is super useful.
+Being able to speak to someone through it while you're away has also been great.
+Unfortunately, I have even had to submit recordings from it to the police.
+The other cameras essentially are used to watch our pets when we're away or things that can go wrong (e.g., garage door stuck). 
+
+I use Reolink cameras and I use Neolink as a re-streamer so I can get access to all my feeds from one spot.
+These feeds get piped to Home Assistant so I can view everything there if I want.
+I also do use Scrypyted to get Homekit Secure Video from the doorbell camera.
+
+So, I run both Neolink and Scrypted in their own LXCs.
+There's some other cool technology out there too such as the NVRs Blue Iris and Frigate if cameras are things that really get you going.
+If you look around, people have projects that use pretty nice "AI" recognition to do things based on these feeds.
+Currently, I don't care enough to do that and I almost didn't put this section, but these services are important to me for sure, just less so than others.
+
+### other
+Outside of what I've already mentioned, I have a few other services and use cases for my lab.
+
+#### syncthing
+I love this service a ton.
+Essentially, Syncthing provides peer-to-peer synchronization of files on different machines. 
+The service itself is dead simple and you don't actually need to run it on a server at home as any two devices can use it together.
+
+I run a central node at home to synchronize certain files I have on my machines such as dotfiles and PDFs.
+The reason why I did it this way is to, yet again, minimize any sort of escape of important data to the internet as I can just connect to this over Wireguard.
+Syncthing has its own cryptography as the peers require key sharing, but to make life simpler, I connect my peers to the service at home, they sync to this as if it were a cloud storage, then other devices can receive new state from this central hub.
+There are some settings to be careful with if you want to forward this service through Wireguard, so just be careful with that!
+
+Likewise, it can be used for things like Obsidian to get the same sync experience they have, but ran on your own.
+Couple this with good backups and a cronjob to periodically commit to a git repository, and you have yourself a pretty bulletproof cloud-storage-like solution.
+This is essentially my goal moving forward -- use more native apps on my devices and use Syncthing as my synchronization primitive.
+One such example would be for a password and 2FA vault shared securely across devices.
+
+#### VMs
+Proxmox gives me the ability to spin up VMs as I please, and these VMs can have a given template.
+Given I mostly use an ARM based machine (for better or worse), it has been convenient for me to be able to create an x86 VM to try certain things out there.
+For example, in my work I've come across repos that have optimizations for x86 ASM which have been worth looking into.
+
+Another case is to be able to have a destructible machine which I don't have to worry about at all.
+Sometimes it can be tough to get an install correct, or I just want to try out something without having to make my own machine in some odd state of disrepair.
+So, this makes going from a VM template to a testing ground quite useful.
+
+Another use case in the realm of VMs is to be able to use them to offload compute completely. 
+If I want to run expensive processes such as computing a zero knowledge proof, then I can run it on a VM and not waste battery on my laptop.
+I would absolutely like to set up Github runners within this system.
+
+#### sunlight/moonlight
+Going off the previous, there are also other use cases such as games where running from a VM is convenient. 
+For example, I have no Windows machines at home, but some games require Windows.
+At the moment I can deploy a VM running Sunlight and connect to it from my Mac machine with Moonlight so that I can use it as a machine with a full-blown desktop environment.
+
+This is actually a point of current development of mine. 
+NixOS is convenient for creating templates that will have this setup automatically.
+Also, Windows VMs can be stored as templates within Proxmox itself.
+I've yet to do the same with Windows as I have with a NixOS instance, but that'll happen soon enough in the future!
+
+#### website
+One final category worth mentioning is self hosting a website.
+I used to do this for the site you're on now, but have instead moved to Github pages. 
+Quite simply, if I can easily avoid forwarding TCP ports on my gateway, I'm going to.
+
+Using a Rust-based static web server was pretty easy to get going in an LXC. 
+Just had to set up a systemd service and point it to the HTML files.
+
+#### diagnostics
+It's also worth noting that I do run Prometheus and Grafana in their own LXCs.
+Currently, I only have two data feeds set up with these, but I do plan to make this more functional in the future.
+
+In the same vein, I do also have Gotify notifications set up for my Proxmox cluster.
+Basically, if certain things happen such as a failed backup or a VM, LXC, or node crash, I can receive notifications.
+Unfortunately, there is no good iOS app for this, but the service is helpful.
+
+As I add more over time, I plan to keep the diagnostics and alerting system improving as well. 
+Keep in mind (1) and (2) from [#ideaology](#ideaology).
+
+### summary
+My list of services here is actually pretty small compared to many others, but there's beauty in simplicity in my opinion.
+If you go visit places like [r/selfhosted](https://reddit.com/r/selfhosted), [r/homelab](https://reddit.com/r/homelab), or [r/homeassistant](https://reddit.com/r/homeassistant), you will see tons of amazing stuff.
+
+As I move away from proprietary software over time, there's some likely additions to have here such as
+- immich
+- Ollama (tried this, it's just slow on these machines)
+
+## TODOs
+I'm going to organize this based on ideaology:
+
+### ideaology 1
+- Have a separate backup server in a different geographical location. 
+It may share some services for redundancy, e.g., also host syncthing.
+
+- Add another PC to replace RPi and use cluster storage.
+Currently, my HA uses ZFS cloning and every thirty minutes, running services offload state to the other node so that the node can reload from that state.
+This leaves a thirty minute window of changes that can be lost if a node crashes.
+Instead, cluster storage like Ceph or LINSTOR is a distributed storage system that maintains parity actively between nodes.
+As a bonus, could use this PC to run an LLM such as Ollama if it had more memory and a faster GPU than my mini PCs.
+
+### ideaology 2
+- Move to Thread/Matter for all IoT devices.
+At the moment, some devices connect with RFID, clear connect (~900MHz), 2.4GHz WiFi, HomeKit over Thread, and Matter over Thread. 
+It would be simpler to just use Matter over Thread everywhere and then gain the ability to distribute border routers throughout my home for redundancy (owing to (1) as well).
+
+### ideaology 3
+- Develop with NixOS and utilizing VMs/LXCs.
+There's a lot to do here and I know there's more fun to unlock.
+This distribution was made for it.
+Ultimately, it may become my daily driver on client devices as well, so using it throughout would be a mission of mine.
+
+- Sunlight/Moonlight cloud gaming.
+I'm not a crazy gamer at all, so I don't need much power in a machine and I also don't need to worry about latency that much either.
+But having a host I can use to run the games I want (easier with x86 and VM can be Windows too) would be a nice thing to have.
+
+- Develop with local "AI". 
+I don't want to rely on any "AI" hosting service at all -- it's easy enough to run this stuff yourself and you can get more power from it anyway; just get a GPU and some RAM.
+Another perk of a third machine with more power would be to run models and games. 
+
+- Develop with IPv6.
+IPv4 and NAT are a bit of a mess.
+I would love to be able to properly use IPv6 addressing to make LAN/WAN easier to manage.
+IPv6 itself is a bit of a mess in its own way, so this is a challenge.
+Nuking your network is also painful.
+
+## helpful things
+If you use proxmox, use tteck's scripts.
