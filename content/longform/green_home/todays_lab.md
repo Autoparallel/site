@@ -41,7 +41,7 @@ The lab should be low power and only run what I need.
 3. Allow for experimentation.
 The lab should be able to spin up new tools with a few commands and not interfere with other running services.
 
-## hardware
+# hardware
 Let's get to the nuts and bolts now.
 Hardware is cheap and fast these days -- don't let anyone convince you otherwise.
 A $200 mini PC can run so much shit, it's astounding.
@@ -73,7 +73,7 @@ These things are awful.
 Just build your own or something -- that's what I'm planning to do.
 Thread is cool, this product is just unstable and feature locked (of course).
 
-## software
+# software
 The key management software I am using is Proxmox.
 Proxmox is a hypervisor that runs on Debian Linux/GNU that provides a nice GUI for managing Virtual Machines (VMs) and Linux Containers (LXC).
 Proxmox also offers the important service of clustering using `corosync` and High Availability (HA) on top of this.
@@ -88,7 +88,7 @@ Proxmox, all together, attains (1), and (3) in [#ideaology](#ideaology).
 Arguably (2) as well, but I think it could be made simpler.
 You will find contention with (2) if you ever want to change node network info.
 
-### Cluster
+## Cluster
 My cluster consists of the two PCs and a RPi as stated earlier.
 The two PCs are nodes in the cluster, the RPi is a quorum device (Q device).
 Put simply: the PCs run all my services and the RPi is there to put in a vote if something bad happens.
@@ -104,7 +104,7 @@ If I had a single machine running this, and this happened, my services would hav
 
 Clustering addresses (1) in [#ideaology](#ideaology).
 
-### PVE
+## PVE
 Proxmox Virtual Environment (PVE) is the interface for managing VMs and LXCs which I'm now just going to call Virtualized Instances (VIs). 
 Basically, you get templates for your VIs, then you can click a few buttons or run a few commands and spin up a new VI based on the template.
 
@@ -121,7 +121,7 @@ It seems like a dream for rapid deployment even though `nix` the language is inf
 Proxmox PVE satisfies (2) in [#ideaology](#ideaology) for me, it's just the other bells and whistles in the UI that are a bit tedious.
 I swear, if there was a nice Nix builder and a VE set up around Nix deployments that also had more cluster storage options, that'd probably take the cake.
 
-### backups
+## backups
 Owing to (1) in [#ideaology](#ideaology) again, Proxmox makes backing up your VIs incredibly easy.
 Just select what VIs you want to back up, where you want to back them up to, when you want to back them up, and how many backups you want to keep.
 
@@ -130,22 +130,22 @@ One use case I have is that owes to (3) is to be able to backup a VI, try to cha
 Similarly, if you want to work with a service, but decide to stop using it, you can create a backup of that service in case you want to go back to using it in the future.
 Two examples of the latter for me are Tailscale and NextCloud -- I may want to use those again some time down the road, but currently don't.
 
-### storage
+## storage
 Argueably this could have gone in the hardware section, but whatever.
 TODO
 
-## services
+# services
 I don't run a ton of services, but what I do run are things I deem critical, or at least very useful, as well as the odd experiment.
 I constantly look for new services to run to make my life better.
 I constantly look for services to remove to make my life simpler.
 
 My current list hits the mark rather well.
 
-### network
+## network
 First things first, none of this works without networking.
 The core to any good lab is a solid, stable, and changeable network setup.
 
-#### Omada SDN
+### Omada SDN
 Begrudgingly, I use TP-Link's Omada SDN as a controller for managing all of my network equipment and clients in one spot.
 Omada provides a nice portal to work with routers, switches, and access points pretty simply.
 The interface is a bit limited on its own, it's a bit clunky at the same time.
@@ -168,16 +168,16 @@ Yet another point off here.
 Not to mention, getting Omada set up in a container was a pain and it is not indicative of the typical experience of launching a container.
 There's weird versions to manage and Omada only liked some specific Ubuntu version.
 
-#### dynamic DNS
+### dynamic DNS
 TODO
 
-#### LAN
+## LAN
 Locally, I use a larger LAN subnet like `x.y.0.0/22` to have a bit clearer delineation between my devices.
 On this subnet, I provision devices (like router, APs, etc.) into the `x.y.0.0/24` range, services into the `x.y.1.0/24` range, known clients such as personal devices or IoT into `x.y.2.0/24` range, and finally I use `x.y.3.0/24` for DHCP.
 
 Like I said before, I use a local DNS resolver so that I don't ever really have to know any IP addresses, but in the off chance that I do, it's convenient, but not really necessary, to have this organization.
 
-#### local DNS
+### local DNS
 With CoreDNS I provide domains for all of my services so that they may be resolved internally in simple ways.
 For example, I have `green.home` as my TLD for my network. 
 I can reach any host on my LAN by `ping $HOSTNAME.green.home`. 
@@ -189,7 +189,7 @@ Or `https:/omada.green.home` to reach my Omada GUI.
 CoreDNS runs in the same container as Omada in my case, though that isn't necessary. 
 It seemed logical to do so as I'd likely just drop both of these for something better in the future.
 
-#### (reverse) proxy
+### (reverse) proxy
 The above DNS also is paired with Caddy as a (reverse) proxy and certificate handler.
 I run Caddy by itself in a Debian 12 LXC.
 Services run over their own ports, e.g., `8043`, so if I have CoreDNS with Omada running on IP `x.y.0.2` and on Caddy on `x.y.1.2`, then I can assign the domain `omada.green.home` to look to `x.y.1.2` which will also pass on the port information.
@@ -199,7 +199,7 @@ I do this with all of my services that I need to reach and I can also do things 
 Reverse proxy and DNS are my most used LAN tools.
 Reverse proxy is also massively useful for WAN forwarding as well.
 
-#### blocky
+### blocky
 Now connecting back to things in WAN world, I also serve Blocky on a container of its own at `x.y.1.1`. 
 Blocky is multi-use upstream DNS proxy for me. 
 That is, I have my gateway point to resolve DNS at CoreDNS, but CoreDNS will see requests to names outside its managed LAN TLD and pass these to Blocky to handle.
@@ -214,7 +214,7 @@ I tend (and you probably do too) to visit many of the same sites throughout the 
 It's not some crazy tech here, but having it remove ads and store this cache makes browsing cleaner and a bit snappier.
 Better than PiHole in my opinion.
 
-#### VPN
+### VPN
 Honestly, this VPN section should probably come earlier because it is likely the most used network infrastructure for me, but I felt like explaining things from the inside out here.
 Perhaps I saved the best for last, then.
 
@@ -236,7 +236,7 @@ I still get to use Blocky, for instance.
 Furthermore, if I wanted to have an upstream VPN from my LAN gateway, I can just keep my persistent Wireguard connection on all of my devices, and enable the upstream VPN anywhere.
 Things like travel routers become simpler.
 
-#### summary
+### summary
 My network services stack includes:
 - Omada SDN + Omada CoreDNS
 - Caddy reverse proxy
@@ -245,11 +245,11 @@ My network services stack includes:
 
 Other worthy mentions to try within this realm would be OPNSense, PFSense, OpenWRT, Nginx, and Traefik.
 
-### home
+## home
 I'm going to combine a handful of my other services under the category of "home". 
 These are things I use for life around the house and currently don't want to live without at all.
 
-#### home assistant
+### home assistant
 Probably the most important non-network service I run.
 This software is unbelievably good with only few exceptions of problems I have had over years of use. 
 Basically, Home Assistant is/was designed for home automation, but it has grown in scope over time to allow for many integrations that fall into a greater category of "home" use (much like my own categorization here).
@@ -309,7 +309,7 @@ This is not only to exit lock in of ecosystem (e.g., Apple), but just as a hobby
 It's fun to tinker with hardware (incase this post has not made that blatantly obvious!).
 Plus, ESP32 development can be done in Rust and there's even a nice async library to use!
 
-#### cameras
+### cameras
 In my home we have a few cameras for a few different purposes, but they are not a huge thing for me.
 The most used camera is my doorbell cam which is certainly indespensible. 
 Knowing when someone comes by or a package is delivered is super useful.
@@ -326,10 +326,10 @@ There's some other cool technology out there too such as the NVRs Blue Iris and 
 If you look around, people have projects that use pretty nice "AI" recognition to do things based on these feeds.
 Currently, I don't care enough to do that and I almost didn't put this section, but these services are important to me for sure, just less so than others.
 
-### other
+## other
 Outside of what I've already mentioned, I have a few other services and use cases for my lab.
 
-#### syncthing
+### syncthing
 I love this service a ton.
 Essentially, Syncthing provides peer-to-peer synchronization of files on different machines. 
 The service itself is dead simple and you don't actually need to run it on a server at home as any two devices can use it together.
@@ -344,7 +344,7 @@ Couple this with good backups and a cronjob to periodically commit to a git repo
 This is essentially my goal moving forward -- use more native apps on my devices and use Syncthing as my synchronization primitive.
 One such example would be for a password and 2FA vault shared securely across devices.
 
-#### VMs
+### VMs
 Proxmox gives me the ability to spin up VMs as I please, and these VMs can have a given template.
 Given I mostly use an ARM based machine (for better or worse), it has been convenient for me to be able to create an x86 VM to try certain things out there.
 For example, in my work I've come across repos that have optimizations for x86 ASM which have been worth looking into.
@@ -357,7 +357,7 @@ Another use case in the realm of VMs is to be able to use them to offload comput
 If I want to run expensive processes such as computing a zero knowledge proof, then I can run it on a VM and not waste battery on my laptop.
 I would absolutely like to set up Github runners within this system.
 
-#### sunlight/moonlight
+### sunlight/moonlight
 Going off the previous, there are also other use cases such as games where running from a VM is convenient. 
 For example, I have no Windows machines at home, but some games require Windows.
 At the moment I can deploy a VM running Sunlight and connect to it from my Mac machine with Moonlight so that I can use it as a machine with a full-blown desktop environment.
@@ -367,7 +367,7 @@ NixOS is convenient for creating templates that will have this setup automatical
 Also, Windows VMs can be stored as templates within Proxmox itself.
 I've yet to do the same with Windows as I have with a NixOS instance, but that'll happen soon enough in the future!
 
-#### website
+### website
 One final category worth mentioning is self hosting a website.
 I used to do this for the site you're on now, but have instead moved to Github pages. 
 Quite simply, if I can easily avoid forwarding TCP ports on my gateway, I'm going to.
@@ -375,7 +375,7 @@ Quite simply, if I can easily avoid forwarding TCP ports on my gateway, I'm goin
 Using a Rust-based static web server was pretty easy to get going in an LXC. 
 Just had to set up a systemd service and point it to the HTML files.
 
-#### diagnostics
+### diagnostics
 It's also worth noting that I do run Prometheus and Grafana in their own LXCs.
 Currently, I only have two data feeds set up with these, but I do plan to make this more functional in the future.
 
@@ -386,7 +386,7 @@ Unfortunately, there is no good iOS app for this, but the service is helpful.
 As I add more over time, I plan to keep the diagnostics and alerting system improving as well. 
 Keep in mind (1) and (2) from [#ideaology](#ideaology).
 
-### summary
+## summary
 My list of services here is actually pretty small compared to many others, but there's beauty in simplicity in my opinion.
 If you go visit places like [r/selfhosted](https://reddit.com/r/selfhosted), [r/homelab](https://reddit.com/r/homelab), or [r/homeassistant](https://reddit.com/r/homeassistant), you will see tons of amazing stuff.
 
@@ -394,10 +394,10 @@ As I move away from proprietary software over time, there's some likely addition
 - immich
 - Ollama (tried this, it's just slow on these machines)
 
-## TODOs
+# TODOs
 I'm going to organize this based on ideaology:
 
-### ideaology 1
+## ideaology 1
 - Have a separate backup server in a different geographical location. 
 It may share some services for redundancy, e.g., also host syncthing.
 
@@ -407,12 +407,12 @@ This leaves a thirty minute window of changes that can be lost if a node crashes
 Instead, cluster storage like Ceph or LINSTOR is a distributed storage system that maintains parity actively between nodes.
 As a bonus, could use this PC to run an LLM such as Ollama if it had more memory and a faster GPU than my mini PCs.
 
-### ideaology 2
+## ideaology 2
 - Move to Thread/Matter for all IoT devices.
 At the moment, some devices connect with RFID, clear connect (~900MHz), 2.4GHz WiFi, HomeKit over Thread, and Matter over Thread. 
 It would be simpler to just use Matter over Thread everywhere and then gain the ability to distribute border routers throughout my home for redundancy (owing to (1) as well).
 
-### ideaology 3
+## ideaology 3
 - Develop with NixOS and utilizing VMs/LXCs.
 There's a lot to do here and I know there's more fun to unlock.
 This distribution was made for it.
@@ -432,5 +432,11 @@ I would love to be able to properly use IPv6 addressing to make LAN/WAN easier t
 IPv6 itself is a bit of a mess in its own way, so this is a challenge.
 Nuking your network is also painful.
 
-## helpful things
+- Key management.
+Without getting into too much detail here, I'd also like to have better personal private key management.
+I've been trying to cook together a mini app for this over time. 
+We'll see where that goes!
+Could at least be useful to add to KeepPassXC
+
+# helpful things
 If you use proxmox, use tteck's scripts.
