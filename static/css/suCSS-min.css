@@ -637,3 +637,58 @@ p {
     text-justify: inter-word;
     hyphens: auto;
 }
+
+/* Sticky header stuff */
+.blog-content {
+    position: relative;
+}
+
+.sticky-path {
+    position: fixed;
+    top: 0;
+    background-color: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    font-family: var(--mono-font);
+    white-space: nowrap;
+    overflow-x: auto;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    /* Match your content width constraints */
+    width: min(45rem, 90%);
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Larger font size */
+    font-size: 1.2rem;
+}
+
+.sticky-path .marker {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.sticky-path .path-separator {
+    color: var(--text-light);
+    margin: 0 0.25rem;
+}
+
+/* Add padding to match your content area */
+.sticky-path {
+    box-sizing: border-box;
+    padding-left: calc(1rem + 8px);
+    /* Adjust these values to match your content padding */
+    padding-right: calc(1rem + 8px);
+}
+
+.sticky-path::-webkit-scrollbar {
+    height: 4px;
+}
+
+.path-item {
+    color: var(--text);
+    display: inline;
+}

@@ -1,6 +1,6 @@
 +++
-title = "today's lab"
-date = "2024-08-22"
+title = "green home: init"
+date = "2024-11-01"
 template = "blog.html"
 description = "I love DIY and computers, so what better combination is there than being a self-hoster? To get the ball rolling, I'll just describe how my setup exists today and how I got here. Details on how to do this yourself isn't inside here, but I am happy to talk about this -- so just reach out to me."
 [taxonomies]
@@ -214,9 +214,9 @@ With CoreDNS I provide domains for all of my services so that they may be resolv
 For example, I have `green.home` as my TLD for my network. 
 I can reach any host on my LAN by `ping $HOSTNAME.green.home` or `ping $HOSTNAME` since every device will know to search within `.green.home` if they connect to this network. 
 
-Specific services I am running I provide their own domain.
+Specific services I am running each get their own domain.
 For example, Proxmox (running on two nodes, remember) I can reach the GUI by a single address `https://proxmox.green.home`. 
-Or `https:/omada.green.home` to reach my Omada GUI.
+Or `https://omada.green.home` to reach my Omada GUI.
 
 CoreDNS runs in the same container as Omada in my case, though that isn't necessary. 
 It seemed logical to do so as I'd likely just drop both of these for something better in the future.
@@ -231,6 +231,7 @@ Caddy sees this request to, for example, `omada.green.home:8043` from CoreDNS, r
 I do this with all of my services that I need to reach and I can also do things like reverse proxy `proxmox.green.home` to both IP addresses of my nodes, pick a default, but if the default IP is unresponsive, use the other.
 Reverse proxy and DNS are my most used LAN tools.
 Reverse proxy is also massively useful for WAN forwarding as well.
+I use this for my VPN so I can access it from a publicly known domain name managed with dynamic DNS as I mentioned before.
 
 Local TLS is really not necessary in my case, but Caddy does it for free and I'll take the minor improvement.
 I just take the cert file and put it on the devices I commonly use to connect.
@@ -295,7 +296,7 @@ This software is unbelievably good with only few exceptions of problems I have h
 Basically, Home Assistant is/was designed for home automation, but it has grown in scope over time to allow for many integrations that fall into a greater category of "home" use (much like my own categorization here).
 Hell, I'm pretty sure you can set up Nginx, PiHole, and Wireguard within Home Assistant with a few clicks.
 
-Home Assistant is running in VM inside of Home Assistant OS (HAOS). 
+Home Assistant is served on a VM that runs Home Assistant OS (HAOS). 
 In fact, this is the only service I have in a VM, the rest are in containers.
 HAOS is its own Linux distribution that has a lot of convenience factors.
 You can easily manage versions of components and get access to add-ons using it.

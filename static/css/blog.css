@@ -93,6 +93,13 @@ body {
     border-bottom: 1px solid var(--border);
 }
 
+.toc-header {
+    font-size: 1.75rem;
+    color: var(--text);
+    font-weight: bold;
+    margin: 0.5em 0;
+}
+
 .toc-items {
     padding-left: 1rem;
 }
