@@ -157,37 +157,68 @@ a:hover {
     color: var(--bg)
 }
 
+/* Lists */
 ul {
     list-style: none;
+    margin-top: .25rem;
+    margin-bottom: .25rem;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    padding-left: 1rem;
+    /* Reduced padding for less indentation */
 }
 
-
-ol {
-    list-style-type: decimal
-}
-
-li {
-    margin-bottom: .125rem
+ul li {
+    position: relative;
+    padding-left: 1em;
+    /* Space for the bullet */
+    margin-bottom: .125rem;
 }
 
 ul li::before {
     content: '» ';
-    color: var(--accent)
-}
-
-
-ol li:hover::marker {
-    font-weight: 700;
-    color: var(--link)
+    color: var(--accent);
+    position: absolute;
+    left: 0;
 }
 
 ul li:hover::before {
     font-weight: 700;
-    color: var(--link)
+    color: var(--link);
 }
 
-ol li::marker {
-    color: var(--accent)
+/* Ordered lists */
+ol {
+    list-style: none;
+    counter-reset: list-counter;
+    margin-top: .25rem;
+    margin-bottom: .25rem;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    padding-left: 1rem;
+    /* Reduced padding for less indentation */
+}
+
+ol li {
+    position: relative;
+    padding-left: 1.5em;
+    /* Slightly more space for numbers */
+    margin-bottom: .125rem;
+}
+
+ol li::before {
+    content: counter(list-counter) ".";
+    counter-increment: list-counter;
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+}
+
+ol li:hover::before {
+    font-weight: 700;
+    color: var(--link);
 }
 
 
