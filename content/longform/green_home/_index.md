@@ -1,6 +1,6 @@
 +++
-title = "green home"
-description = "There is a set of three equivalences between category theory (algebra), type theory (computation), and logic (proofs) that are known as the Curry-Howard-Lambek correspondence. I find these relationships fascinating and want to explore them further. Not only in a theoretical way, but also in a practical way for designing safe and scalable software. Ultimately, I want to get into programming languages that offer theorem proving and venture deep into homotopy type theory and higher categories."
+title = "my own tech"
+description = "Messing with hardware and software is one of my biggest hobbies outside of fitness related stuff. There's a lot of options as far as DIY goes. This series is going to be about this sort of thing and it will grow and adapt over time. Expect to see things ranging from managing a cluster at home, to building IoT devices, to features, commits, and issues on open source software."
 [extra]
-tags = ["math", "computer science", "category theory", "type theory"]
+tags = ["computers", "technology", "DIY"]
 +++
