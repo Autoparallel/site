@@ -91,80 +91,71 @@ body {
     margin-bottom: 2rem;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    counter-reset: toc-counter;
 }
 
-.table-of-contents ol {
-    list-style-type: none;
+.toc-items {
     padding-left: 1rem;
 }
 
-.table-of-contents ol li {
-    position: relative;
+.toc-item {
     margin-bottom: 0.5rem;
 }
 
-/* Level 1 */
-.toc-level-1>li {
-    counter-increment: toc-counter;
-    padding-left: calc(3ch + 1em);
-    /* Space for «n» plus some padding */
+.toc-line {
+    display: flex;
+    align-items: baseline;
 }
 
-.toc-level-1>li::before {
-    content: "«" counter(toc-counter) "» ";
-    position: absolute;
-    left: 0;
+.toc-number {
     color: var(--accent);
     font-weight: bold;
-    width: max-content;
-    /* Ensures the pseudo-element takes only as much space as needed */
+    margin-right: 0.5em;
+    white-space: nowrap;
 }
 
-/* Level 2 */
-.toc-level-2 {
-    counter-reset: toc-level-2-counter;
-    margin-left: 0.5rem;
+/* Counter setup */
+.toc-items {
+    counter-reset: h1;
 }
 
-.toc-level-2>li {
-    counter-increment: toc-level-2-counter;
-    padding-left: calc(5ch + 1em);
-    /* Space for «n.n» plus some padding */
+.level-1>.toc-line>.toc-number::before {
+    counter-increment: h1;
+    content: "«" counter(h1) "» ";
 }
 
-.toc-level-2>li::before {
-    content: "«" counter(toc-counter) "." counter(toc-level-2-counter) "» ";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: bold;
-    width: max-content;
+.level-2 {
+    padding-left: 1.5rem;
+    counter-reset: h2;
 }
 
-/* Level 3 */
-.toc-level-3 {
-    counter-reset: toc-level-3-counter;
-    margin-left: 0.5rem;
+.level-2>.toc-line>.toc-number::before {
+    counter-increment: h2;
+    content: "«" counter(h1) "." counter(h2) "» ";
 }
 
-.toc-level-3>li {
-    counter-increment: toc-level-3-counter;
-    padding-left: calc(7ch + 1em);
-    /* Space for «n.n.n» plus some padding */
+.level-3 {
+    padding-left: 1.5rem;
+    counter-reset: h3;
 }
 
-.toc-level-3>li::before {
-    content: "«" counter(toc-counter) "." counter(toc-level-2-counter) "." counter(toc-level-3-counter) "» ";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: bold;
-    width: max-content;
+.level-3>.toc-line>.toc-number::before {
+    counter-increment: h3;
+    content: "«" counter(h1) "." counter(h2) "." counter(h3) "» ";
 }
 
 /* Hover effects */
-.table-of-contents ol li:hover::before {
+.toc-line:hover .toc-number {
+    color: var(--link);
+}
+
+/* Link styling */
+.toc-line a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.toc-line a:hover {
+    background-color: transparent;
     color: var(--link);
 }
 
