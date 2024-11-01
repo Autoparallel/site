@@ -1,8 +1,6 @@
 function copyLink(event, heading) {
-    event.preventDefault(); // Prevent the default anchor action
-
-    // Construct the full URL manually
-    url = window.location.href.split('#')[0] + heading; // Append the slug (hash)
+    event.preventDefault();
+    url = window.location.href.split('#')[0] + heading;
 
     navigator.clipboard.writeText(url).then(() => {
         alert('Link copied to clipboard: ' + url);
@@ -13,9 +11,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
 
     headings.forEach(heading => {
+        // Get the heading level from the tag name (h1 -> 1, h2 -> 2, etc.)
+        const level = parseInt(heading.tagName.charAt(1));
+
         const anchor = document.createElement('a');
         anchor.className = 'anchor';
-        anchor.textContent = '#';
+        // Repeat '#' symbol based on heading level
+        anchor.textContent = '#'.repeat(level);
 
         if (heading.id) {
             anchor.href = `#${heading.id}`;
