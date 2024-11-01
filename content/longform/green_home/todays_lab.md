@@ -7,8 +7,6 @@ description = "I love DIY and computers, so what better combination is there tha
 tags = ["home lab", "self hosted", "computers", "networking", "DIY"]
 +++
 
----
-
 
 # intro
 I care a lot about technology and learning how to do things myself.
@@ -547,4 +545,3 @@ Otherwise, all your services depend on addressing in some way, so this is guaran
 You will hate yourself when your PiHole instance that manages your DNS and DHCP crashes and you can't even get a lease to access the network at all.
 I made this mistake once and I will never do it again.
 Seriously, this is a warning to tread carefully especially if you don't know what DHCP really does.
-
