@@ -56,21 +56,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return heading.textContent.replace(anchorText, '').trim();
     }
 
-    function isHeadingOffScreen(heading) {
+    function isHeadingColliding(heading) {
         const rect = heading.getBoundingClientRect();
         const stickyHeaderHeight = stickyPath.offsetHeight;
-        return rect.top + rect.height <= stickyHeaderHeight;
+        // Consider a heading "off screen" when its top edge reaches the bottom of where
+        // the sticky header would be
+        return rect.top <= stickyHeaderHeight;
     }
 
     function findActiveHeading() {
-        // Find the last heading that has scrolled past the sticky header
+        // Find the last heading that has collided with the sticky header position
         let activeHeading = null;
 
         for (const heading of headings) {
-            if (isHeadingOffScreen(heading)) {
+            if (isHeadingColliding(heading)) {
                 activeHeading = heading;
             } else {
-                // Stop when we find the first heading that hasn't scrolled past
+                // Stop when we find the first heading that hasn't collided
                 break;
             }
         }
@@ -107,15 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const path = buildPathForHeading(activeHeading);
-
-        if (path.length === 0) {
-            stickyPath.style.display = 'none';
-            return;
-        }
-
         stickyPath.style.display = 'flex';
         stickyPath.innerHTML = '';
+
+        const path = buildPathForHeading(activeHeading);
 
         path.forEach((heading, index) => {
             if (index > 0) {
