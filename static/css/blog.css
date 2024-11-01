@@ -102,8 +102,15 @@ body {
 }
 
 .toc-line {
+    display: block;
+}
+
+.toc-line a {
     display: flex;
     align-items: baseline;
+    color: var(--link);
+    text-decoration: none;
+    transition: color 0.3s, background-color 0.3s;
 }
 
 .toc-number {
@@ -118,7 +125,7 @@ body {
     counter-reset: h1;
 }
 
-.level-1>.toc-line>.toc-number::before {
+.level-1 .toc-number::before {
     counter-increment: h1;
     content: "«" counter(h1) "» ";
 }
@@ -128,7 +135,7 @@ body {
     counter-reset: h2;
 }
 
-.level-2>.toc-line>.toc-number::before {
+.level-2 .toc-number::before {
     counter-increment: h2;
     content: "«" counter(h1) "." counter(h2) "» ";
 }
@@ -138,25 +145,26 @@ body {
     counter-reset: h3;
 }
 
-.level-3>.toc-line>.toc-number::before {
+.level-3 .toc-number::before {
     counter-increment: h3;
     content: "«" counter(h1) "." counter(h2) "." counter(h3) "» ";
 }
 
 /* Hover effects */
-.toc-line:hover .toc-number {
-    color: var(--link);
-}
-
-/* Link styling */
-.toc-line a {
-    color: inherit;
-    text-decoration: none;
-}
-
 .toc-line a:hover {
-    background-color: transparent;
-    color: var(--link);
+    background-color: var(--link);
+    color: var(--bg);
+}
+
+.toc-line a:hover .toc-number {
+    color: var(--bg);
+}
+
+/* Optional: add some padding to make the clickable area more comfortable */
+.toc-line a {
+    padding: 0.1rem 0.3rem;
+    margin: -0.1rem -0.3rem;
+    border-radius: 0.125rem;
 }
 
 .blog-content {

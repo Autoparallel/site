@@ -29,24 +29,30 @@
         {% for h1 in page.toc %}
         <div class="toc-item level-1">
           <div class="toc-line">
-            <span class="toc-number"></span>
-            <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+            <a href="{{ h1.permalink | safe }}">
+              <span class="toc-number"></span>
+              <span class="toc-text">{{ h1.title }}</span>
+            </a>
           </div>
           {% if h1.children %}
           <div class="toc-children">
             {% for h2 in h1.children %}
             <div class="toc-item level-2">
               <div class="toc-line">
-                <span class="toc-number"></span>
-                <a href="{{ h2.permalink | safe }}">{{ h2.title }}</a>
+                <a href="{{ h2.permalink | safe }}">
+                  <span class="toc-number"></span>
+                  <span class="toc-text">{{ h2.title }}</span>
+                </a>
               </div>
               {% if h2.children %}
               <div class="toc-children">
                 {% for h3 in h2.children %}
                 <div class="toc-item level-3">
                   <div class="toc-line">
-                    <span class="toc-number"></span>
-                    <a href="{{ h3.permalink | safe }}">{{ h3.title }}</a>
+                    <a href="{{ h3.permalink | safe }}">
+                      <span class="toc-number"></span>
+                      <span class="toc-text">{{ h3.title }}</span>
+                    </a>
                   </div>
                 </div>
                 {% endfor %}
