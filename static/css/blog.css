@@ -91,64 +91,81 @@ body {
     margin-bottom: 2rem;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-}
-
-.table-of-contents {
     counter-reset: toc-counter;
 }
 
 .table-of-contents ol {
     list-style-type: none;
-    padding-left: 1.5rem;
+    padding-left: 1rem;
 }
 
 .table-of-contents ol li {
+    position: relative;
     margin-bottom: 0.5rem;
 }
 
-.table-of-contents ol li::before {
-    color: var(--accent);
-    font-weight: bold;
-    display: inline-block;
-    margin-left: -1.5em;
-}
-
-.table-of-contents ol li:hover::before {
-    color: var(--link);
-}
-
+/* Level 1 */
 .toc-level-1>li {
     counter-increment: toc-counter;
+    padding-left: calc(3ch + 1em);
+    /* Space for «n» plus some padding */
 }
 
 .toc-level-1>li::before {
     content: "«" counter(toc-counter) "» ";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: bold;
+    width: max-content;
+    /* Ensures the pseudo-element takes only as much space as needed */
 }
 
+/* Level 2 */
 .toc-level-2 {
     counter-reset: toc-level-2-counter;
+    margin-left: 0.5rem;
 }
 
 .toc-level-2>li {
     counter-increment: toc-level-2-counter;
+    padding-left: calc(5ch + 1em);
+    /* Space for «n.n» plus some padding */
 }
 
 .toc-level-2>li::before {
     content: "«" counter(toc-counter) "." counter(toc-level-2-counter) "» ";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: bold;
+    width: max-content;
 }
 
-
+/* Level 3 */
 .toc-level-3 {
     counter-reset: toc-level-3-counter;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
 }
 
 .toc-level-3>li {
     counter-increment: toc-level-3-counter;
+    padding-left: calc(7ch + 1em);
+    /* Space for «n.n.n» plus some padding */
 }
 
 .toc-level-3>li::before {
     content: "«" counter(toc-counter) "." counter(toc-level-2-counter) "." counter(toc-level-3-counter) "» ";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: bold;
+    width: max-content;
+}
+
+/* Hover effects */
+.table-of-contents ol li:hover::before {
+    color: var(--link);
 }
 
 .blog-content {
