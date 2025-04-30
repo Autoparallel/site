@@ -4,11 +4,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 <meta name="robots" content="index, follow">
 
-<!-- In your HTML <head> -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&family=Kode+Mono&display=swap" rel="stylesheet">
 
 <!-- Katex math rendering -->
 <style>
@@ -137,7 +134,6 @@
 {% endif %}
 {% endblock metatags %}
 {% block css %}
-<link rel="stylesheet" type="text/css" href="{{ get_url(path='css/reset-min.css', trailing_slash=false) }}" />
 <link rel="stylesheet" type="text/css" href="{{ get_url(path='css/style.css', trailing_slash=false) }}" />
 <link rel="stylesheet" type="text/css" href="{{ get_url(path='css/braindump.css', trailing_slash=false) }}" />
 <link rel="stylesheet" type="text/css" href="{{ get_url(path='css/longform.css', trailing_slash=false) }}" />
