@@ -7,17 +7,13 @@ function copyLink(event, heading) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
 
     headings.forEach(heading => {
-        // Get the heading level from the tag name (h1 -> 1, h2 -> 2, etc.)
-        const level = parseInt(heading.tagName.charAt(1));
-
         const anchor = document.createElement('a');
         anchor.className = 'anchor';
-        // Repeat '#' symbol based on heading level
-        anchor.textContent = '#'.repeat(level);
+        anchor.textContent = '#';
 
         if (heading.id) {
             anchor.href = `#${heading.id}`;
@@ -127,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const marker = document.createElement('span');
             marker.className = 'marker';
-            marker.textContent = '#'.repeat(getHeadingLevel(heading));
+            marker.textContent = '# ';
 
             const text = document.createElement('span');
             text.textContent = getHeadingText(heading);
