@@ -7,11 +7,10 @@ description = "going with the flow"
 
 My name is Colin Roberts, CTO and Co-Founder of [Multifactor](https://multifactor.com).
 Check us out here!
-<div class="cta-banner">
+<div class="cta-banner" onclick="window.open('https://multifactor.com', '_blank')">
   <div class="cta-content">
     <span class="cta-text">Learn more about how we're redefining zero-trust at</span>
     <img src="/images/mf_logo.svg" alt="Multifactor" class="cta-logo">
-    <a href="https://multifactor.com" class="cta-arrow" target="_blank" rel="noopener">→</a>
   </div>
 </div>
 
