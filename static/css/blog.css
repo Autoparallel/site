@@ -18,7 +18,6 @@ body {
     right: 1rem;
 }
 
-
 .vertical-line::before {
     content: "";
     position: absolute;
