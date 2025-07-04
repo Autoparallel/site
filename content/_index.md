@@ -6,20 +6,25 @@ description = "going with the flow"
 ## About Me
 
 My name is Colin Roberts.
-I have a passion for mathematics, physics, and computer science.
-Some specific interests were previously mathematical physics via Riemannian geometry, PDEs, Clifford analysis, Hodge theory, and inverse problems.
-I also dabbled in sensor fusion, data assimilation, and plasma physics.
 
-Now I find myself in an open arc of developing software on and related to cryptography. 
-Here we want beautiful math and beautiful software.
-We want it to be provable, modular, extensible, and composable.
+<div class="cta-banner">
+  <div class="cta-content">
+    <span class="cta-text">Learn more about how we're redefining zero-trust at</span>
+    <img src="/images/mf_logo.svg" alt="Multifactor" class="cta-logo">
+    <a href="https://multifactor.com" class="cta-arrow" target="_blank" rel="noopener">→</a>
+  </div>
+</div>
+
+I am a mathematician and physicist turned research engineer with a deep passion for computer science. My journey has taken me from theoretical explorations in mathematical physics—including Riemannian geometry, PDEs, Clifford analysis, Hodge theory, and inverse problems, as well as sensor fusion, data assimilation, and plasma physics—to leading applied research and development in cryptography, DeFi, and distributed systems.
+
+Currently, my focus is on architecting innovative solutions for complex challenges in the cryptographic space, including developing cutting-edge proving systems and secure computation techniques. I have significant experience in modeling, simulation (notably as the lead developer of the Arbiter framework), and building novel financial primitives. I thrive on leading teams to impactful execution and am driven by the desire to be challenged and make a difference.
+
+In all my work, the goal remains to create beautiful math and beautiful software: provable, modular, extensible, and composable.
 
 Here are some projects I have worked on or am currently working on:
+- [arbiter](https://github.com/harnesslabs/arbiter): Agent-based simulation framework.
+- [cova](https://github.com/harnesslabs/cova): Abstract mathematics made computational.
 - [ronkathon](https://github.com/pluto/ronkathon): Cryptographic primitives, self contained, for learning, and for collaboration.
-- [arbiter](https://github.com/anthias-labs/arbiter): Agent-based simulation framework for Ethereum execution environments.
-- [tensor](https://github.com/Autoparallel/tensor): Rust library for multilinear algebra interface.
-- [type_sheaf](https://github.com/Autoparallel/type_sheaf): Sheaves of types in Rust. WIP.
-- Sheaves of modules in Lean4. TODO.
 
 ## Contact
 

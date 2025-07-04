@@ -13,6 +13,14 @@
   --border: #ff79c6;
   --link: #ff79c6;
   --white: #F8F8F2;
+
+  /* Multifactor Brand Colors */
+  --color-mf-primary-dark: #ef4444;
+  --color-mf-primary-medium: #f97316;
+  --color-mf-primary-light: #eab308;
+  --color-mf-light-dark: #ffffffff;
+  --color-mf-light-medium: #ffffffb1;
+  --color-mf-light-light: #ffffff64;
 }
 
 /* Reset and Base Styles */
@@ -534,4 +542,103 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Call-to-Action Banner */
+.cta-banner {
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg,
+      rgba(249, 115, 22, 0.03) 0%,
+      rgba(234, 179, 8, 0.02) 50%,
+      var(--bg-light) 100%);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.cta-banner:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+.cta-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cta-logo {
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
+  opacity: 0.9;
+  margin: 0rem 1rem;
+}
+
+.cta-text {
+  color: var(--text-light);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+}
+
+.cta-arrow {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-mf-primary-medium) !important;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  padding: 0.4rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.15);
+}
+
+.cta-arrow:hover {
+  background: rgba(249, 115, 22, 0.15) !important;
+  color: var(--color-mf-primary-dark) !important;
+  transform: translateX(2px);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+@media only screen and (max-width: 720px) {
+  .cta-banner {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+  }
+
+  .cta-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .cta-logo {
+    height: 24px;
+    width: auto;
+  }
+
+  .cta-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .cta-arrow {
+    font-size: 1.1rem;
+    min-width: 1.8rem;
+    height: 1.8rem;
+    padding: 0.3rem;
+  }
 }
